@@ -40,9 +40,17 @@ concommand.Add("ph_taunt", function (ply, com, args, full)
 		duration = t.soundDurationOverride or 1
 	end
 
-	ply:EmitSound(snd)
+	-- TODO: don't repeat this code everywhere.
+	local sndName = string.Trim(snd)
+	sndName = string.Replace(sndName, "/", "_")
+	sndName = string.Replace(sndName, ".", "_")
+
+	ply:EmitSound(sndName)
 	ply.Taunting = CurTime() + duration + 0.1
 	ply.TauntAmount = (ply.TauntAmount or 0) + 1
+
+	if !ply.TauntsUsed then ply.TauntsUsed = {} end
+	ply.TauntsUsed[sndName] = true
 end)
 
 concommand.Add("ph_taunt_random", function (ply, com, args, full)
@@ -81,7 +89,15 @@ concommand.Add("ph_taunt_random", function (ply, com, args, full)
 		duration = t.soundDurationOverride or 1
 	end
 
-	ply:EmitSound(snd)
+	-- TODO: don't repeat this code everywhere.
+	local sndName = string.Trim(snd)
+	sndName = string.Replace(sndName, "/", "_")
+	sndName = string.Replace(sndName, ".", "_")
+
+	ply:EmitSound(sndName)
 	ply.Taunting = CurTime() + duration + 0.1
 	ply.TauntAmount = (ply.TauntAmount or 0) + 1
+
+	if !ply.TauntsUsed then ply.TauntsUsed = {} end
+	ply.TauntsUsed[sndName] = true
 end)

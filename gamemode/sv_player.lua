@@ -336,6 +336,14 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 
 		// set the last death award
 		self.LastPropDeath = ply
+
+		if ply.TauntsUsed then
+			for k, v in pairs(ply.TauntsUsed) do
+				ply:StopSound(k)
+			end
+		end
+
+		ply.TauntsUsed = {}
 	end
 	ply:UnDisguise()
 

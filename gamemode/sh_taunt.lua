@@ -33,6 +33,18 @@ local function addTaunt(name, snd, pteam, sex, cats, duration)
 
 	local dur, count = 0, 0
 	for k, v in pairs(snd) do
+		-- TODO: don't repeat this code everywhere.
+		local sndName = string.Trim(v)
+		sndName = string.Replace(sndName, "/", "_")
+		sndName = string.Replace(sndName, ".", "_")
+
+		Sound.Add({
+			name = sndName,
+			channel = CHAN_AUTO,
+			level = 75,
+			sound = v
+		})
+
 		if !AllowedTauntSounds[v] then AllowedTauntSounds[v] = {} end
 		table.insert(AllowedTauntSounds[v], t)
 		dur = dur + SoundDuration(v)
