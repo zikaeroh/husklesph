@@ -84,10 +84,10 @@ setmetatable(tempG, meta)
 local function loadTaunts(rootFolder)
 	local files, dirs = file.Find(rootFolder .. "*.lua", "LUA")
 	for k, v in pairs(files) do
-		AddCSLuaFile(rootFolder .. v)
+		local filePath = rootFolder .. v
+		AddCSLuaFile(filePath)
 
-		local name = v:sub(1, -5)
-		local f = CompileFile(rootFolder .. v)
+		local f = CompileFile(filePath)
 		if !f then
 			return
 		end
@@ -97,9 +97,9 @@ local function loadTaunts(rootFolder)
 		local s = SERVER and "Server" or "Client"
 		local b = SERVER and 90 or 0
 		if !b then
-			MsgC(Color(255, 50, 50 + b), s .. " loading taunts failed " .. name .. ".lua\nError: " .. err .. "\n")
+			MsgC(Color(255, 50, 50 + b), s .. " loading taunts failed " .. filePath .. "\nError: " .. err .. "\n")
 		else
-			MsgC(Color(50, 255, 50 + b), s .. " loaded taunts file " .. name .. ".lua\n")
+			MsgC(Color(50, 255, 50 + b), s .. " loaded taunts file " .. filePath .. "\n")
 		end
 	end
 end
