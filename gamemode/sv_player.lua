@@ -344,6 +344,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 		end
 
 		ply.TauntsUsed = {}
+		ply.Taunting = CurTime()
 	end
 	ply:UnDisguise()
 
