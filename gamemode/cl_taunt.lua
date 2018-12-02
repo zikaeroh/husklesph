@@ -2,6 +2,8 @@
 include("sh_taunt.lua")
 
 local menu
+local lastCursorX
+local lastCursorY
 
 local gradU = surface.GetTextureID("gui/gradient_up")
 local gradD = surface.GetTextureID("gui/gradient_down")
@@ -10,6 +12,18 @@ local function colMul(color, mul)
 	color.r = math.Clamp(math.Round(color.r * mul), 0, 255)
 	color.g = math.Clamp(math.Round(color.g * mul), 0, 255)
 	color.b = math.Clamp(math.Round(color.b * mul), 0, 255)
+end
+
+local function saveCursor()
+	lastCursorX, lastCursorY = input.GetCursorPos()
+end
+
+local function restoreCursor()
+	if !lastCursorX then return end
+
+	input.SetCursorPos(lastCursorX, lastCursorY)
+	lastCursorX = nil
+	lastCursorY = nil
 end
 
 local function fillList(mlist, taunts, cat)
@@ -44,6 +58,7 @@ local function fillList(mlist, taunts, cat)
 		end
 		function but:DoClick()
 			RunConsoleCommand("ph_taunt", t.sound[math.random(#t.sound)])
+			saveCursor()
 			menu:Close()
 		end
 		mlist:AddItem(but)
@@ -105,6 +120,8 @@ local function fillCats(clist, mlist)
 end
 
 local function openTauntMenu()
+	restoreCursor()
+
 	if IsValid(menu) then
 		fillCats(menu.CatList, menu.TauntList)
 		fillList(menu.TauntList, menu.CurrentTaunts, menu.CurrentTauntCat)
@@ -163,6 +180,7 @@ local function openTauntMenu()
 	end
 	function but:DoClick()
 		RunConsoleCommand("ph_taunt_random")
+		saveCursor()
 		menu:Close()
 	end
 
