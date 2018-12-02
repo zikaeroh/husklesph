@@ -51,6 +51,7 @@ GM.PropsWinStayProps = CreateConVar("ph_props_onwinstayprops", 0, bit.bor(FCVAR_
 GM.PropsSmallSize = CreateConVar("ph_props_small_size", 200, bit.bor(FCVAR_NOTIFY), "Size that speed penalty for small size starts to apply (0 to disable)" )
 GM.PropsJumpPower = CreateConVar("ph_props_jumppower", 1.2, bit.bor(FCVAR_NOTIFY), "Jump power bonus for when props are disguised" )
 GM.PropsCamDistance = CreateConVar("ph_props_camdistance", 1, bit.bor(FCVAR_NOTIFY), "The camera distance multiplier for props when disguised")
+GM.TauntMenuPhrase = CreateConVar("ph_taunt_menu_phrase", TauntMenuPhrase, bit.bor(FCVAR_NOTIFY), "Phrase shown at the top of the taunt menu")
 
 function GM:Initialize()
 	self.RoundWaitForPlayers = CurTime()

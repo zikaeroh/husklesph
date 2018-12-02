@@ -101,3 +101,19 @@ concommand.Add("ph_taunt_random", function (ply, com, args, full)
 	if !ply.TauntsUsed then ply.TauntsUsed = {} end
 	ply.TauntsUsed[sndName] = true
 end)
+
+util.AddNetworkString("ph_set_taunt_menu_phrase")
+function GM:SetTauntMenuPhrase(phrase, ply)
+	net.Start("ph_set_taunt_menu_phrase")
+	net.WriteString(phrase)
+
+	if ply then
+		net.Send(ply)
+	else
+		net.Broadcast()
+	end
+end
+
+cvars.AddChangeCallback("ph_taunt_menu_phrase", function(convar_name, value_old, value_new)
+	(GM or GAMEMODE):SetTauntMenuPhrase(value_new)
+end)

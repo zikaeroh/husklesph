@@ -3,6 +3,7 @@
 Taunts = {}
 TauntCategories = {}
 AllowedTauntSounds = {}
+TauntMenuPhrase = "make annoying fart sounds"
 
 // display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
 local function addTaunt(name, snd, pteam, sex, cats, duration)

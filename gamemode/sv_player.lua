@@ -24,6 +24,7 @@ function GM:PlayerInitialSpawn(ply)
 end
 
 function GM:PlayerLoadedLocalPlayer(ply)
+	self:SetTauntMenuPhrase(self.TauntMenuPhrase:GetString(), ply)
 end
 
 net.Receive("clientIPE", function (len, ply)
