@@ -38,7 +38,7 @@ local function addTaunt(name, snd, pteam, sex, cats, duration)
 		sndName = string.Replace(sndName, "/", "_")
 		sndName = string.Replace(sndName, ".", "_")
 
-		Sound.Add({
+		sound.Add({
 			name = sndName,
 			channel = CHAN_AUTO,
 			level = 75,
