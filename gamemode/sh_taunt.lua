@@ -95,11 +95,11 @@ local function loadTaunts(rootFolder)
 		local b, err = pcall(f)
 
 		local s = SERVER and "Server" or "Client"
-		local b = SERVER and 90 or 0
+		local c = SERVER and 90 or 0
 		if !b then
-			MsgC(Color(255, 50, 50 + b), s .. " loading taunts failed " .. filePath .. "\nError: " .. err .. "\n")
+			MsgC(Color(255, 50, 50 + c), s .. " loading taunts failed: " .. filePath .. "\nError: " .. err .. "\n")
 		else
-			MsgC(Color(50, 255, 50 + b), s .. " loaded taunts file " .. filePath .. "\n")
+			MsgC(Color(50, 255, 50 + c), s .. " loaded taunts file: " .. filePath .. "\n")
 		end
 	end
 end

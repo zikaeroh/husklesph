@@ -6,24 +6,24 @@ function GM:CheckForNewVersion(ply)
 	local req = {}
 	req.url = url
 	req.failed = function (reason)
-		print("Couldn't get version file", reason)
+		print("Couldn't get version file.", reason)
 	end
 	req.success = function (code, body, headers)
 		local tab = util.KeyValuesToTable(body)
 		if !tab || !tab.version then
-			print("Couldn't parse version file")
+			print("Couldn't parse version file.")
 			return
 		end
 		local t = MsgClients()
 		if tab.version != GAMEMODE.Version then
-			t:Add("Out of date. ", Color(215, 20, 20))
+			t:Add("Out of date.", Color(215, 20, 20))
 		end
-		t:Add("Latest version is " .. tab.version, color_white)
+		t:Add("Latest version is " .. tab.version .. ".", color_white)
 		if tab.version != GAMEMODE.Version then
-			t:Add(". Current version is " .. tostring(GAMEMODE.Version or "error"))
-			t:Add(". Download the latest version from " .. downloadlinks)
+			t:Add(". Current version is " .. tostring(GAMEMODE.Version or "error") .. ".")
+			t:Add(". Download the latest version from: " .. downloadlinks)
 		else
-			t:Add(". Up to date")
+			t:Add(". Up to date.")
 		end
 		t:Add("\n")
 		if ply then
