@@ -14,17 +14,22 @@ end
 
 
 addHelpText("Intro", 1, [[
-Prop Hunters is a gamemode based on the classic Prop Hunt. I've added better looks, more features and lots of fixes to gameplay.
-
-
-==CONTROLS==
+== CONTROLS ==
 LEFT CLICK - Disguises as the prop you are looking at
 C - Locks your prop's rotation when disguised
-F3 - Taunt
+F3 - Taunt menu
 
-==OBJECTIVES==
+
+== OBJECTIVES ==
 The aim of the hunters is to find and kill all the props.
+Don't shoot too many actual props, as guessing incorrectly costs health!
+
 The aim of the props is to hide from the hunters and not get killed.
+
+
+== COMMANDS ==
+"ph_taunt_random" plays a random taunt.
+"ph_taunt <filename>" plays a taunt given a filename.
 ]])
 
 local function colMul(color, mul)

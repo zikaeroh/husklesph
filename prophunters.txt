@@ -1,8 +1,8 @@
 "Gamemode"
 {
 	"base"		"base"
-	"title"		"Prophunters"
+	"title"		"Prop Hunters - Huskles Edition"
 	"maps"		"^ph_"
 	"menusystem"	"1"
-	"version" 	"1.4"
+	"version" 	"v1.5.0"
 }

@@ -1,9 +1,9 @@
-GM.Name 	= "Prophunters"
-GM.Author 	= "MechanicalMind"
+GM.Name 	= "Prop Hunters - Huskles Edition"
+GM.Author 	= "Zikaeroh"
 // Credits to waddlesworth for the logo and icon
-GM.Email 	= ""
-GM.Website 	= "http://codingconcoctions.com/"
-GM.Version 	= "1.4"
+GM.Email 	= "N/A"
+GM.Website 	= "N/A"
+GM.Version 	= "v1.5.0"
 
 team.SetUp(1, "Spectators", Color(120, 120, 120))
 team.SetUp(2, "Hunters", Color(255, 150, 50))
