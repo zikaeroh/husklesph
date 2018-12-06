@@ -16,9 +16,9 @@ function GM:CheckForNewVersion(ply)
 		end
 		local t = MsgClients()
 		if tab.version != GAMEMODE.Version then
-			t:Add("Out of date.", Color(215, 20, 20))
+			t:Add("Out of date. ", Color(215, 20, 20))
 		end
-		t:Add("Latest version is " .. tab.version .. ".\n", color_white)
+		t:Add("Latest version is " .. tab.version .. ". ", color_white)
 		if tab.version != GAMEMODE.Version then
 			t:Add("Current version is " .. tostring(GAMEMODE.Version or "error") .. ".\n")
 			t:Add("Download the latest version from: " .. downloadlinks)

@@ -1,9 +1,12 @@
-GM.Name 	= "Prop Hunters - Huskles Edition"
+local tabFile = file.Read(GM.Folder .. "/prophunters.txt", "GAME") or ""
+local tab = util.KeyValuesToTable(tabFile)
+
+GM.Name 	= tab["title"] or "Prop Hunters - Huskles Edition"
 GM.Author 	= "Zikaeroh"
 // Credits to waddlesworth for the logo and icon
 GM.Email 	= "N/A"
 GM.Website 	= "N/A"
-GM.Version 	= "v1.5.0"
+GM.Version  = tab["version"] or "unknown"
 
 team.SetUp(1, "Spectators", Color(120, 120, 120))
 team.SetUp(2, "Hunters", Color(255, 150, 50))
