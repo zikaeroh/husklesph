@@ -125,6 +125,11 @@ local function openTauntMenu()
 	if IsValid(menu) then
 		fillCats(menu.CatList, menu.TauntList)
 		fillList(menu.TauntList, menu.CurrentTaunts, menu.CurrentTauntCat)
+
+		if menu:IsVisible() then
+			saveCursor()
+		end
+
 		menu:SetVisible(!menu:IsVisible())
 		return
 	end
