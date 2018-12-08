@@ -14,7 +14,7 @@ in the future.
 - Versions are now prefixed with "v" to avoid version checks failing due to floating point coercion. (Plus, they're now semver.)
 - Auto taunts are natively supported!
     - Enable with `ph_auto_taunt 1`. The default is disabled.
-    - Set `ph_auto_taunt_delay_min` and `ph_auto_taunt_delay_max` to control the frequency of auto taunts in seconds. If a player doesn't taunt (within a randomly selected time between those two values), they will be forced to taunt. The default range is `[30, 120]`.
+    - Set `ph_auto_taunt_delay_min` and `ph_auto_taunt_delay_max` to control the frequency of auto taunts in seconds. If a player doesn't taunt (within a randomly selected time between those two values), they will be forced to taunt. The default range is `[60, 120]`.
     - Set `ph_auto_taunt_props_only 0` to enable auto taunts for hunters. The default is to only auto taunt for props.
 
 ## TODO
