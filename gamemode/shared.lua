@@ -1,8 +1,8 @@
-local tabFile = file.Read(GM.Folder .. "/prophunters.txt", "GAME") or ""
+local tabFile = file.Read(GM.Folder .. "/husklesph.txt", "GAME") or ""
 local tab = util.KeyValuesToTable(tabFile)
 
 GM.Name 	= tab["title"] or "Prop Hunters - Huskles Edition"
-GM.Author 	= "Zikaeroh"
+GM.Author 	= "Zikaeroh, MechanicalMind"
 // Credits to waddlesworth for the logo and icon
 GM.Email 	= "N/A"
 GM.Website 	= "N/A"

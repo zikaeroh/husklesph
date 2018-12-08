@@ -1,4 +1,4 @@
-"Gamemode"
+"husklesph"
 {
 	"base"		"base"
 	"title"		"Prop Hunters - Huskles Edition"
