@@ -332,20 +332,20 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 		ply:EmitSound("ambient/voices/f_scream1.wav")
 	end
 
+	if ply.TauntsUsed then
+		for k, v in pairs(ply.TauntsUsed) do
+			ply:StopSound(k)
+		end
+	end
+
+	ply.TauntsUsed = {}
+	ply.TauntEnd = nil
+	ply.AutoTauntDeadline = nil
+
 	// are they a prop
 	if ply:Team() == 3 then
-
 		// set the last death award
 		self.LastPropDeath = ply
-
-		if ply.TauntsUsed then
-			for k, v in pairs(ply.TauntsUsed) do
-				ply:StopSound(k)
-			end
-		end
-
-		ply.TauntsUsed = {}
-		ply.Taunting = CurTime()
 	end
 	ply:UnDisguise()
 

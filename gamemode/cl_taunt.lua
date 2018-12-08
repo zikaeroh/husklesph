@@ -237,5 +237,8 @@ concommand.Add("ph_menu_taunt", openTauntMenu)
 net.Receive("open_taunt_menu", openTauntMenu)
 
 net.Receive("ph_set_taunt_menu_phrase", function()
-	TauntMenuPhrase = net.ReadString()
+	value_new = net.ReadString()
+	-- Prevent this from being done more than once. GMod is weird.
+	if TauntMenuPhrase == value_new then return end
+	TauntMenuPhrase = value_new
 end)

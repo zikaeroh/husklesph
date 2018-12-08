@@ -2,24 +2,39 @@ include("sh_taunt.lua")
 
 util.AddNetworkString("open_taunt_menu")
 
-concommand.Add("ph_taunt", function (ply, com, args, full)
-	if !IsValid(ply) then
-		return
+local PlayerMeta = FindMetaTable("Player")
+
+function PlayerMeta:CanTaunt()
+	if !self:Alive() then 
+		return false
 	end
 
-	if !ply:Alive() then return end
-
-	if ply.Taunting && ply.Taunting > CurTime() then
-		return
+	if self.TauntEnd && self.TauntEnd > CurTime() then
+		return false
 	end
 
-	local snd = args[1] or ""
-	if !AllowedTauntSounds[snd] then
-		return
+	return true
+end
+
+function PlayerMeta:EmitTaunt(filename, durationOverride)
+	local duration = SoundDuration(filename)
+	if filename:match("%.mp3$") then
+		duration = durationOverride or 1
 	end
 
-	local t
-	for k, v in pairs(AllowedTauntSounds[snd]) do
+	local sndName = FilenameToSoundname(filename)
+
+	self:EmitSound(sndName)
+	self.TauntEnd = CurTime() + duration + 0.1
+	self.TauntAmount = (self.TauntAmount or 0) + 1
+	self.AutoTauntDeadline = nil
+
+	if !self.TauntsUsed then self.TauntsUsed = {} end
+	self.TauntsUsed[sndName] = true
+end
+
+local function ForEachTaunt(ply, taunts, func)
+	for k, v in pairs(taunts) do
 		if v.sex && v.sex != ply.ModelSex then
 			continue
 		end
@@ -28,78 +43,49 @@ concommand.Add("ph_taunt", function (ply, com, args, full)
 			continue
 		end
 
-		t = v
+		if func(k, v) then return end
 	end
+end
+
+local function DoTaunt(ply, snd)
+	if !IsValid(ply) then return end
+	if !ply:CanTaunt() then return end
+	if !AllowedTauntSounds[snd] then return end
+
+	local t
+	ForEachTaunt(ply, AllowedTauntSounds[snd], function(k, v)
+		t = v
+		return true
+	end)
 
 	if !t then
 		return
 	end
 
-	local duration = SoundDuration(snd)
-	if snd:match("%.mp3$") then
-		duration = t.soundDurationOverride or 1
-	end
+	ply:EmitTaunt(snd, t.soundDurationOverride)
+end
 
-	-- TODO: don't repeat this code everywhere.
-	local sndName = string.Trim(snd)
-	sndName = string.Replace(sndName, "/", "_")
-	sndName = string.Replace(sndName, ".", "_")
-
-	ply:EmitSound(sndName)
-	ply.Taunting = CurTime() + duration + 0.1
-	ply.TauntAmount = (ply.TauntAmount or 0) + 1
-
-	if !ply.TauntsUsed then ply.TauntsUsed = {} end
-	ply.TauntsUsed[sndName] = true
-end)
-
-concommand.Add("ph_taunt_random", function (ply, com, args, full)
-	if !IsValid(ply) then
-		return
-	end
-
-	if !ply:Alive() then return end
-
-	if ply.Taunting && ply.Taunting > CurTime() then
-		return
-	end
+local function DoRandomTaunt(ply)
+	if !IsValid(ply) then return end
+	if !ply:CanTaunt() then return end
 
 	local potential = {}
-	for k, v in pairs(Taunts) do
-		if v.sex && v.sex != ply.ModelSex then
-			continue
-		end
-
-		if v.team && v.team != ply:Team() then
-			continue
-		end
-
+	ForEachTaunt(ply, Taunts, function(k, v)
 		table.insert(potential, v)
-	end
-
-	if #potential == 0 then 
-		return
-	end
+	end)
 
 	local t = potential[math.random(#potential)]
 	local snd = t.sound[math.random(#t.sound)]
 
-	local duration = SoundDuration(snd)
-	if snd:match("%.mp3$") then
-		duration = t.soundDurationOverride or 1
-	end
+	ply:EmitTaunt(snd, t.soundDurationOverride)
+end
 
-	-- TODO: don't repeat this code everywhere.
-	local sndName = string.Trim(snd)
-	sndName = string.Replace(sndName, "/", "_")
-	sndName = string.Replace(sndName, ".", "_")
+concommand.Add("ph_taunt", function (ply, com, args, full)
+	DoTaunt(ply, args[1] or "")
+end)
 
-	ply:EmitSound(sndName)
-	ply.Taunting = CurTime() + duration + 0.1
-	ply.TauntAmount = (ply.TauntAmount or 0) + 1
-
-	if !ply.TauntsUsed then ply.TauntsUsed = {} end
-	ply.TauntsUsed[sndName] = true
+concommand.Add("ph_taunt_random", function (ply, com, args, full)
+	DoRandomTaunt(ply)
 end)
 
 util.AddNetworkString("ph_set_taunt_menu_phrase")
@@ -116,4 +102,56 @@ end
 
 cvars.AddChangeCallback("ph_taunt_menu_phrase", function(convar_name, value_old, value_new)
 	(GM or GAMEMODE):SetTauntMenuPhrase(value_new)
+end)
+
+function GM:AutoTauntCheck()
+	if self.GameState ~= 2 then return end
+
+	local propsOnly = self.AutoTauntPropsOnly:GetBool()
+	local minDeadline = self.AutoTauntMin:GetInt()
+	local maxDeadline = self.AutoTauntMax:GetInt()
+	local badMinMax = minDeadline <= 0 || maxDeadline <= 0 || minDeadline > maxDeadline
+
+	for i, ply in ipairs(player.GetAll()) do
+		if propsOnly && ply:Team() ~= 3 then
+			ply.AutoTauntDeadline = nil
+			continue
+		end
+
+		local begin
+		if ply.AutoTauntDeadline then
+			local secsLeft = ply.AutoTauntDeadline - CurTime() 
+			if secsLeft > 0 then
+				continue 
+			end
+
+			if !ply.TauntEnd || CurTime() > ply.AutoTauntDeadline then
+				-- ply:ChatPrint("I warned you!")
+				DoRandomTaunt(ply)
+				begin = ply.TauntEnd
+			end
+		end
+		if !begin then begin = CurTime() end
+
+		if badMinMax then continue end
+
+		local delta = math.random(minDeadline, maxDeadline)
+		ply.AutoTauntDeadline = begin + delta
+		-- ply:ChatPrint("If you don't taunt within " .. tostring(delta) .. " seconds, the server will do it for you!")
+	end
+end
+
+function GM:StartAutoTauntTimer()
+	timer.Destroy("AutoTauntCheck")
+	local start = self.AutoTauntEnabled:GetBool()
+
+	if start then
+		timer.Create("AutoTauntCheck", 5, 0, function()
+			self:AutoTauntCheck()
+		end)
+	end
+end
+
+cvars.AddChangeCallback("ph_auto_taunt", function(convar_name, value_old, value_new)
+	(GM or GAMEMODE):StartAutoTauntTimer()
 end)

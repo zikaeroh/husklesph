@@ -4,5 +4,6 @@
 	"title"		"Prop Hunters - Huskles Edition"
 	"maps"		"^ph_"
 	"menusystem"	"1"
+	"workshopid"	"1585255351"
 	"version" 	"v1.5.0"
 }

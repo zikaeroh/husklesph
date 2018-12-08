@@ -5,6 +5,12 @@ TauntCategories = {}
 AllowedTauntSounds = {}
 TauntMenuPhrase = "make annoying fart sounds"
 
+function FilenameToSoundname(filename)
+	local sndName = string.Trim(filename)
+	sndName = string.Replace(sndName, "/", "_")
+	return string.Replace(sndName, ".", "_")
+end
+
 // display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
 local function addTaunt(name, snd, pteam, sex, cats, duration)
 	if !name || type(name) != "string" then return end
@@ -34,13 +40,8 @@ local function addTaunt(name, snd, pteam, sex, cats, duration)
 
 	local dur, count = 0, 0
 	for k, v in pairs(snd) do
-		-- TODO: don't repeat this code everywhere.
-		local sndName = string.Trim(v)
-		sndName = string.Replace(sndName, "/", "_")
-		sndName = string.Replace(sndName, ".", "_")
-
 		sound.Add({
-			name = sndName,
+			name = FilenameToSoundname(v),
 			channel = CHAN_AUTO,
 			level = 75,
 			sound = v

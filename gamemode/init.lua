@@ -53,6 +53,11 @@ GM.PropsJumpPower = CreateConVar("ph_props_jumppower", 1.2, bit.bor(FCVAR_NOTIFY
 GM.PropsCamDistance = CreateConVar("ph_props_camdistance", 1, bit.bor(FCVAR_NOTIFY), "The camera distance multiplier for props when disguised")
 GM.TauntMenuPhrase = CreateConVar("ph_taunt_menu_phrase", TauntMenuPhrase, bit.bor(FCVAR_NOTIFY), "Phrase shown at the top of the taunt menu")
 
+GM.AutoTauntEnabled = CreateConVar("ph_auto_taunt", 0, bit.bor(FCVAR_NOTIFY), "1 if auto taunts should be enabled")
+GM.AutoTauntMin = CreateConVar("ph_auto_taunt_delay_min", 30, bit.bor(FCVAR_NOTIFY), "Mininum time to go without taunting")
+GM.AutoTauntMax = CreateConVar("ph_auto_taunt_delay_max", 120, bit.bor(FCVAR_NOTIFY), "Maximum time to go without taunting")
+GM.AutoTauntPropsOnly = CreateConVar("ph_auto_taunt_props_only", 1, bit.bor(FCVAR_NOTIFY), "Enable auto taunt for props only")
+
 function GM:Initialize()
 	self.RoundWaitForPlayers = CurTime()
 
@@ -60,6 +65,7 @@ function GM:Initialize()
 	self:SetupStatisticsTables()
 	self:LoadMapList()
 	self:LoadBannedModels()
+	self:StartAutoTauntTimer()
 end
 
 function GM:InitPostEntity() 

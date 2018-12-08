@@ -103,6 +103,10 @@ function GM:SetupRound()
 			if ply:Team() == 2 then
 				ply:Freeze(true)
 			end
+
+			ply.TauntsUsed = {}
+			ply.TauntEnd = nil
+			ply.AutoTauntDeadline = nil
 		else
 			ply:SetNWBool("RoundInGame", false)
 		end
