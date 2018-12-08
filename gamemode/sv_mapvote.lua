@@ -41,7 +41,7 @@ function GM:ChangeMapTo(map)
 		self:SetGameState(0)
 		return
 	end
-	print("[Prophunters] Rotate changing map to " .. map)
+	print("[husklesph] Rotate changing map to " .. map)
 	local ct = ChatText()
 	ct:Add("Changing map to " .. map)
 	ct:SendAll()
@@ -63,19 +63,19 @@ local defaultMapList = {
 function GM:SaveMapList()
 
 	// ensure the folders are there
-	if !file.Exists("prophunters/","DATA") then
-		file.CreateDir("prophunters")
+	if !file.Exists("husklesph/","DATA") then
+		file.CreateDir("husklesph")
 	end
 
 	local txt = ""
 	for k, map in pairs(self.MapList) do
 		txt = txt .. map .. "\r\n"
 	end
-	file.Write("prophunters/maplist.txt", txt)
+	file.Write("husklesph/maplist.txt", txt)
 end
 
 function GM:LoadMapList() 
-	local jason = file.ReadDataAndContent("prophunters/maplist.txt")
+	local jason = file.ReadDataAndContent("husklesph/maplist.txt")
 	if jason then
 		local tbl = {}
 		local i = 1

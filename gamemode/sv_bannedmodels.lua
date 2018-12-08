@@ -23,19 +23,19 @@ end
 
 function GM:SaveBannedModels()
 	// ensure the folders are there
-	if !file.Exists("prophunters/","DATA") then
-		file.CreateDir("prophunters")
+	if !file.Exists("husklesph/","DATA") then
+		file.CreateDir("husklesph")
 	end
 
 	local txt = ""
 	for k, v in pairs(self.BannedModels) do
 		txt = txt .. v .. "\r\n"
 	end
-	file.Write("prophunters/bannedmodels.txt", txt)
+	file.Write("husklesph/bannedmodels.txt", txt)
 end
 
 function GM:LoadBannedModels() 
-	local jason = file.ReadDataAndContent("prophunters/bannedmodels.txt")
+	local jason = file.ReadDataAndContent("husklesph/bannedmodels.txt")
 	if jason then
 		local tbl = {}
 		for map in jason:gmatch("[^\r\n]+") do
@@ -45,7 +45,7 @@ function GM:LoadBannedModels()
 	else
 
 		// don't touch this
-		// use ph_bannedmodels_menu or edit data/prophunters/bannedmodels.txt
+		// use ph_bannedmodels_menu or edit data/husklesph/bannedmodels.txt
 		self.BannedModels = {
 			"models/props/cs_assault/money.mdl",
 			"models/props/cs_office/computer_mouse.mdl",

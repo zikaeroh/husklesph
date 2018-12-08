@@ -1,6 +1,6 @@
 Create a file in (if the folders don't exist, create them)
 
-	garrysmod/lua/prophunters/taunts/ 
+	garrysmod/lua/husklesph/taunts/ 
 
 called
 
@@ -10,13 +10,13 @@ replacing something with a different name (e.g. the name of your addon, your nam
 
 Place your sound files in
 
-	garrysmod/sound/prophunters/
+	garrysmod/sound/husklesph/
 
 in something.lua list your taunts in the form
 
 	addTaunt("name", {
-		"prophunters/sound1.wav", 
-		"prophunters/sound2.wav"
+		"husklesph/sound1.wav", 
+		"husklesph/sound2.wav"
 	}, "team", "gender", {"category1", "category2"}, durationOverride)
 
 each addTaunt adds one entry to the list which when clicked will randomly play one of the sound files
@@ -31,8 +31,8 @@ durationOverride is the length the taunt goes for (you must specify this for mp3
 examples
 
 	addTaunt("Farts", {
-		"prophunters/fart1.mp3",
-		"prophunters/fart2.mp3"
+		"husklesph/fart1.mp3",
+		"husklesph/fart2.mp3"
 	}, "props", "both", {"farts"}, 5) // NOTE the 5 specifying the length, this is required for mp3s
 
 	addTaunt("Get the hell out", {
