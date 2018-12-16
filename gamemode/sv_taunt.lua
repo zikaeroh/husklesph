@@ -74,6 +74,8 @@ local function DoRandomTaunt(ply)
 		table.insert(potential, v)
 	end)
 
+	if #potential == 0 then return end
+
 	local t = potential[math.random(#potential)]
 	local snd = t.sound[math.random(#t.sound)]
 
