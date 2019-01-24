@@ -327,9 +327,36 @@ function GM:PlayerDeathThink(ply)
 	end
 end
 
+local defaultDeathsound = Sound("ambient/voices/f_scream1.wav")
+local deathsoundsFile = file.Read(GM.Folder .. "/ph_deathsounds.txt", "GAME") or ""
+local deathsounds = util.KeyValuesToTable(deathsoundsFile, true, true)
+
+for _, v in pairs(deathsounds) do
+	if type(v) == "string" then
+		resource.AddFile(Sound(v))
+		continue 
+	end
+
+	for _, s in ipairs(v) do
+		resource.AddFile(Sound(s))
+	end
+end
+
+local function chooseDeathsound(key)
+	local ds = deathsounds[key]
+	if !ds then return nil end
+	if type(ds) == "string" then return ds end
+	if #ds == 0 then return nil end
+	return table.Random(ds)
+end
+
+local function randomDeathsound(ply)
+	return chooseDeathsound(ply:SteamID()) or chooseDeathsound("default") or defaultDeathsound
+end
+
 function GM:DoPlayerDeath(ply, attacker, dmginfo)
 	if ply:IsDisguised() && ply:Team() == 3 then
-		ply:EmitSound("ambient/voices/f_scream1.wav")
+		ply:EmitSound(randomDeathsound(ply))
 	end
 
 	if ply.TauntsUsed then

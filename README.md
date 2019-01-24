@@ -16,6 +16,26 @@ in the future.
     - Enable with `ph_auto_taunt 1`. The default is disabled.
     - Set `ph_auto_taunt_delay_min` and `ph_auto_taunt_delay_max` to control the frequency of auto taunts in seconds. If a player doesn't taunt (within a randomly selected time between those two values), they will be forced to taunt. The default range is `[60, 120]`.
     - Set `ph_auto_taunt_props_only 0` to enable auto taunts for hunters. The default is to only auto taunt for props.
+- Prop deathsounds can be customized per-user by placing a key-value file named `ph_deathsounds.txt` into the `husklesph` directory. For example:
+```
+"PH_Deathsounds"
+{
+    "default"    "ambient/voices/f_scream1.wav"
+    "STEAM_0:1:12345678"
+    {
+        "1"    "vo/npc/male01/hacks01.wav"
+        "2"    "vo/npc/male01/hacks02.wav"
+        "3"    "vo/npc/male01/thehacks01.wav"
+        "4"    "vo/npc/male01/thehacks02.wav"
+    }
+    "STEAM_0:1:87654321" "vo/npc/male01/hacks01.wav"
+    "STEAM_0:1:13467928"
+    {
+        "1"    "vo/npc/male01/hacks01.wav"
+        "2"    "vo/npc/male01/hacks02.wav"
+    }
+}
+```
 
 ## TODO
 
