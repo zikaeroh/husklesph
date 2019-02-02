@@ -75,8 +75,7 @@ function GM:DrawGameHUD()
 	self:DrawHealth(ply)
 
 	if ply != LocalPlayer() then
-		local col = ply:GetPlayerColor()
-		col = Color(col.r * 255, col.y * 255, col.z * 255)
+		local col = team.GetColor(ply:Team())
 		draw.ShadowText(ply:Nick(), "RobotoHUD-30", ScrW() / 2, ScrH() - 4, col, 1, 4)
 	end
 
@@ -95,8 +94,7 @@ function GM:DrawGameHUD()
 		end
 		if IsValid(self.LastLooked) && self.LookedFade + 2 > CurTime() then
 			local name = self.LastLooked:Nick() or "error"
-			local col = self.LastLooked:GetPlayerColor() or Vector()
-			col = Color(col.x * 255, col.y * 255, col.z * 255)
+			local col = table.Copy(team.GetColor(self.LastLooked:Team()))
 			col.a = (1 - (CurTime() - self.LookedFade) / 2) * 255
 			draw.ShadowText(name, "RobotoHUD-20", ScrW() / 2, ScrH() / 2 + 80, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, Color(0, 0, 0, col.a))
 		end

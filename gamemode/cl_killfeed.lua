@@ -19,8 +19,7 @@ net.Receive("kill_feed_add", function (len)
 	t.time = CurTime()
 	t.player = ply
 	t.playerName = ply:Nick()
-	local col = ply:GetPlayerColor()
-	t.playerColor = Color(col.x * 255, col.y * 255, col.z * 255)
+	t.playerColor = team.GetColor(ply:Team())
 	t.attacker = attacker
 	t.damageType = damageType
 	if bit.band(damageType, DMG_FALL) == DMG_FALL then
@@ -62,8 +61,7 @@ net.Receive("kill_feed_add", function (len)
 	end
 	if IsValid(attacker) && attacker:IsPlayer() && attacker != ply then
 		t.attackerName = attacker:Nick()
-		local col = attacker:GetPlayerColor()
-		t.attackerColor = Color(col.x * 255, col.y * 255, col.z * 255)
+		t.attackerColor = team.GetColor(attacker:Team())
 		Msg(attacker:Nick() .. " " .. (t.message or "killed") .. " " .. ply:Nick() .. "\n")
 	else
 		Msg(ply:Nick() .. " " .. (t.messageSelf or "killed themself") .. "\n")

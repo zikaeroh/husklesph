@@ -35,8 +35,7 @@ function PANEL:Paint( w, h )
 	-- local volume = (math.sin(CurTime()) / 2 + 0.5)
 	local volume = self.ply:VoiceVolume()
 
-	local col = self.ply:GetPlayerColor()
-	col = Color(col.r * 255, col.y * 255, col.z * 255)
+	col = team.GetColor(self.ply:Team())
 
 	surface.SetDrawColor(0, 0, 0, 255)
 	surface.DrawRect(0, 0, w, h)
