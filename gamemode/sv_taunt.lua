@@ -50,10 +50,16 @@ end
 local function DoTaunt(ply, snd)
 	if !IsValid(ply) then return end
 	if !ply:CanTaunt() then return end
-	if !AllowedTauntSounds[snd] then return end
+	
+	local ats = AllowedTauntSounds[snd]
+	if !ats then return end
 
 	local t
-	ForEachTaunt(ply, AllowedTauntSounds[snd], function(k, v)
+	ForEachTaunt(ply, ats, function(k, v)
+		if !PlayerModelTauntAllowed(ply, v.allowedModels) then 
+			return false
+		end
+
 		t = v
 		return true
 	end)
@@ -71,7 +77,9 @@ local function DoRandomTaunt(ply)
 
 	local potential = {}
 	ForEachTaunt(ply, Taunts, function(k, v)
-		table.insert(potential, v)
+		if PlayerModelTauntAllowed(ply, v.allowedModels) then 
+			table.insert(potential, v)
+		end
 	end)
 
 	if #potential == 0 then return end

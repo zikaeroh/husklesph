@@ -38,6 +38,7 @@ in the future.
 ```
 - The `ph_endround` command forces a the round to end on a tie.
 - Team colors and player colors should be consistent and not change when another mod changes the player model/color.
+- Taunts can be restricted to a specific player model. See the taunt docs for more info.
 
 ## TODO
 

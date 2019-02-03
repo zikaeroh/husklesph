@@ -43,6 +43,11 @@ local function fillList(mlist, taunts, cat)
 		if t.team && LocalPlayer():Team() != t.team then
 			continue
 		end
+
+		if !PlayerModelTauntAllowed(LocalPlayer(), t.allowedModels) then 
+			continue
+		end
+
 		local but = vgui.Create("DButton")
 		but:SetTall(draw.GetFontHeight("RobotoHUD-L15") * 1.0)
 		but:SetText("")
@@ -110,6 +115,11 @@ local function fillCats(clist, mlist)
 			if t.team && LocalPlayer():Team() != t.team then
 				continue
 			end
+
+			if !PlayerModelTauntAllowed(LocalPlayer(), t.allowedModels) then 
+				continue
+			end
+
 			c = c + 1
 		end
 		if c > 0 then

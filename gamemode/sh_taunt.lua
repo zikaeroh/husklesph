@@ -11,8 +11,34 @@ function FilenameToSoundname(filename)
 	return string.Replace(sndName, ".", "_")
 end
 
+function PlayerModelTauntAllowed(ply, whitelist)
+	if whitelist == nil then return true end
+
+	local mod = ply:GetModel()
+	mod = player_manager.TranslateToPlayerModelName(mod)
+	print(mod)
+
+	local models = player_manager.AllValidModels()
+
+	for _, v in pairs(whitelist) do
+		v = string.lower(v)
+		print(1, v)
+
+		if !models[v] then
+			-- v was not a name, so check it as a path
+			v = player_manager.TranslateToPlayerModelName(v)
+		end
+
+		print(2, v)
+
+		if mod == v then return true end
+	end
+
+	return false
+end
+
 // display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
-local function addTaunt(name, snd, pteam, sex, cats, duration)
+local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
 	if !name || type(name) != "string" then return end
 	if type(snd) != "table" then snd = {tostring(snd)} end
 	if #snd == 0 then error("No sounds for " .. name) return end
@@ -37,6 +63,7 @@ local function addTaunt(name, snd, pteam, sex, cats, duration)
 		end
 	end
 	t.name = name
+	t.allowedModels = allowedModels
 
 	local dur, count = 0, 0
 	for k, v in pairs(snd) do

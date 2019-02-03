@@ -17,7 +17,7 @@ in something.lua list your taunts in the form
 	addTaunt("name", {
 		"husklesph/sound1.wav", 
 		"husklesph/sound2.wav"
-	}, "team", "gender", {"category1", "category2"}, durationOverride)
+	}, "team", "gender", {"category1", "category2"}, durationOverride, allowedModels)
 
 each addTaunt adds one entry to the list which when clicked will randomly play one of the sound files
 
@@ -27,6 +27,7 @@ team is the team it should belong to (props or hunters)
 gender is the gender of the voice (male, female or both)
 category is the categories the taunt should belong to (all categories should be camelCase and not contain spaces)
 durationOverride is the length the taunt goes for (you must specify this for mp3)
+allowedModels is a table of player model names or paths which should have access to the taunt. If nil (or not specified), all may access the taunt.
 
 examples
 
