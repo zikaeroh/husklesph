@@ -35,13 +35,7 @@ end
 
 local function ForEachTaunt(ply, taunts, func)
 	for k, v in pairs(taunts) do
-		if v.sex && v.sex != ply.ModelSex then
-			continue
-		end
-
-		if v.team && v.team != ply:Team() then
-			continue
-		end
+		if !TauntAllowedForPlayer(ply, v) then continue end
 
 		if func(k, v) then return end
 	end
@@ -56,10 +50,6 @@ local function DoTaunt(ply, snd)
 
 	local t
 	ForEachTaunt(ply, ats, function(k, v)
-		if !PlayerModelTauntAllowed(ply, v.allowedModels) then 
-			return false
-		end
-
 		t = v
 		return true
 	end)
@@ -77,9 +67,7 @@ local function DoRandomTaunt(ply)
 
 	local potential = {}
 	ForEachTaunt(ply, Taunts, function(k, v)
-		if PlayerModelTauntAllowed(ply, v.allowedModels) then 
-			table.insert(potential, v)
-		end
+		table.insert(potential, v)
 	end)
 
 	if #potential == 0 then return end

@@ -16,18 +16,14 @@ function PlayerModelTauntAllowed(ply, whitelist)
 
 	local mod = ply:GetModel()
 	mod = player_manager.TranslateToPlayerModelName(mod)
-	print("mod", mod)
 
 	local models = player_manager.AllValidModels()
 
 	for _, v in pairs(whitelist) do
-		print("v", v)
-
 		if !models[v] then
 			-- v was not a name, so check it as a path
 			v = string.lower(v)
 			v = player_manager.TranslateToPlayerModelName(v)
-			print("checking path, v", v)
 		end
 
 		if mod == v then return true end
@@ -36,22 +32,59 @@ function PlayerModelTauntAllowed(ply, whitelist)
 	return false
 end
 
+local function teamNameToNum(pteam)
+	pteam = pteam:lower()
+	if pteam == "prop" || pteam == "props" then
+		return 3
+	elseif pteam == "hunter" || pteam == "hunters" then
+		return 2
+	end
+	return nil
+end
+
+local function teamNameTableToNumTable(pteams)
+	local ret = {}
+	for i, pteam in ipairs(pteams) do
+		ret[i] = teamNameToNum(pteam)
+	end
+	return ret
+end
+
+function TauntAllowedForPlayer(ply, tauntTable)
+	if tauntTable.sex then
+		if GAMEMODE && GAMEMODE.PlayerModelSex then
+			if tauntTable.sex ~= GAMEMODE.PlayerModelSex then
+				return false
+			end
+		elseif tauntTable.sex ~= ply.ModelSex then
+			return false
+		end
+	end
+
+	if type(tauntTable.team) == "table" then
+		if !table.HasValue(tauntTable.team, ply:Team()) then
+			return false
+		end
+	elseif tauntTable.team ~= ply:Team() then
+		return false
+	end
+
+	return PlayerModelTauntAllowed(ply, tauntTable.allowedModels)
+end
+
 // display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
 local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
-	if !name || type(name) != "string" then return end
-	if type(snd) != "table" then snd = {tostring(snd)} end
+	if !name || type(name) ~= "string" then return end
+	if type(snd) ~= "table" then snd = {tostring(snd)} end
 	if #snd == 0 then error("No sounds for " .. name) return end
 
 	local t = {}
 	t.sound = snd
 	t.categories = cats
 	if type(pteam) == "string" then
-		pteam = pteam:lower()
-		if pteam == "prop" || pteam == "props" then
-			t.team = 3
-		elseif pteam == "hunter" || pteam == "hunters" then
-			t.team = 2
-		end
+		t.team = teamNameToNum(pteam)
+	elseif type(pteam) == "table" then
+		t.team = teamNameTableToNumTable(pteam)
 	else
 		t.team = tonumber(pteam)
 	end

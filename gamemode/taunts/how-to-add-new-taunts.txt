@@ -23,7 +23,7 @@ each addTaunt adds one entry to the list which when clicked will randomly play o
 
 name is the name of your sound
 sound1.wav is the path to your sound file (don't include sound/)
-team is the team it should belong to (props or hunters)
+team is the team it should belong to (props or hunters); may be a list of teams
 gender is the gender of the voice (male, female or both)
 category is the categories the taunt should belong to (all categories should be camelCase and not contain spaces)
 durationOverride is the length the taunt goes for (you must specify this for mp3)
