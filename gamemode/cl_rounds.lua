@@ -60,7 +60,7 @@ net.Receive("round_victor", function (len)
 		tab.playerAwards[k] = {
 			player = v,
 			name = name,
-			color = Color(col.x * 255, col.y * 255, col.z * 255)	
+			color = team.GetColor(v:Team())
 		}
 	end
 
