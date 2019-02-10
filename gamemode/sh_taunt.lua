@@ -16,20 +16,16 @@ function PlayerModelTauntAllowed(ply, whitelist)
 
 	local mod = ply:GetModel()
 	mod = player_manager.TranslateToPlayerModelName(mod)
-	print(mod)
 
 	local models = player_manager.AllValidModels()
 
 	for _, v in pairs(whitelist) do
 		v = string.lower(v)
-		print(1, v)
 
 		if !models[v] then
 			-- v was not a name, so check it as a path
 			v = player_manager.TranslateToPlayerModelName(v)
 		end
-
-		print(2, v)
 
 		if mod == v then return true end
 	end
