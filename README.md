@@ -36,9 +36,10 @@ in the future.
     }
 }
 ```
-- The `ph_endround` command forces a the round to end on a tie.
+- The `ph_endround` command forces a round to end on a tie.
 - Team colors and player colors should be consistent and not change when another mod changes the player model/color.
 - Taunts can be restricted to a specific player model. See the taunt docs for more info.
+- All (useful) commands and convars have ULX commands; this is not yet in this repo but comes in the Steam workshop item.
 
 ## TODO
 
@@ -49,5 +50,4 @@ in the future.
     - There's a lot of oddity in this codebase, along with loads of dead code copied from other gamemodes.
 - Improve disguising for large props.
     - The reach of a large prop isn't always far enough to be able to change into something else.
-- ULX support.
 - Allow the builtin mapvote system to be swapped out for a more common one.

@@ -35,6 +35,7 @@ include("sv_mapvote.lua")
 include("sv_bannedmodels.lua")
 include("sv_version.lua")
 
+-- NOTE: Make sure to sync default changes over to ULX.
 GM.VoiceHearTeam = CreateConVar("ph_voice_hearotherteam", 0, bit.bor(FCVAR_NOTIFY), "Can we hear the voices of opposing teams" )
 GM.VoiceHearDead = CreateConVar("ph_voice_heardead", 1, bit.bor(FCVAR_NOTIFY), "Can we hear the voices of dead players and spectators" )
 GM.RoundLimit = CreateConVar("ph_roundlimit", 10, bit.bor(FCVAR_NOTIFY), "Number of rounds before mapvote" )
