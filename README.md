@@ -1,8 +1,12 @@
 # Prop Hunters - Huskles Edition
 
-This is a fork of MechanicalMind's Prop Hunters, intended to fix a few bugs and add a few features.
+This is a fork of [MechanicalMind's Prop Hunters](https://github.com/MechanicalMind/prophunters),
+intended to fix a few bugs and add a few features.
 For now, things are backwards compatible with the original gamemode, but I may make breaking changes
 in the future.
+
+This is not shown as a fork in GitHub; I have unconnected them to make the search box work.
+Once GitHub allows forked to be searched, I'll fix up the repo to point back upstream.
 
 ## Improvements
 
