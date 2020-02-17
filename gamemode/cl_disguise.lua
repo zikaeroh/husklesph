@@ -57,8 +57,8 @@ end
 function GM:RenderDisguiseHalo()
 	local client = LocalPlayer()
 	if client:Team() == 3 then
-		local candisguise, target = self:PlayerCanDisguiseCurrentTarget(client)
-		if candisguise then
+		local canDisguise, target = self:PlayerCanDisguiseCurrentTarget(client)
+		if canDisguise then
 			local col = Color(50, 220, 50)
 			local hullxy, hullz = target:GetPropSize()
 			if !client:CanFitHull(hullxy, hullxy, hullz) then

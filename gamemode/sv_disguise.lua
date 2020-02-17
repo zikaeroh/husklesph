@@ -4,8 +4,8 @@ local PlayerMeta = FindMetaTable("Player")
 local EntityMeta = FindMetaTable("Entity")
 
 function GM:PlayerDisguise(ply)
-	local candisguise, target = self:PlayerCanDisguiseCurrentTarget(ply)
-	if candisguise then
+	local canDisguise, target = self:PlayerCanDisguiseCurrentTarget(ply)
+	if canDisguise then
 		if ply.LastDisguise and ply.LastDisguise + 1 > CurTime() then
 			return
 		end
