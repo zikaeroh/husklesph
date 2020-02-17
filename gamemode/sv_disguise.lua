@@ -4,21 +4,12 @@ local PlayerMeta = FindMetaTable("Player")
 local EntityMeta = FindMetaTable("Entity")
 
 function GM:PlayerDisguise(ply)
-
-	if ply:Team() == 3 then
-		local tr = ply:GetPropEyeTrace()
-		if IsValid(tr.Entity) then
-			if tr.HitPos:Distance(tr.StartPos) < 100 then
-				if ply:CanDisguiseAsProp(tr.Entity) then
-					if ply.LastDisguise && ply.LastDisguise + 1 > CurTime() then
-						return
-					end
-					ply:DisguiseAsProp(tr.Entity)
-				end
-			else
-				-- ply:ChatPrint("too far " .. math.floor(tr.HitPos:Distance(tr.StartPos)))
-			end
+	local CanDisguise, Target = self:PlayerCanDisguiseCurrentTarget(ply)
+	if CanDisguise then
+		if ply.LastDisguise && ply.LastDisguise + 1 > CurTime() then
+			return
 		end
+		ply:DisguiseAsProp(Target)
 	end
 end
 

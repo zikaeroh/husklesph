@@ -57,19 +57,16 @@ end
 function GM:RenderDisguiseHalo()
 	local client = LocalPlayer()
 	if client:Team() == 3 then
-		local tr = client:GetPropEyeTrace()
-		if IsValid(tr.Entity) then
-			if tr.HitPos:Distance(tr.StartPos) < 100 then
-				if client:CanDisguiseAsProp(tr.Entity) then
-					local col = Color(50, 220, 50)
-					local hullxy, hullz = tr.Entity:GetPropSize()
-					if !client:CanFitHull(hullxy, hullxy, hullz) then
-						col = Color(220, 50, 50)
-					end
-					halo.Add({tr.Entity}, col, 2, 2, 2, true, true)
-				end
+		local CanDisguise, Target = self:PlayerCanDisguiseCurrentTarget(client)
+		if CanDisguise then
+			local col = Color(50, 220, 50)
+			local hullxy, hullz = Target:GetPropSize()
+			if !client:CanFitHull(hullxy, hullxy, hullz) then
+				col = Color(220, 50, 50)
 			end
+			halo.Add({Target}, col, 2, 2, 2, true, true)
 		end
+
 		local tab = {}
 		for k, ply in pairs(player.GetAll()) do
 			if ply != client && ply:Team() == 3 && ply:IsDisguised() then
@@ -80,5 +77,4 @@ function GM:RenderDisguiseHalo()
 		end
 		halo.Add(tab, team.GetColor(3), 2, 2, 2, true, false)
 	end
-
 end
