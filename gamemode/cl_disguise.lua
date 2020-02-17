@@ -57,19 +57,19 @@ end
 function GM:RenderDisguiseHalo()
 	local client = LocalPlayer()
 	if client:Team() == 3 then
-		local CanDisguise, Target = self:PlayerCanDisguiseCurrentTarget(client)
-		if CanDisguise then
+		local candisguise, target = self:PlayerCanDisguiseCurrentTarget(client)
+		if candisguise then
 			local col = Color(50, 220, 50)
-			local hullxy, hullz = Target:GetPropSize()
+			local hullxy, hullz = target:GetPropSize()
 			if !client:CanFitHull(hullxy, hullxy, hullz) then
 				col = Color(220, 50, 50)
 			end
-			halo.Add({Target}, col, 2, 2, 2, true, true)
+			halo.Add({target}, col, 2, 2, 2, true, true)
 		end
 
 		local tab = {}
 		for k, ply in pairs(player.GetAll()) do
-			if ply != client && ply:Team() == 3 && ply:IsDisguised() then
+			if ply != client and ply:Team() == 3 and ply:IsDisguised() then
 				if IsValid(ply.PropMod) then
 					table.insert(tab, ply.PropMod)
 				end
