@@ -126,7 +126,7 @@ function GM:PlayerCanDisguiseCurrentTarget(ply)
 			local testPos = Vector(tr.StartPos.x, tr.StartPos.y, 0)
 			local hitPosition = Vector(tr.HitPos.x, tr.HitPos.y, 0)
 			local hitZ = tr.HitPos.z
-			local propCurC = ply:GetPos().z
+			local propCurZ = ply:GetPos().z
 			local propMaxZ = ply:OBBMaxs().z + propCurZ
 			local propMinZ = ply:OBBMins().z + propCurZ
 			local withinZRange = hitZ >= propMinZ - verticalLeniency && hitZ <= propMaxZ + verticalLeniency
