@@ -112,3 +112,32 @@ end
 function PlayerMeta:DisguiseRotationLocked()
 	return self:GetNWBool("disguiseRotationLock")
 end
+
+function GM:PlayerCanDisguiseCurrentTarget(ply)
+	if !IsValid(ply) then return false, nil end
+	
+	local horizLeniency = 50
+	local minHLeniency = 100
+	local verticalLeniency = 100	
+	
+	if ply:Team() == 3 then
+		local tr = ply:GetPropEyeTrace()
+		if IsValid(tr.Entity) then
+			local testPos = Vector(tr.StartPos.x, tr.StartPos.y, 0)
+			local hitPosition = Vector(tr.HitPos.x, tr.HitPos.y, 0)
+			local hitZ = tr.HitPos.z
+			local propCurZ = ply:GetPos().z
+			local propMaxZ = ply:OBBMaxs().z + propCurZ
+			local propMinZ = ply:OBBMins().z + propCurZ
+			local withinZRange = hitZ >= propMinZ - verticalLeniency && hitZ <= propMaxZ + verticalLeniency
+			local propXY, propZ = ply:GetPropSize()
+			local withinHorizRange = hitPosition:Distance(testPos) < math.max(propXY + horizLeniency, minHLeniency)
+			if withinHorizRange and withinZRange then
+				if ply:CanDisguiseAsProp(tr.Entity) then
+					return true, tr.Entity
+				end	
+			end
+		end
+	end
+	return false, nil
+end
