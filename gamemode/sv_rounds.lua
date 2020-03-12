@@ -372,14 +372,6 @@ function GM:DoRoundDeaths(ply, attacker)
 
 end
 
-function PlayerMeta:SetScore(score)
-	self:SetNWInt("MelonScore", score)
-end
-
-function PlayerMeta:GetScore()
-	return self:GetNWInt("MelonScore") or 0
-end
-
 local function ForceEndRound(ply, command, args)
    -- ply is nil on dedicated server console
     if (not IsValid(ply)) or ply:IsAdmin() or ply:IsSuperAdmin() or cvars.Bool("sv_cheats", 0) then

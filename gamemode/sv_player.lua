@@ -4,8 +4,6 @@ local EntityMeta = FindMetaTable("Entity")
 function GM:PlayerInitialSpawn(ply)
 	self:RoundsSetupPlayer(ply)
 
-	ply:SetMoney(10000)
-
 	self:TeamsSetupPlayer(ply)
 
 	if self:GetGameState() != 0 then
@@ -219,31 +217,6 @@ function GM:PlayerDeathSound()
 	return true
 end
 
-util.AddNetworkString("heist_money")
-function PlayerMeta:SetMoney(money)
-	self.Money = money
-	net.Start("heist_money")
-	net.WriteDouble(self.Money or 0)
-	net.Send(self)
-end
-
-function PlayerMeta:GetMoney()
-	return self.Money or 0
-end
-
-function PlayerMeta:AddMoney(money)
-	self:SetMoney(self:GetMoney() + money)
-end
-
-function PlayerMeta:TakeMoney(amount)
-	if self:GetMoney() >= amount then
-		self:SetMoney(self:GetMoney() - amount)
-		return true
-	end
-	return false
-end
-
-
 function GM:PlayerSelectSpawn( pl )
 
 	local spawnPoints = {}
@@ -419,8 +392,6 @@ function GM:PlayerDeath(ply, inflictor, attacker )
 	// time until player can spectate another player
 	ply.SpectateTime = CurTime() + 2
 
-	if IsValid(attacker) && attacker:IsPlayer() && attacker != ply then
-		attacker:AddMoney(100)
 	end
 end
 

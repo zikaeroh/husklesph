@@ -70,10 +70,6 @@ net.Receive("round_victor", function (len)
 	end)
 end)
 
-function PlayerMeta:GetScore()
-	return self:GetNWInt("MelonScore") or 0
-end
-
 net.Receive("gamerules", function ()
 
 	local settings = {}
