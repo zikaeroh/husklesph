@@ -392,7 +392,6 @@ function GM:PlayerDeath(ply, inflictor, attacker )
 	// time until player can spectate another player
 	ply.SpectateTime = CurTime() + 2
 
-	end
 end
 
 
