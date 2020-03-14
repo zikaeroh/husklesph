@@ -4,7 +4,6 @@ include("cl_ragdoll.lua")
 include("cl_chattext.lua")
 include("cl_rounds.lua")
 include("cl_hud.lua")
-include("cl_player.lua")
 include("cl_scoreboard.lua")
 include("cl_spectate.lua")
 include("cl_health.lua")
@@ -18,20 +17,9 @@ include("cl_wraptext.lua")
 include("cl_mapvote.lua")
 include("cl_bannedmodels.lua")
 
-function GM:Initialize() 
-end
-
 function GM:InitPostEntity()
 	net.Start("clientIPE")
 	net.SendToServer()
-end
-
-function GM:Think()
-end
-
-
-function GM:EntityRemoved(ent)
-
 end
 
 function GM:PostDrawViewModel( vm, ply, weapon )
@@ -58,26 +46,9 @@ function GM:RenderScene( origin, angles, fov )
 	end
 end
 
-
-function GM:PostDrawTranslucentRenderables()
-
-end
-function GM:DrawMonitors()
-end
-
-function GM:PreDrawTranslucentRenderables()
-
-end
-
 function GM:PreDrawHalos()
 	self:RenderDisguiseHalo()
 end
-
-
-function GM:OnReloaded()
-end
-
-
 
 local function lerp(from, to, step)
 	if from < to then
@@ -133,10 +104,6 @@ function GM:ShouldDrawLocalPlayer()
 	return false
 end
 
-function GM:CreateMove( cmd )
-
-end
-
 net.Receive("hull_set", function (len)
 	local ply = net.ReadEntity()
 	if !IsValid(ply) then return end
@@ -150,9 +117,6 @@ end)
 
 function GM:RenderScene()
 	self:RenderDisguises()
-end
-
-function GM:PostDrawEffects()
 end
 
 function GM:EntityRemoved(ent)

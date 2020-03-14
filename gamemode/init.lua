@@ -88,20 +88,9 @@ function GM:Think()
 	self:SpectateThink()
 end
 
-function GM:ShutDown()
-end
-
 function GM:PlayerNoClip( ply )
 	timer.Simple(0, function () ply:CalculateSpeed() end)
 	return ply:IsSuperAdmin() || ply:GetMoveType() == MOVETYPE_NOCLIP
-end
-
-function GM:OnEndRound()
-
-end
-
-function GM:OnStartRound()
-	
 end
 
 function GM:EntityTakeDamage( ent, dmginfo )
@@ -144,9 +133,6 @@ function file.ReadDataAndContent(path)
 	if f then return f end
 	f = file.Read(GAMEMODE.Folder .. "/content/data/" .. path, "GAME")
 	return f
-end
-
-function GM:OnReloaded()
 end
 
 function GM:CleanupMap()

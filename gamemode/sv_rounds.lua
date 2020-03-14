@@ -150,7 +150,6 @@ function GM:StartRound()
 	print("Round time is " .. (self.RoundSettings.RoundTime / 60) .. " (" .. c .. " props)")
 
 	self:NetworkGameSettings()
-	hook.Run("OnStartRound")
 	self:SetGameState(2)
 
 	local ct = ChatText()
@@ -283,7 +282,6 @@ function GM:EndRound(reason)
 		else
 		end
 	end
-	hook.Run("OnEndRound", self.Rounds)
 	self:SetGameState(3)
 end
 
