@@ -32,13 +32,6 @@ net.Receive("clientIPE", function (len, ply)
 	end
 end)
 
-function GM:PlayerConnect(name, ip)
-
-end
-
-function GM:PlayerAuthed(ply)
-end
-
 function GM:PlayerDisconnected(ply)
 	ply:SetTeam(2)
 end
@@ -60,7 +53,6 @@ function GM:PlayerSpawn( ply )
 	ply:SetHMaxHealth(100)
 	ply:SetHealth(ply:GetHMaxHealth())
 
-	-- ply:SetCustomCollisionCheck(true)
 	GAMEMODE:PlayerSetNewHull(ply)
 
 	self:PlayerSetupHands(ply)
@@ -205,12 +197,6 @@ function GM:PlayerSetModel( ply )
 	net.Start("player_model_sex")
 	net.WriteString(playerModel.sex)
 	net.Send(ply)
-end
-
-function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
-end
-
-function GM:ScaleNPCDamage( npc, hitgroup, dmginfo )
 end
 
 function GM:PlayerDeathSound()
@@ -394,10 +380,6 @@ function GM:PlayerDeath(ply, inflictor, attacker )
 
 end
 
-
-function GM:PlayerSwitchWeapon(ply, oldwep, newwep)
-end
-
 function GM:KeyPress(ply, key)
 	if ply:Alive() then
 		if key == IN_ATTACK then
@@ -417,29 +399,6 @@ end
 function GM:PlayerShouldTaunt( ply, actid )
 	return false
 end
-
-function GM:CanPlayerSuicide(ply)
-	return true
-end
-
-function GM:PlayerSay( ply, text, team)
-	if !IsValid(ply) then
-		return true
-	end
-
-	-- local ct = ChatText()
-	-- if !ply:Alive() then
-	-- 	ct:Add("[DEAD] ", Color(200, 20, 20))
-	-- end
-	-- local col = ply:GetPlayerColor()
-	-- ct:Add(ply:Nick(), Color(col.x * 255, col.y * 255, col.z * 255))
-	-- ct:Add(": " .. text, color_white)
-	-- ct:SendAll()
-	-- Msg(ply:Nick() .. ": " .. text .. "\n")
-	-- return false
-	return true
-end
-
 
 function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, speaker )
 	if !IsValid(speaker) then return false end

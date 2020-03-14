@@ -12,13 +12,6 @@ team.SetUp(1, "Spectators", Color(120, 120, 120))
 team.SetUp(2, "Hunters", Color(255, 150, 50))
 team.SetUp(3, "Props", Color(50, 150, 255))
 
-function GM:ShouldCollide(ent1, ent2)
-	if !IsValid(ent1) then return true end
-	if !IsValid(ent2) then return true end
-
-	return true
-end
-
 function GM:PlayerSetNewHull(ply, s, hullz, duckz)
 	self:PlayerSetHull(ply, s, s, hullz, duckz)
 end

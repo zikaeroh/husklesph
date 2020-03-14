@@ -91,10 +91,6 @@ end
 function GM:ShutDown()
 end
 
-function GM:AllowPlayerPickup( ply, ent )
-	return true
-end
-
 function GM:PlayerNoClip( ply )
 	timer.Simple(0, function () ply:CalculateSpeed() end)
 	return ply:IsSuperAdmin() || ply:GetMoveType() == MOVETYPE_NOCLIP

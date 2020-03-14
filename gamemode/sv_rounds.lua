@@ -283,7 +283,6 @@ function GM:EndRound(reason)
 		else
 		end
 	end
-	self:AddRoundStatistic(self:GetStateRunningTime(), #self:GetPlayingPlayers())
 	hook.Run("OnEndRound", self.Rounds)
 	self:SetGameState(3)
 end
