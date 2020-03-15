@@ -27,21 +27,6 @@ function draw.ShadowText(n, f, x, y, c, px, py, shadowColor)
 	draw.SimpleText(n, f, x, y, c, px, py)
 end
 
-function draw.EasyPNG(path, x, y, w, h, col)
-	surface.SetMaterial(Material(path, "noclamp"))
-	if col then
-		surface.SetDrawColor(col.r, col.g, col.b, col.a)
-	else
-		surface.SetDrawColor(255, 255, 255, 255)
-	end
-	surface.DrawTexturedRect(x, y, w, h)
-end
-
-local function translate(name)
-	if name == "weapon_physcannon" then return "Gravity Gun" end
-	return language.GetPhrase(name)
-end
-
 function GM:HUDPaint()
 	if LocalPlayer():Alive() then
 	end
@@ -136,13 +121,6 @@ function GM:DrawGameHUD()
 	end
 end
 
-
-local tex = surface.GetTextureID("mech/ring")
-local ringThin = surface.GetTextureID("mech/ring_thin")
-local matWhite = Material( "model_color" )
-local rt_Store = render.GetScreenEffectTexture( 0 )
-local mat_Copy = Material( "pp/copy" )
-
 local polyTex = surface.GetTextureID("VGUI/white.vmt")
 
 local function drawPoly(x, y, w, h, percent)
@@ -212,7 +190,6 @@ function GM:DrawHealth(ply)
 	render.SetBlend( 0 )
 
 	render.OverrideDepthEnable( true, false )
-	-- render.SetMaterial(matWhite)
 	-- render.DrawScreenQuadEx(tx, ty, tw, th)
 
 	surface.SetDrawColor(26, 120, 245, 1)
@@ -291,9 +268,6 @@ function GM:DrawRoundTimer()
 	end
 end
 
-local polyMat = Material("VGUI/white.vmt")
-function GM:RenderScreenspaceEffects()
-end
 function GM:PreDrawHUD()
 	local client = LocalPlayer()
 	if !client:Alive() then

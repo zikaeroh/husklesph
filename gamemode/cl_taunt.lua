@@ -5,9 +5,6 @@ local menu
 local lastCursorX
 local lastCursorY
 
-local gradU = surface.GetTextureID("gui/gradient_up")
-local gradD = surface.GetTextureID("gui/gradient_down")
-
 local function colMul(color, mul)
 	color.r = math.Clamp(math.Round(color.r * mul), 0, 255)
 	color.g = math.Clamp(math.Round(color.g * mul), 0, 255)

@@ -365,10 +365,6 @@ function GM:RoundsThink()
 	end
 end
 
-function GM:DoRoundDeaths(ply, attacker)
-
-end
-
 local function ForceEndRound(ply, command, args)
    -- ply is nil on dedicated server console
     if (not IsValid(ply)) or ply:IsAdmin() or ply:IsSuperAdmin() or cvars.Bool("sv_cheats", 0) then

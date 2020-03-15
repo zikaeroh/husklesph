@@ -370,7 +370,6 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 end
 
 function GM:PlayerDeath(ply, inflictor, attacker )
-	self:DoRoundDeaths(ply, attacker)
 
 	ply.NextSpawnTime = CurTime() + 1
 	ply.DeathTime = CurTime()

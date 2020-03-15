@@ -77,9 +77,6 @@ function GM:InitPostEntityAndMapCleanup()
 		if ent:GetClass():find("door") then
 			ent:Fire("unlock","",0)
 		end
-		if ent:IsDisguisableAs() then
-			-- ent:DrawShadow(false)
-		end
 	end
 end
 
