@@ -4,8 +4,6 @@ local EntityMeta = FindMetaTable("Entity")
 function GM:PlayerInitialSpawn(ply)
 	self:RoundsSetupPlayer(ply)
 
-	ply:SetMoney(10000)
-
 	self:TeamsSetupPlayer(ply)
 
 	if self:GetGameState() != 0 then
@@ -34,13 +32,6 @@ net.Receive("clientIPE", function (len, ply)
 	end
 end)
 
-function GM:PlayerConnect(name, ip)
-
-end
-
-function GM:PlayerAuthed(ply)
-end
-
 function GM:PlayerDisconnected(ply)
 	ply:SetTeam(2)
 end
@@ -62,7 +53,6 @@ function GM:PlayerSpawn( ply )
 	ply:SetHMaxHealth(100)
 	ply:SetHealth(ply:GetHMaxHealth())
 
-	-- ply:SetCustomCollisionCheck(true)
 	GAMEMODE:PlayerSetNewHull(ply)
 
 	self:PlayerSetupHands(ply)
@@ -209,40 +199,9 @@ function GM:PlayerSetModel( ply )
 	net.Send(ply)
 end
 
-function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
-end
-
-function GM:ScaleNPCDamage( npc, hitgroup, dmginfo )
-end
-
 function GM:PlayerDeathSound()
 	return true
 end
-
-util.AddNetworkString("heist_money")
-function PlayerMeta:SetMoney(money)
-	self.Money = money
-	net.Start("heist_money")
-	net.WriteDouble(self.Money or 0)
-	net.Send(self)
-end
-
-function PlayerMeta:GetMoney()
-	return self.Money or 0
-end
-
-function PlayerMeta:AddMoney(money)
-	self:SetMoney(self:GetMoney() + money)
-end
-
-function PlayerMeta:TakeMoney(amount)
-	if self:GetMoney() >= amount then
-		self:SetMoney(self:GetMoney() - amount)
-		return true
-	end
-	return false
-end
-
 
 function GM:PlayerSelectSpawn( pl )
 
@@ -411,7 +370,6 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 end
 
 function GM:PlayerDeath(ply, inflictor, attacker )
-	self:DoRoundDeaths(ply, attacker)
 
 	ply.NextSpawnTime = CurTime() + 1
 	ply.DeathTime = CurTime()
@@ -419,13 +377,6 @@ function GM:PlayerDeath(ply, inflictor, attacker )
 	// time until player can spectate another player
 	ply.SpectateTime = CurTime() + 2
 
-	if IsValid(attacker) && attacker:IsPlayer() && attacker != ply then
-		attacker:AddMoney(100)
-	end
-end
-
-
-function GM:PlayerSwitchWeapon(ply, oldwep, newwep)
 end
 
 function GM:KeyPress(ply, key)
@@ -447,29 +398,6 @@ end
 function GM:PlayerShouldTaunt( ply, actid )
 	return false
 end
-
-function GM:CanPlayerSuicide(ply)
-	return true
-end
-
-function GM:PlayerSay( ply, text, team)
-	if !IsValid(ply) then
-		return true
-	end
-
-	-- local ct = ChatText()
-	-- if !ply:Alive() then
-	-- 	ct:Add("[DEAD] ", Color(200, 20, 20))
-	-- end
-	-- local col = ply:GetPlayerColor()
-	-- ct:Add(ply:Nick(), Color(col.x * 255, col.y * 255, col.z * 255))
-	-- ct:Add(": " .. text, color_white)
-	-- ct:SendAll()
-	-- Msg(ply:Nick() .. ": " .. text .. "\n")
-	-- return false
-	return true
-end
-
 
 function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, speaker )
 	if !IsValid(speaker) then return false end

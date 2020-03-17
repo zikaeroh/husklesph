@@ -329,9 +329,6 @@ function GM:ScoreboardHide()
 	end
 end
 
-function GM:HUDDrawScoreBoard()
-end
-
 function GM:DoScoreboardActionPopup(ply)
 	local actions = DermaMenu()
 
@@ -351,20 +348,6 @@ function GM:DoScoreboardActionPopup(ply)
 			if IsValid(ply) then
 				ply:SetMuted(!ply:IsMuted())
 			end
-		end
-	end
-	
-	if IsValid(LocalPlayer()) && LocalPlayer():IsAdmin() then
-		actions:AddSpacer()
-
-		if ply:Team() == 2 then
-			-- if ply:Alive() then
-			-- 	local specateThem = actions:AddOption( "Spectate" )
-			-- 	specateThem:SetIcon( "icon16/status_online.png" )
-			-- 	function specateThem:DoClick()
-			-- 		RunConsoleCommand("mu_spectate", ply:EntIndex())
-			-- 	end
-			-- end
 		end
 	end
 

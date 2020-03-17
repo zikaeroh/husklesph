@@ -150,7 +150,6 @@ function GM:StartRound()
 	print("Round time is " .. (self.RoundSettings.RoundTime / 60) .. " (" .. c .. " props)")
 
 	self:NetworkGameSettings()
-	hook.Run("OnStartRound")
 	self:SetGameState(2)
 
 	local ct = ChatText()
@@ -283,8 +282,6 @@ function GM:EndRound(reason)
 		else
 		end
 	end
-	self:AddRoundStatistic(self:GetStateRunningTime(), #self:GetPlayingPlayers())
-	hook.Run("OnEndRound", self.Rounds)
 	self:SetGameState(3)
 end
 
@@ -366,18 +363,6 @@ function GM:RoundsThink()
 	elseif self:GetGameState() == 4 then
 		self:MapVoteThink()
 	end
-end
-
-function GM:DoRoundDeaths(ply, attacker)
-
-end
-
-function PlayerMeta:SetScore(score)
-	self:SetNWInt("MelonScore", score)
-end
-
-function PlayerMeta:GetScore()
-	return self:GetNWInt("MelonScore") or 0
 end
 
 local function ForceEndRound(ply, command, args)

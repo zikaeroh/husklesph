@@ -6,14 +6,6 @@ net.Receive("kill_feed_add", function (len)
 	local attacker = net.ReadEntity()
 	local damageType = net.ReadUInt(32)
 	if !IsValid(ply) then return end
-	-- print(ply, attacker, damageType)
-	-- if damageType != 0 then
-	-- 	local i = 1
-	-- 	for c = 1, 30 do
-	-- 		i = i * 2
-	-- 		print(i, "", bit.band(damageType, i))
-	-- 	end
-	-- end
 
 	local t = {}
 	t.time = CurTime()

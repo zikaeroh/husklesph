@@ -27,25 +27,9 @@ function draw.ShadowText(n, f, x, y, c, px, py, shadowColor)
 	draw.SimpleText(n, f, x, y, c, px, py)
 end
 
-function draw.EasyPNG(path, x, y, w, h, col)
-	surface.SetMaterial(Material(path, "noclamp"))
-	if col then
-		surface.SetDrawColor(col.r, col.g, col.b, col.a)
-	else
-		surface.SetDrawColor(255, 255, 255, 255)
-	end
-	surface.DrawTexturedRect(x, y, w, h)
-end
-
-local function translate(name)
-	if name == "weapon_physcannon" then return "Gravity Gun" end
-	return language.GetPhrase(name)
-end
-
 function GM:HUDPaint()
 	if LocalPlayer():Alive() then
 	end
-	-- self:DrawMoney()
 	self:DrawGameHUD()
 	-- DebugInfo(1, tostring(LocalPlayer():GetVelocity():Length()))
 
@@ -137,13 +121,6 @@ function GM:DrawGameHUD()
 	end
 end
 
-
-local tex = surface.GetTextureID("mech/ring")
-local ringThin = surface.GetTextureID("mech/ring_thin")
-local matWhite = Material( "model_color" )
-local rt_Store = render.GetScreenEffectTexture( 0 )
-local mat_Copy = Material( "pp/copy" )
-
 local polyTex = surface.GetTextureID("VGUI/white.vmt")
 
 local function drawPoly(x, y, w, h, percent)
@@ -213,7 +190,6 @@ function GM:DrawHealth(ply)
 	render.SetBlend( 0 )
 
 	render.OverrideDepthEnable( true, false )
-	-- render.SetMaterial(matWhite)
 	-- render.DrawScreenQuadEx(tx, ty, tw, th)
 
 	surface.SetDrawColor(26, 120, 245, 1)
@@ -254,52 +230,6 @@ function GM:DrawHealth(ply)
 	end
 end
 
-function GM:DrawMoney()
-
-	local x = 20 + 8
-	local w, h = 0, draw.GetFontHeight("RobotoHUD-25")
-	local y = ScrH() - 20 - math.ceil(ScrW() * 0.09) - 20 - h
-
-	surface.SetFont("RobotoHUD-20")
-	local tw, th = surface.GetTextSize("000000")
-
-	surface.SetFont("RobotoHUD-25")
-	local dw, dh = surface.GetTextSize("$")
-	local gap = 4
-
-	w = dw + gap + tw
-
-	local dull = 220
-	local dulla = 90
-
-	surface.SetFont("RobotoHUD-25")
-	surface.SetTextColor(255, 255, 255, 255)
-	surface.SetTextPos(x, y + h / 2 - dh / 2 - 3)
-	surface.DrawText("$")
-
-	local mone = self:GetMoney()
-	if GAMEMODE.MoneyNotifTime && GAMEMODE.MoneyNotifTime + 3 > CurTime() then
-		local add = "+" .. GAMEMODE.MoneyNotif
-		mone = mone - GAMEMODE.MoneyNotif
-		draw.ShadowText(add, "RobotoHUD-20", x + w + gap + 16, y + h / 2 - th / 2)
-	end
-
-	surface.SetFont("RobotoHUD-20")
-	local money = tostring(mone):sub(1,6)
-	if self:GetMoney() <= 0 then money = "" end
-	if #money < 6 then
-		surface.SetTextColor(dull, dull, dull, dulla)
-		surface.SetTextPos(x + dw + gap, y + h / 2 - th / 2)
-		surface.DrawText(("0"):rep(6 - #money))
-	end
-
-	local aw, ah = surface.GetTextSize(money)
-	surface.SetTextColor(255, 255, 255, 255)
-	surface.SetTextPos(x + dw + gap + (tw - aw), y + h / 2 - th / 2)
-	surface.DrawText(money)
-
-end
-
 function GM:HUDShouldDraw(name)
 	if name == "CHudHealth" then return false end
 	if name == "CHudVoiceStatus" then return false end
@@ -338,9 +268,6 @@ function GM:DrawRoundTimer()
 	end
 end
 
-local polyMat = Material("VGUI/white.vmt")
-function GM:RenderScreenspaceEffects()
-end
 function GM:PreDrawHUD()
 	local client = LocalPlayer()
 	if !client:Alive() then

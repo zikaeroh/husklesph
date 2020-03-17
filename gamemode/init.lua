@@ -24,9 +24,7 @@ include("sv_rounds.lua")
 include("sv_spectate.lua")
 include("sv_respawn.lua")
 include("sv_health.lua")
-include("sh_weightedrandom.lua")
 include("sv_killfeed.lua")
-include("sv_statistics.lua")
 include("sv_bot.lua")
 include("sv_disguise.lua")
 include("sv_teams.lua")
@@ -61,7 +59,6 @@ function GM:Initialize()
 	self.RoundWaitForPlayers = CurTime()
 
 	self.DeathRagdolls = {}
-	self:SetupStatisticsTables()
 	self:LoadMapList()
 	self:LoadBannedModels()
 	self:StartAutoTauntTimer()
@@ -80,9 +77,6 @@ function GM:InitPostEntityAndMapCleanup()
 		if ent:GetClass():find("door") then
 			ent:Fire("unlock","",0)
 		end
-		if ent:IsDisguisableAs() then
-			-- ent:DrawShadow(false)
-		end
 	end
 end
 
@@ -91,24 +85,9 @@ function GM:Think()
 	self:SpectateThink()
 end
 
-function GM:ShutDown()
-end
-
-function GM:AllowPlayerPickup( ply, ent )
-	return true
-end
-
 function GM:PlayerNoClip( ply )
 	timer.Simple(0, function () ply:CalculateSpeed() end)
 	return ply:IsSuperAdmin() || ply:GetMoveType() == MOVETYPE_NOCLIP
-end
-
-function GM:OnEndRound()
-
-end
-
-function GM:OnStartRound()
-	
 end
 
 function GM:EntityTakeDamage( ent, dmginfo )
@@ -151,9 +130,6 @@ function file.ReadDataAndContent(path)
 	if f then return f end
 	f = file.Read(GAMEMODE.Folder .. "/content/data/" .. path, "GAME")
 	return f
-end
-
-function GM:OnReloaded()
 end
 
 function GM:CleanupMap()
