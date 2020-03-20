@@ -89,7 +89,6 @@ function GM:CreateBannedModelsMenu()
 		entry:SetEnabled(false)
 	end
 
-	-- What to do when the ENTER key is pressed on the text box.
 	function entry:OnEnter()
 		-- This client side check is for informational purposes.
 		if !LocalPlayer():IsAdmin() then
@@ -99,7 +98,7 @@ function GM:CreateBannedModelsMenu()
 
 		local modelToBan = entry:GetText()
 		-- This client side check is for informational purposes.
-		if string.len(modelToBan) == 0 then
+		if modelToBan == "" then
 			chat.AddText(Color(255, 50, 50), "Error when attempting to ban model: no input text was given.")
 			return
 		end
@@ -153,7 +152,6 @@ function GM:CreateBannedModelsMenu()
 		unbanButton:SetPos(0, modelIconHeight - unbanButton:GetTall())
 		unbanButton:SetVisible(false)
 
-		-- What to do when the unban button for a model is clicked.
 		function unbanButton:DoClick()
 			-- This client side check is for informational purposes.
 			if !LocalPlayer():IsAdmin() then
