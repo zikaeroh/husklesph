@@ -16,12 +16,16 @@ end
 
 
 function GM:AddBannedModel(model)
+	if self.BannedModels[model] == true then return end
+
 	self.BannedModels[model] = true
 	self:SaveBannedModels()
 end
 
 
 function GM:RemoveBannedModel(model)
+	if self.BannedModels[model] != true then return end
+
 	self.BannedModels[model] = nil
 	self:SaveBannedModels()
 end
