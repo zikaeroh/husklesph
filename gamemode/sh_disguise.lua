@@ -123,6 +123,8 @@ function GM:PlayerCanDisguiseCurrentTarget(ply)
 	if ply:Team() == 3 then
 		local tr = ply:GetPropEyeTrace()
 		if IsValid(tr.Entity) then
+			if(self:IsModelBanned(tr.Entity:GetModel())) then return false, nil end
+
 			local testPos = Vector(tr.StartPos.x, tr.StartPos.y, 0)
 			local hitPosition = Vector(tr.HitPos.x, tr.HitPos.y, 0)
 			local hitZ = tr.HitPos.z
