@@ -1,102 +1,98 @@
-GM.BannedModels = {}
+-- This file is what controls what models are banned. Models that are banned
+-- cannot be chosen as a disguise.
 
-util.AddNetworkString("ph_bannedmodels")
+
+GM.BannedModels = {} -- This is used as a hash table where the key is the model string and the value is true.
+
+
+util.AddNetworkString("ph_bannedmodels_getall")
+util.AddNetworkString("ph_bannedmodels_add")
+util.AddNetworkString("ph_bannedmodels_remove")
+
 
 function GM:IsModelBanned(model)
-	return table.HasValue(self.BannedModels, model)
+	return self.BannedModels[model] == true
 end
+
 
 function GM:AddBannedModel(model)
-	table.insert(self.BannedModels, model)
+	if self.BannedModels[model] == true then return end
+
+	self.BannedModels[model] = true
 	self:SaveBannedModels()
-	self:RemoveBannedModelProps()
 end
+
 
 function GM:RemoveBannedModel(model)
-	table.RemoveByValue(self.BannedModels, model)
+	if self.BannedModels[model] != true then return end
+
+	self.BannedModels[model] = nil
 	self:SaveBannedModels()
 end
 
-function GM:GetBannedModels()
-	return self.BannedModels
-end
 
 function GM:SaveBannedModels()
-	// ensure the folders are there
+	-- ensure the folders are there
 	if !file.Exists("husklesph/","DATA") then
 		file.CreateDir("husklesph")
 	end
 
 	local txt = ""
-	for k, v in pairs(self.BannedModels) do
-		txt = txt .. v .. "\r\n"
+	for key, value in pairs(self.BannedModels) do
+		if value then
+			txt = txt .. key .. "\r\n"
+		end
 	end
 	file.Write("husklesph/bannedmodels.txt", txt)
 end
 
-function GM:LoadBannedModels() 
-	local jason = file.ReadDataAndContent("husklesph/bannedmodels.txt")
-	if jason then
+
+function GM:LoadBannedModels()
+	local bannedModels = file.Read("husklesph/bannedmodels.txt", "DATA")
+	if bannedModels then
 		local tbl = {}
-		for map in jason:gmatch("[^\r\n]+") do
-			table.insert(tbl, map)
-		end
-		self.BannedModels = tbl
-	else
-
-		// don't touch this
-		// use ph_bannedmodels_menu or edit data/husklesph/bannedmodels.txt
-		self.BannedModels = {
-			"models/props/cs_assault/money.mdl",
-			"models/props/cs_office/computer_mouse.mdl",
-			"models/props/cs_office/projector_remote.mdl"
-		}
-	end
-end
-
-function GM:RemoveBannedModelProps()
-	for k, ent in pairs(ents.GetAll()) do
-		if IsValid(ent) && ent:IsDisguisableAs() then
-			if self:IsModelBanned(ent:GetModel()) then
-				ent:Remove()
-			end
+		for match in bannedModels:gmatch("[^\r\n]+") do
+			self:AddBannedModel(match)
 		end
 	end
 end
 
-net.Receive("ph_bannedmodels", function (len, ply)
-	if ply.BannedAntiSpam && ply.BannedAntiSpam > CurTime() then return end
-	ply.BannedAntiSpam = CurTime() + 0.1
 
-	net.Start("ph_bannedmodels")
-	for k, v in pairs(GAMEMODE.BannedModels) do
-		net.WriteUInt(k, 16)
-		net.WriteString(tostring(v))
+net.Receive("ph_bannedmodels_getall", function (len, ply)
+	net.Start("ph_bannedmodels_getall")
+
+	for key, value in pairs(GAMEMODE.BannedModels) do
+		if value then
+			net.WriteString(key)
+		end
 	end
-	net.WriteUInt(0, 16)
+
+	net.WriteString("")
 	net.Send(ply)
 end)
 
-concommand.Add("ph_bannedmodels_add", function (ply, com, args)
-	if !ply:IsSuperAdmin() then
-		ply:ChatPrint("Not a superadmin")
-		return
-	end
-	if #args < 1 then
-		ply:ChatPrint("Too few arguments")
-		return
-	end
-	GAMEMODE:AddBannedModel(args[1])
+
+net.Receive("ph_bannedmodels_add", function (len, ply)
+	if !ply:IsAdmin() then return end
+
+	local model = net.ReadString()
+	if model == "" then return end
+
+	GAMEMODE:AddBannedModel(model)
+	net.Start("ph_bannedmodels_add")
+	net.WriteString(model)
+	net.Broadcast()
 end)
 
-concommand.Add("ph_bannedmodels_remove", function (ply, com, args)
-	if !ply:IsSuperAdmin() then
-		ply:ChatPrint("Not a superadmin")
-		return
-	end
-	if #args < 1 then
-		ply:ChatPrint("Too few arguments")
-		return
-	end
-	GAMEMODE:RemoveBannedModel(args[1])
+
+net.Receive("ph_bannedmodels_remove", function (len, ply)
+	if !ply:IsAdmin() then return end
+
+	local model = net.ReadString()
+	if model == "" then return end
+
+	GAMEMODE:RemoveBannedModel(model)
+	net.Start("ph_bannedmodels_remove")
+	net.WriteString(model)
+	net.Broadcast()
 end)

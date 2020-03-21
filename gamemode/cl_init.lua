@@ -20,6 +20,11 @@ include("cl_bannedmodels.lua")
 function GM:InitPostEntity()
 	net.Start("clientIPE")
 	net.SendToServer()
+
+	-- Sync the banned models
+	self:CreateBannedModelsMenu()
+	net.Start("ph_bannedmodels_getall")
+	net.SendToServer()
 end
 
 function GM:PostDrawViewModel( vm, ply, weapon )
