@@ -1,4 +1,4 @@
-local url = "https://raw.githubusercontent.com/zikaeroh/husklesph/master/prophunters.txt"
+local url = "https://raw.githubusercontent.com/zikaeroh/husklesph/master/husklesph.txt"
 local downloadlinks = "https://steamcommunity.com/sharedfiles/filedetails/?id=1585255351"
 
 
