@@ -1,7 +1,7 @@
 include("shared.lua")
 include("cl_fixplayercolor.lua")
 include("cl_ragdoll.lua")
-include("cl_chattext.lua")
+include("cl_chatmsg.lua")
 include("cl_rounds.lua")
 include("cl_hud.lua")
 include("cl_scoreboard.lua")
@@ -150,16 +150,4 @@ function GM:StartChat()
 		self.EndRoundPanel.ChatTextEntry:RequestFocus()
 		return true
 	end
-end
-
-function GM:ChatText(i, name, text, filter)
-	self:EndRoundAddChatText(Color(0, 120, 220), text)
-
-	if ( filter == "chat" ) then
-		Msg( name, ": ", text, "\n" )
-	else
-		Msg( text, "\n" )
-	end
-	
-	return false
 end

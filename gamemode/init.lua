@@ -16,7 +16,7 @@ util.AddNetworkString("player_model_sex")
 
 include("shared.lua")
 include("sv_ragdoll.lua")
-include("sv_chattext.lua")
+include("sv_chatmsg.lua")
 include("sv_playercolor.lua")
 include("sv_player.lua")
 include("sv_realism.lua")
