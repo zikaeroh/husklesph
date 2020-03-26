@@ -8,7 +8,7 @@ local PlayerMeta = FindMetaTable("Player")
 
 
 -- Sends a message to an individual player.
-function PlayerMeta:ChatMsg(...)
+function PlayerMeta:PlayerChatMsg(...)
 	net.Start("ph_chatmsg")
 	net.WriteTable({...})
 	net.Send(self)
@@ -16,7 +16,7 @@ end
 
 
 -- Sends a message to every player.
-function GM:ChatMsg(...)
+function GM:GlobalChatMsg(...)
 	net.Start("ph_chatmsg")
 	net.WriteTable({...})
 	net.Broadcast()

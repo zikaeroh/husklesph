@@ -19,7 +19,7 @@ concommand.Add("car_jointeam", function (ply, com, args)
 		if ply:Alive() then
 			ply:Kill()
 		end
-		GAMEMODE:ChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
+		GAMEMODE:GlobalChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
 
 	elseif newteam >= 2 && newteam <= 3 && newteam != curteam then
 
@@ -30,9 +30,9 @@ concommand.Add("car_jointeam", function (ply, com, args)
 			if ply:Alive() then
 				ply:Kill()
 			end
-			GAMEMODE:ChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
+			GAMEMODE:GlobalChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
 		else
-			ply:ChatMsg("Team full, you cannot join")
+			ply:PlayerChatMsg("Team full, you cannot join")
 		end
 
 	end
@@ -73,7 +73,7 @@ function GM:BalanceTeams(nokill)
 			if !nokill && ply:Alive() then
 				ply:Kill()
 			end
-			GAMEMODE:ChatMsg(ply:Nick(), " team balanced to ", team.GetColor(smallerTeam), team.GetName(smallerTeam))
+			GAMEMODE:GlobalChatMsg(ply:Nick(), " team balanced to ", team.GetColor(smallerTeam), team.GetName(smallerTeam))
 			diff = diff - 2
 		end
 	end
@@ -87,5 +87,5 @@ function GM:SwapTeams()
 			ply:SetTeam(2)
 		end
 	end
-	GAMEMODE:ChatMsg(Color(50, 220, 150), "Teams have been swapped")
+	GAMEMODE:GlobalChatMsg(Color(50, 220, 150), "Teams have been swapped")
 end

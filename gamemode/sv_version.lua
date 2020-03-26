@@ -29,7 +29,7 @@ function GM:CheckForNewVersion(ply)
 		end
 
 		if IsValid(ply) then
-			ply:ChatMsg(unpack(msg))
+			ply:PlayerChatMsg(unpack(msg))
 		else
 			MsgC(unpack(msg))
 			MsgC("\n")
@@ -39,17 +39,16 @@ function GM:CheckForNewVersion(ply)
 end
 
 concommand.Add("ph_version", function (ply)
-	local msg = {Color(255, 149, 129),
-					(GAMEMODE.Name or "") ..
+	local color = Color(255, 149, 129)
+	local msg = (GAMEMODE.Name or "") ..
 					" by Zikaeroh, " ..
 					tostring(GAMEMODE.Version or "error") ..
-					" (originally by MechanicalMind)"}
+					" (originally by MechanicalMind)"
 
 	if IsValid(ply) then
-		ply:ChatMsg(unpack(msg))
+		ply:PlayerChatMsg(color, msg)
 	else
-		MsgC(unpack(msg)) -- Print to the server console
-		MsgC("\n")
+		MsgC(color, msg, "\n") -- Print to the server console
 	end
 	GAMEMODE:CheckForNewVersion(ply)
 end)

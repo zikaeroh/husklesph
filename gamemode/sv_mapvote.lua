@@ -42,7 +42,7 @@ function GM:ChangeMapTo(map)
 		return
 	end
 	print("[husklesph] Rotate changing map to " .. map)
-	GAMEMODE:ChatMsg("Changing map to ", map)
+	GAMEMODE:GlobalChatMsg("Changing map to ", map)
 	hook.Call("OnChangeMap", GAMEMODE)
 	timer.Simple(5, function ()
 		RunConsoleCommand("changelevel", map)
@@ -168,7 +168,7 @@ function GM:MapVoteThink()
 			if #maps > 0 then
 				self:ChangeMapTo(table.Random(maps))
 			else
-				GAMEMODE:ChatMsg("Map change failed, not enough votes")
+				GAMEMODE:GlobalChatMsg("Map change failed, not enough votes")
 				print("Map change failed, not enough votes")
 				self:SetGameState(0)
 			end
