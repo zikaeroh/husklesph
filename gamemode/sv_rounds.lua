@@ -82,7 +82,7 @@ function GM:SetupRound()
 		end
 	end
 	if c < 2 then
-		GAMEMODE:GlobalChatMsg("Not enough players to start round")
+		GlobalChatMsg("Not enough players to start round")
 		self:SetGameState(0)
 		return
 	end
@@ -150,19 +150,19 @@ function GM:StartRound()
 	self:NetworkGameSettings()
 	self:SetGameState(2)
 
-	GAMEMODE:GlobalChatMsg("Round has started")
+	GlobalChatMsg("Round has started")
 
 end
 
 function GM:EndRound(reason)
 	local winningTeam
 	if reason == 1 then
-		GAMEMODE:GlobalChatMsg("Tie everybody loses")
+		GlobalChatMsg("Tie everybody loses")
 	elseif reason == 2 then
-		GAMEMODE:GlobalChatMsg(team.GetColor(2), team.GetName(2), " win")
+		GlobalChatMsg(team.GetColor(2), team.GetName(2), " win")
 		winningTeam = 2
 	elseif reason == 3 then
-		GAMEMODE:GlobalChatMsg(team.GetColor(3), team.GetName(3), " win")
+		GlobalChatMsg(team.GetColor(3), team.GetName(3), " win")
 		winningTeam = 3
 	end
 	self.LastRoundResult = reason

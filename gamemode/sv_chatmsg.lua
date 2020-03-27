@@ -16,7 +16,7 @@ end
 
 
 -- Sends a message to every player.
-function GM:GlobalChatMsg(...)
+function GlobalChatMsg(...)
 	net.Start("ph_chatmsg")
 	net.WriteTable({...})
 	net.Broadcast()
