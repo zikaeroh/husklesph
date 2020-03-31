@@ -17,9 +17,7 @@ function PlayerMeta:DisguiseAsProp(ent)
 
 	local hullxy, hullz = ent:GetPropSize()
 	if !self:CanFitHull(hullxy, hullxy, hullz) then
-		local ct = ChatText()
-		ct:Add("Not enough room to change", Color(255, 50, 50))
-		ct:Send(self)
+		self:PlayerChatMsg(Color(255, 50, 50), "Not enough room to change")
 		return
 	end
 	
@@ -120,9 +118,7 @@ function PlayerMeta:DisguiseLockRotation()
 	local hully = math.Round((maxs.y - mins.y) / 2)
 	local hullz = math.Round(maxs.z - mins.z)
 	if !self:CanFitHull(hullx, hully, hullz) then
-		local ct = ChatText()
-		ct:Add("Not enough room to lock rotation, move into a more open area", Color(255, 50, 50))
-		ct:Send(self)
+		self:PlayerChatMsg(Color(255, 50, 50), "Not enough room to lock rotation, move into a more open area")
 		return
 	end
 
@@ -138,9 +134,7 @@ function PlayerMeta:DisguiseUnlockRotation()
 	local hullxy = math.Round(math.Max(maxs.x - mins.x, maxs.y - mins.y) / 2)
 	local hullz = math.Round(maxs.z - mins.z)
 	if !self:CanFitHull(hullxy, hullxy, hullz) then
-		local ct = ChatText()
-		ct:Add("Not enough room to unlock rotation, move into a more open area", Color(255, 50, 50))
-		ct:Send(self)
+		self:PlayerChatMsg(Color(255, 50, 50), "Not enough room to unlock rotation, move into a more open area")
 		return
 	end
 

@@ -14,41 +14,41 @@ function GM:CheckForNewVersion(ply)
 			print("Couldn't parse version file.")
 			return
 		end
-		local t = MsgClients()
+
+		local msg = {}
 		if tab.version != GAMEMODE.Version then
-			t:Add("Out of date. ", Color(215, 20, 20))
-		end
-		t:Add("Latest version is " .. tab.version .. ". ", color_white)
-		if tab.version != GAMEMODE.Version then
-			t:Add("Current version is " .. tostring(GAMEMODE.Version or "error") .. ".\n")
-			t:Add("Download the latest version from: " .. downloadlinks)
+			msg = {Color(215, 20, 20), "Out of date!\n",
+					Color(255, 222, 102), "You're on version ",
+					Color(0, 255, 0), (GAMEMODE.Version or "error"),
+					Color(255, 222, 102), " but the latest is ",
+					Color(0, 255, 0), tab.version, "\n",
+					Color(255, 222, 102), "Download the latest version from: ",
+					Color(11, 191, 227), downloadlinks}
 		else
-			t:Add("Up to date.")
+			msg = {Color(0, 255, 0), "Up to date!"}
 		end
-		t:Add("\n")
-		if ply then
-			t:Send(ply)
+
+		if IsValid(ply) then
+			ply:PlayerChatMsg(unpack(msg))
 		else
-			t:Print()
-			local ct = ChatText(t.msgs)
-			for k, v in pairs(player.GetAll()) do
-				if v:IsListenServerHost() || v:IsSuperAdmin() then
-					ct:Send(v)
-				end
-			end
+			MsgC(unpack(msg))
+			MsgC("\n")
 		end
 	end
 	HTTP(req)
 end
 
 concommand.Add("ph_version", function (ply)
-	local t = MsgClients()
-	local n = GAMEMODE.Name or ""
-	t:Add(n .. " by Zikaeroh, " .. tostring(GAMEMODE.Version or "error") .. " (originally by MechanicalMind)\n", Color(255, 149, 129))
+	local color = Color(255, 149, 129)
+	local msg = (GAMEMODE.Name or "") ..
+					" by Zikaeroh, " ..
+					tostring(GAMEMODE.Version or "error") ..
+					" (originally by MechanicalMind)"
+
 	if IsValid(ply) then
-		t:Send(ply)
+		ply:PlayerChatMsg(color, msg)
 	else
-		t:Print()
+		MsgC(color, msg, "\n") -- Print to the server console
 	end
 	GAMEMODE:CheckForNewVersion(ply)
 end)
