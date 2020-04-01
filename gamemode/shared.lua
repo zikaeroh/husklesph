@@ -8,6 +8,8 @@ GM.Email 	= "N/A"
 GM.Website 	= "N/A"
 GM.Version  = tab["version"] or "unknown"
 
+GM.StartWaitTime = CreateConVar("ph_mapstartwait", 30, bit.bor(FCVAR_NOTIFY, FCVAR_REPLICATED), "Number of seconds to wait for players on map start before starting round" )
+
 team.SetUp(1, "Spectators", Color(120, 120, 120))
 team.SetUp(2, "Hunters", Color(255, 150, 50))
 team.SetUp(3, "Props", Color(50, 150, 255))
