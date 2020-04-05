@@ -203,80 +203,242 @@ function GM:PlayerDeathSound()
 	return true
 end
 
-function GM:PlayerSelectSpawn( pl )
 
-	local spawnPoints = {}
-
-
-	if pl:Team() == 3 then // props
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_terrorist" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_axis" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_combine" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_pirate" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_viking" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "diprip_start_team_blue" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_blue" ) )        
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_human" ) )
-	elseif pl:Team() == 2 then 
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_counterterrorist" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_allies" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_rebel" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_knight" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "diprip_start_team_red" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_red" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_zombie" ) )      
-	end
-
-	local Count = table.Count( spawnPoints )
-
-	if pl:Team() == 1 || Count == 0 then
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_start" ) )
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "gmod_player_start" ) ) -- (Old) GMod Maps
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_teamspawn" ) ) -- TF Maps
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "ins_spawnpoint" ) ) -- INS Maps
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "aoc_spawnpoint" ) ) -- AOC Maps
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "dys_spawn_point" ) ) -- Dystopia Maps
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_coop" ) ) -- SYN Maps
-		spawnPoints = table.Add( spawnPoints, ents.FindByClass( "info_player_deathmatch" ) )
-	end
-
-
-	// recount
-	local Count = table.Count( spawnPoints )
-	
-	if ( Count == 0 ) then
-		Msg("[PlayerSelectSpawn] Error! No spawn points!\n")
-		return nil
-	end
-	
-	local ChosenSpawnPoint = nil
-	
-	-- Try to work out the best, random spawnpoint
-	for i = 0, Count do
-	
-		ChosenSpawnPoint = table.Random( spawnPoints )
-
-		if ( ChosenSpawnPoint &&
-			ChosenSpawnPoint:IsValid() &&
-			ChosenSpawnPoint:IsInWorld() &&
-			ChosenSpawnPoint != pl:GetVar( "LastSpawnpoint" ) &&
-			ChosenSpawnPoint != self.LastSpawnPoint ) then
-			
-			if ( hook.Call( "IsSpawnpointSuitable", GAMEMODE, pl, ChosenSpawnPoint, i == Count ) ) then
-			
-				self.LastSpawnPoint = ChosenSpawnPoint
-				pl:SetVar( "LastSpawnpoint", ChosenSpawnPoint )
-				return ChosenSpawnPoint
-			
-			end
-			
+-- This is only a shallow copy.
+local function MergeTables(...)
+	local args = {...}
+	local new_table = {}
+	for _, tbl in ipairs(args) do
+		for _, value in ipairs(tbl) do
+			table.insert(new_table, value)
 		end
-			
 	end
-	
-	return ChosenSpawnPoint
-	
+
+	return new_table
 end
+
+
+-------------------------------
+-------------------------------
+-------------------------------
+
+-- Most of the following code from this comment block down to the next is from TTT.
+-- The code provides the functionality for automatically generating spawnpoints if
+-- necessary. Prophunters sort-of-not-really had a system for doing this but it
+-- basically just killed players every time or got them stuck in each other so it
+-- was not very useful. The TTT code has been tweaked to work better with Prophunters.
+
+
+-- Nice Fisher-Yates implementation, from Wikipedia
+local rand = math.random
+local function ShuffleTable(t)
+	local n = #t
+
+	while n > 2 do
+		-- n is now the last pertinent index
+		local k = rand(n) -- 1 <= k <= n
+		-- Quick swap
+		t[n], t[k] = t[k], t[n]
+		n = n - 1
+	end
+
+	return t
+end
+
+
+function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
+	if !IsValid(ply) || ply:Team() == 1 then return true end
+	if !rigged && (!IsValid(spwn) || !spwn:IsInWorld()) then return false end
+
+	-- spwn is normally an ent, but we sometimes use a vector for jury rigged
+	-- positions
+	local pos = rigged && spwn || spwn:GetPos()
+
+	if not util.IsInWorld(pos) then return false end
+
+	local blocking = ents.FindInBox(pos + Vector( -32, -32, 0 ), pos + Vector( 32, 32, 64 )) -- Changed from (-16, -16, 0) (16, 16, 64)
+
+	for _, blocking_ent in ipairs(blocking) do
+		if IsValid(blocking_ent) && blocking_ent:IsPlayer() && blocking_ent:Team() != 1 && blocking_ent:Alive() then
+			if force then
+				blocking_ent:Kill()
+			else
+				return false
+			end
+		end
+	end
+
+	return true
+end
+
+
+-- TTT only had a single table for spawnpoints but we're going to use three different ones
+-- so that we can try to group teams together.
+local prop_spawn_types = {"info_player_terrorist", "info_player_axis",
+"info_player_combine", "info_player_pirate", "info_player_viking",
+"diprip_start_team_blue", "info_player_blue", "info_player_human"}
+
+local hunter_spawn_types = {"info_player_counterterrorist",
+"info_player_allies", "info_player_rebel", "info_player_knight",
+"diprip_start_team_red", "info_player_red", "info_player_zombie"}
+
+-- These spawn types should ideally only be used for spectators. Hunters/props spawning here
+-- will probably fall out of the world.
+local spectator_spawn_types = {"info_player_start", "gmod_player_start",
+"info_player_teamspawn", "ins_spawnpoint", "aoc_spawnpoint",
+"dys_spawn_point", "info_player_coop", "info_player_deathmatch"}
+
+
+function GetSpawnEnts(ply_team, shuffled, force_all)
+	local tbl_to_use
+	if ply_team == 3 then
+		tbl_to_use = prop_spawn_types
+	elseif ply_team == 2 then
+		tbl_to_use = hunter_spawn_types
+	else
+		tbl_to_use = spectator_spawn_types
+	end
+
+	local tbl = {}
+	for _, classname in ipairs(tbl_to_use) do
+		for _, e in ipairs(ents.FindByClass(classname)) do
+			if IsValid(e) && (!e.BeingRemoved) then
+				table.insert(tbl, e)
+			end
+		end
+	end
+
+	-- If necessary, ignore the ply_team restriction and use ALL spawnpoints.
+	if force_all or #tbl == 0 then
+		local allSpawnTypes = MergeTables(prop_spawn_types, hunter_spawn_types, spectator_spawn_types)
+		for _, classname in ipairs(allSpawnTypes) do
+			for _, e in ipairs(ents.FindByClass(classname)) do
+				if IsValid(e) && (!e.BeingRemoved) then
+					table.insert(tbl, e)
+				end
+			end
+		end
+	end
+
+	if shuffled then
+		ShuffleTable(tbl)
+	end
+
+	return tbl
+end
+
+
+-- Generate points next to and above the spawn that we can test for suitability (a "3x3 grid")
+local function PointsAroundSpawn(spwn)
+	if !IsValid(spwn) then return {} end
+	local pos = spwn:GetPos()
+
+	local w, h = 50, 72 -- Increased from the default 36, 72 as it seems to work better with Prophunters.
+
+	-- all rigged positions
+	-- could be done without typing them out, but would take about as much time
+	return {
+		pos + Vector( w,  0,  0),
+		pos + Vector( 0,  w,  0),
+		pos + Vector( w,  w,  0),
+		pos + Vector(-w,  0,  0),
+		pos + Vector( 0, -w,  0),
+		pos + Vector(-w, -w,  0),
+		pos + Vector(-w,  w,  0),
+		pos + Vector( w, -w,  0)
+	};
+end
+
+
+function GM:PlayerSelectSpawn(ply)
+	local ply_team = ply:Team()
+	-- 3 = Props
+	-- 2 = Hunters
+	-- 1 = Spectators
+
+	-- Should be true when the first player joins the game
+	if !self.SpawnPoints then
+		self.SpawnPoints = {}
+	end
+
+	-- Should be true for each first player on a team
+	if !self.SpawnPoints[ply_team] || (table.IsEmpty(self.SpawnPoints[ply_team])) || (!IsTableOfEntitiesValid(self.SpawnPoints[ply_team])) then
+
+		self.SpawnPoints[ply_team] = GetSpawnEnts(ply_team, true, false)
+
+		-- One might think that we have to regenerate our spawnpoint
+		-- cache. Otherwise, any rigged spawn entities would not get reused, and
+		-- MORE new entities would be made instead. In reality, the map cleanup at
+		-- round start will remove our rigged spawns, and we'll have to create new
+		-- ones anyway.
+	end
+
+	if table.IsEmpty(self.SpawnPoints[ply_team]) then
+		Error("No spawn entity found!\n")
+		return
+	end
+
+	-- Just always shuffle, it's not that costly and should help spawn
+	-- randomness.
+	ShuffleTable(self.SpawnPoints[ply_team])
+
+	-- Optimistic attempt: assume there are sufficient spawns for all and one is
+	-- free
+	for _, spwn in pairs(self.SpawnPoints[ply_team]) do
+		if self:IsSpawnpointSuitable(ply, spwn, false) then
+			return spwn
+		end
+	end
+
+	-- That did not work, so now look around spawns
+	local picked = nil
+
+	for _, spwn in pairs(self.SpawnPoints[ply_team]) do
+		picked = spwn -- just to have something if all else fails
+
+		-- See if we can jury rig a spawn near this one
+		local rigged = PointsAroundSpawn(spwn)
+		for _, rig in pairs(rigged) do
+			if self:IsSpawnpointSuitable(ply, rig, false, true) then
+				local spawn_type
+				if ply:Team() == 3 then
+					spawn_type = "info_player_terrorist"
+				elseif ply:Team() == 2 then
+					spawn_type = "info_player_counterterrorist"
+				else
+					spawn_type = "info_player_start"
+				end
+				local rig_spwn = ents.Create(spawn_type)
+				if IsValid(rig_spwn) then
+					rig_spwn:SetPos(rig)
+					rig_spwn:Spawn()
+
+					ErrorNoHalt("PROPHUNTERS WARNING: Map has too few spawn points, using a rigged spawn for ".. tostring(ply:Nick()) .. "\n")
+
+					self.HaveRiggedSpawn = true
+					return rig_spwn
+				end
+			end
+		end
+	end
+
+	-- Last attempt, force one (this could kill other players)
+	for _, spwn in pairs(self.SpawnPoints[ply_team]) do
+		if self:IsSpawnpointSuitable(ply, spwn, true) then
+			return spwn
+		end
+	end
+
+	return picked
+end
+
+
+-- TTT code ends here.
+
+-----------------------------------
+-----------------------------------
+-----------------------------------
+
 
 function GM:PlayerDeathThink(ply)
 	if self:CanRespawn(ply) then
