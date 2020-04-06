@@ -25,6 +25,10 @@ function GM:InitPostEntity()
 	self:CreateBannedModelsMenu()
 	net.Start("ph_bannedmodels_getall")
 	net.SendToServer()
+
+	-- Ask server if there's a different mapvote being used instead of Prophunter's default
+	net.Start("ph_mapvoteoverride")
+	net.SendToServer()
 end
 
 function GM:PostDrawViewModel( vm, ply, weapon )

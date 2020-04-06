@@ -55,6 +55,8 @@ resource.AddFile("materials/melonbomber/skull.png")
 resource.AddFile("materials/melonbomber/skull_license.txt")
 
 function GM:Initialize()
+	self:FindMapvoteOverrides()
+
 	self.RoundWaitForPlayers = CurTime()
 
 	self.DeathRagdolls = {}

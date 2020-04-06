@@ -1,10 +1,43 @@
 // mapvote
 
+util.AddNetworkString("ph_mapvoteoverride")
 util.AddNetworkString("ph_mapvote")
 util.AddNetworkString("ph_mapvotevotes")
 
 GM.MapVoteTime = GAMEMODE and GAMEMODE.MapVoteTime or 30
 GM.MapVoteStart = GAMEMODE and GAMEMODE.MapVoteStart or CurTime()
+
+net.Receive("ph_mapvoteoverride", function (len, ply)
+	net.Start("ph_mapvoteoverride")
+	net.WriteBool(GAMEMODE.MapvoteOverride)
+	if GAMEMODE.MapvoteOverride then
+		net.WriteString(GAMEMODE.MapvoteOverrideType)
+	end
+	net.Send(ply)
+end)
+
+local function doMapvoteOverride()
+	-- The mapvote addon being used needs to do something, even if nobody votes.
+	-- If the mapvote addon doesn't pick a map to change to then the game WILL get
+	-- stuck and not do anything until manually fixed. This is because we're putting
+	-- complete faith that the mapvote addon will change the map, so Prophunters
+	-- will wait an infinite amount of time for that to happen.
+	if GAMEMODE.MapvoteOverrideType == "fretta" then
+		MapVote.Start()
+	end
+end
+
+function GM:FindMapvoteOverrides()
+	self.MapvoteOverride = false
+
+	-- The current idea here is to just search hook tables for specific hook identifiers that indicate
+	-- which mapvote addon is being used.
+	local initHookTbl = hook.GetTable()["Initialize"]
+	if initHookTbl && initHookTbl["MapVoteConfigSetup"] then
+		self.MapvoteOverride = true
+		self.MapvoteOverrideType = "fretta"
+	end
+end
 
 function GM:IsMapVoting()
 	return self.MapVoting
@@ -117,6 +150,12 @@ function GM:LoadMapList()
 end
 
 function GM:StartMapVote()
+	if self.MapvoteOverride then
+		self:SetGameState(4)
+		doMapvoteOverride()
+		return
+	end
+
 	self.MapVoteStart = CurTime()
 	self.MapVoteTime = 30
 	self.MapVoting = true

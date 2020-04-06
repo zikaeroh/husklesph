@@ -1,6 +1,13 @@
 GM.MapVoteTime = GAMEMODE and GAMEMODE.MapVoteTime or 30
 GM.MapVoteStart = GAMEMODE and GAMEMODE.MapVoteStart or CurTime()
 
+net.Receive("ph_mapvoteoverride", function ()
+	GAMEMODE.MapvoteOverride = net.ReadBool()
+	if GAMEMODE.MapvoteOverride then
+		GAMEMODE.MapvoteOverrideType = net.ReadString()
+	end
+end)
+
 net.Receive("ph_mapvote", function (len)
 	GAMEMODE.MapVoteStart = net.ReadFloat()
 	GAMEMODE.MapVoteTime = net.ReadFloat()
