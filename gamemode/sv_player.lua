@@ -266,7 +266,7 @@ function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
 				blockingEnt:PlayerChatMsg(Color(200, 20, 20), "You were killed because there are not enough spawnpoints.")
 				for _, value in ipairs(player.GetAll()) do
 					if value:IsAdmin() || value:IsSuperAdmin() then
-						value:PlayerChatMsg(Color(200, 20, 20), "Not enough spawnpoints; " .. blockingEnt:Nick() .. " has been killed to spawn " .. ply:Nick())
+						value:PlayerChatMsg(Color(200, 20, 20), "Not enough spawnpoints; " .. blockingEnt:Nick() .. " has been killed to spawn " .. ply:Nick() .. ".")
 					end
 				end
 			else
@@ -296,7 +296,7 @@ local spectatorSpawnTypes = {"info_player_start", "gmod_player_start",
 "dys_spawn_point", "info_player_coop", "info_player_deathmatch"}
 
 
-local function getSpawnEnts(plyTeam, shuffled, force_all)
+local function getSpawnEnts(plyTeam, force_all)
 	local tblToUse
 	if plyTeam == 3 then
 		tblToUse = propSpawnTypes
@@ -327,9 +327,7 @@ local function getSpawnEnts(plyTeam, shuffled, force_all)
 		end
 	end
 
-	if shuffled then
-		shuffleTable(tbl)
-	end
+	shuffleTable(tbl)
 
 	return tbl
 end
@@ -371,7 +369,7 @@ function GM:PlayerSelectSpawn(ply)
 	-- Should be true for each first player on a team
 	if !self.SpawnPoints[plyTeam] || (table.IsEmpty(self.SpawnPoints[plyTeam])) || (!IsTableOfEntitiesValid(self.SpawnPoints[plyTeam])) then
 
-		self.SpawnPoints[plyTeam] = getSpawnEnts(plyTeam, true, false)
+		self.SpawnPoints[plyTeam] = getSpawnEnts(plyTeam, false)
 
 		-- One might think that we have to regenerate our spawnpoint
 		-- cache. Otherwise, any rigged spawn entities would not get reused, and
