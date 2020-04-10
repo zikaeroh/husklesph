@@ -341,7 +341,7 @@ function GM:OpenEndRoundMenu()
 	winner:DockMargin(20, 20, 20, 20)
 	winner:SetTall(draw.GetFontHeight("RobotoHUD-45"))
 	winner:SetText("Props win!")
-	winner:SetColor(team.GetColor(3))
+	winner:SetColor(team.GetColor(TEAM_PROP))
 	winner:SetFont("RobotoHUD-45")
 
 	local timeleft = vgui.Create("DPanel", respnl)
@@ -349,7 +349,7 @@ function GM:OpenEndRoundMenu()
 	timeleft:SetTall(draw.GetFontHeight("RobotoHUD-20"))
 	local col = Color(150, 150, 150)
 	function timeleft:Paint(w, h)
-		if GAMEMODE:GetGameState() == 3 then
+		if GAMEMODE:GetGameState() == ROUND_POST then
 			local settings = GAMEMODE:GetRoundSettings()
 			local roundTime = settings.NextRoundTime or 30
 			local time = math.max(0, roundTime - GAMEMODE:GetStateRunningTime())
@@ -396,7 +396,7 @@ function GM:OpenEndRoundMenu()
 	timeleft:SetTall(draw.GetFontHeight("RobotoHUD-20"))
 	local col = Color(150, 150, 150)
 	function timeleft:Paint(w, h)
-		if GAMEMODE:GetGameState() == 4 then
+		if GAMEMODE:GetGameState() == ROUND_MAPVOTE then
 			local voteTime = GAMEMODE.MapVoteTime or 30
 			local time = math.max(0, voteTime - GAMEMODE:GetMapVoteRunningTime())
 			draw.SimpleText("Voting ends in " .. math.ceil(time), "RobotoHUD-20", w - 4, 0, col, 2)
@@ -463,7 +463,7 @@ function GM:EndRoundMenuResults(res)
 	menu.Results = res
 	menu.ChatList:Clear()
 	menu.ResultList:Clear()
-	if res.reason == 2 || res.reason == 3 then
+	if res.reason == WIN_HUNTER || res.reason == WIN_PROP then
 		menu.WinningTeam:SetText(team.GetName(res.reason) .. " win!")
 		menu.WinningTeam:SetColor(team.GetColor(res.reason))
 	else

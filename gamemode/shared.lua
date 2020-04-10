@@ -1,3 +1,4 @@
+local PlayerMeta = FindMetaTable("Player")
 local tabFile = file.Read(GM.Folder .. "/husklesph.txt", "GAME") or ""
 local tab = util.KeyValuesToTable(tabFile)
 
@@ -8,11 +9,34 @@ GM.Email 	= "N/A"
 GM.Website 	= "N/A"
 GM.Version  = tab["version"] or "unknown"
 
+
+ROUND_WAIT = 1
+ROUND_HIDE = 2
+ROUND_SEEK = 3
+ROUND_POST = 4
+ROUND_MAPVOTE = 5
+
+
+TEAM_SPEC = 1
+TEAM_HUNTER = 2
+TEAM_PROP = 3
+
+
+WIN_NONE = TEAM_SPEC
+WIN_HUNTER = TEAM_HUNTER
+WIN_PROP = TEAM_PROP
+
+
+function PlayerMeta:IsSpectator() return self:Team() == TEAM_SPEC end
+function PlayerMeta:IsHunter() return self:Team() == TEAM_HUNTER end
+function PlayerMeta:IsProp() return self:Team() == TEAM_PROP end
+
+
 GM.StartWaitTime = CreateConVar("ph_mapstartwait", 30, bit.bor(FCVAR_NOTIFY, FCVAR_REPLICATED), "Number of seconds to wait for players on map start before starting round" )
 
-team.SetUp(1, "Spectators", Color(120, 120, 120))
-team.SetUp(2, "Hunters", Color(255, 150, 50))
-team.SetUp(3, "Props", Color(50, 150, 255))
+team.SetUp(TEAM_SPEC, "Spectators", Color(120, 120, 120))
+team.SetUp(TEAM_HUNTER, "Hunters", Color(255, 150, 50))
+team.SetUp(TEAM_PROP, "Props", Color(50, 150, 255))
 
 function GM:PlayerSetNewHull(ply, s, hullz, duckz)
 	self:PlayerSetHull(ply, s, s, hullz, duckz)

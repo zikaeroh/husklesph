@@ -35,9 +35,9 @@ end
 local function teamNameToNum(pteam)
 	pteam = pteam:lower()
 	if pteam == "prop" || pteam == "props" then
-		return 3
+		return TEAM_PROP
 	elseif pteam == "hunter" || pteam == "hunters" then
-		return 2
+		return TEAM_HUNTER
 	end
 	return nil
 end

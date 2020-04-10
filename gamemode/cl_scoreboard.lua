@@ -212,7 +212,7 @@ end
 
 function GM:ScoreboardShow()
 	if IsValid(menu) then
-		if GAMEMODE.GameState == 3 then
+		if GAMEMODE.GameState == ROUND_POST then
 			menu:SetVisible(false)
 		else
 			menu:SetVisible(true)
@@ -268,7 +268,7 @@ function GM:ScoreboardShow()
 
 		function bottom:Paint(w, h)
 			local c
-			for k, ply in pairs(team.GetPlayers(1)) do
+			for k, ply in pairs(team.GetPlayers(TEAM_SPEC)) do
 				if c then
 					c = c .. ", " .. ply:Nick()
 				else
@@ -300,7 +300,7 @@ function GM:ScoreboardShow()
 			draw.ShadowText("Spectate", "RobotoHUD-15", w / 2, h / 2, colt, 1, 1)
 		end
 		function but:DoClick()
-			RunConsoleCommand("car_jointeam", 1)
+			RunConsoleCommand("car_jointeam", TEAM_SPEC)
 		end
 
 		local main = vgui.Create("DPanel", menu)
@@ -310,17 +310,17 @@ function GM:ScoreboardShow()
 			-- surface.DrawRect(0, 0, w, h)
 		end
 
-		menu.CopsList = makeTeamList(main, 2)
+		menu.CopsList = makeTeamList(main, TEAM_HUNTER)
 		menu.CopsList:Dock(LEFT)
 		menu.CopsList:DockMargin(0, 0, 8, 0)
-		menu.RobbersList = makeTeamList(main, 3)
+		menu.RobbersList = makeTeamList(main, TEAM_PROP)
 		menu.RobbersList:Dock(FILL)
 
 
 	end
 end
 function GM:ScoreboardHide()
-	if GAMEMODE.GameState == 3 then
+	if GAMEMODE.GameState == ROUND_POST then
 		menu:Close()
 		return
 	end

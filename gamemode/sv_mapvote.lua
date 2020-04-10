@@ -38,7 +38,7 @@ end
 function GM:ChangeMapTo(map)
 	if map == game.GetMap() then
 		self.Rounds = 0
-		self:SetGameState(0)
+		self:SetGameState(ROUND_WAIT)
 		return
 	end
 	print("[husklesph] Rotate changing map to " .. map)
@@ -121,7 +121,7 @@ function GM:StartMapVote()
 	-- MapVote Workshop Link: https://steamcommunity.com/sharedfiles/filedetails/?id=151583504
 	local initHookTbl = hook.GetTable().Initialize
 	if initHookTbl && initHookTbl.MapVoteConfigSetup then
-		self:SetGameState(4)
+		self:SetGameState(ROUND_MAPVOTE)
 		MapVote.Start()
 		return
 	end
@@ -145,7 +145,7 @@ function GM:StartMapVote()
 	-- 	end
 	-- end
 
-	self:SetGameState(4)
+	self:SetGameState(ROUND_MAPVOTE)
 	self:NetworkMapVoteStart()
 end
 
@@ -179,7 +179,7 @@ function GM:MapVoteThink()
 			else
 				GlobalChatMsg("Map change failed, not enough votes")
 				print("Map change failed, not enough votes")
-				self:SetGameState(0)
+				self:SetGameState(ROUND_WAIT)
 			end
 		end
 	end

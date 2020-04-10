@@ -6,7 +6,7 @@ function GM:PlayerInitialSpawn(ply)
 
 	self:TeamsSetupPlayer(ply)
 
-	if self:GetGameState() != 0 then
+	if self:GetGameState() != ROUND_WAIT then
 		timer.Simple(0, function ()
 			if IsValid(ply) then
 				ply:KillSilent()
@@ -33,7 +33,7 @@ net.Receive("clientIPE", function (len, ply)
 end)
 
 function GM:PlayerDisconnected(ply)
-	ply:SetTeam(2)
+	ply:SetTeam(TEAM_HUNTER)
 end
 
 util.AddNetworkString("hull_set")
@@ -138,7 +138,7 @@ function PlayerMeta:CalculateSpeed()
 end
 
 function GM:PlayerLoadout(ply)
-	if ply:Team() == 2 then
+	if ply:IsHunter() then
 		ply:Give("weapon_crowbar")
 		ply:Give("weapon_smg1")
 		ply:Give("weapon_shotgun")
@@ -247,7 +247,7 @@ end
 
 
 function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
-	if !IsValid(ply) || ply:Team() == 1 then return true end
+	if !IsValid(ply) || ply:IsSpectator() then return true end
 	if !rigged && (!IsValid(spwn) || !spwn:IsInWorld()) then return false end
 
 	-- spwn is normally an ent, but we sometimes use a vector for jury rigged
@@ -259,7 +259,7 @@ function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
 	local blocking = ents.FindInBox(pos + Vector( -32, -32, 0 ), pos + Vector( 32, 32, 64 )) -- Changed from (-16, -16, 0) (16, 16, 64)
 
 	for _, blockingEnt in ipairs(blocking) do
-		if IsValid(blockingEnt) && blockingEnt:IsPlayer() && blockingEnt:Team() != 1 && blockingEnt:Alive() then
+		if IsValid(blockingEnt) && blockingEnt:IsPlayer() && !blockingEnt:IsSpectator() && blockingEnt:Alive() then
 			if force then
 				blockingEnt:Kill()
 
@@ -298,9 +298,9 @@ local spectatorSpawnTypes = {"info_player_start", "gmod_player_start",
 
 local function getSpawnEnts(plyTeam, force_all)
 	local tblToUse
-	if plyTeam == 3 then
+	if plyTeam == TEAM_PROP then
 		tblToUse = propSpawnTypes
-	elseif plyTeam == 2 then
+	elseif plyTeam == TEAM_HUNTER then
 		tblToUse = hunterSpawnTypes
 	else
 		tblToUse = spectatorSpawnTypes
@@ -357,9 +357,6 @@ end
 
 function GM:PlayerSelectSpawn(ply)
 	local plyTeam = ply:Team()
-	-- 3 = Props
-	-- 2 = Hunters
-	-- 1 = Spectators
 
 	-- Should be true when the first player joins the game
 	if !self.SpawnPoints then
@@ -406,9 +403,9 @@ function GM:PlayerSelectSpawn(ply)
 		for _, rig in pairs(rigged) do
 			if self:IsSpawnpointSuitable(ply, rig, false, true) then
 				local spawnType
-				if ply:Team() == 3 then
+				if ply:IsProp() then
 					spawnType = "info_player_terrorist"
-				elseif ply:Team() == 2 then
+				elseif ply:IsHunter() then
 					spawnType = "info_player_counterterrorist"
 				else
 					spawnType = "info_player_start"
@@ -481,7 +478,7 @@ local function randomDeathsound(ply)
 end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo)
-	if ply:IsDisguised() && ply:Team() == 3 then
+	if ply:IsDisguised() && ply:IsProp() then
 		ply:EmitSound(randomDeathsound(ply))
 	end
 
@@ -495,8 +492,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 	ply.TauntEnd = nil
 	ply.AutoTauntDeadline = nil
 
-	// are they a prop
-	if ply:Team() == 3 then
+	if ply:IsProp() then
 		// set the last death award
 		self.LastPropDeath = ply
 	end
@@ -520,7 +516,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 			attacker:AddFrags(1)
 
 			// did a hunter kill a prop
-			if attacker:Team() == 2 && ply:Team() == 3 then
+			if attacker:IsHunter() && ply:IsProp() then
 
 				// increase their round kills
 				attacker.HunterKills = (attacker.HunterKills or 0) + 1
@@ -600,17 +596,17 @@ function GM:PlayerCanHearChatVoice( listener, talker, typ, teamOnly )
 		return true
 	end
 	
-	if self:GetGameState() == 3 || self:GetGameState() == 0 then
+	if self:GetGameState() == ROUND_POST || self:GetGameState() == ROUND_WAIT then
 		return true
 	end
 
 	// spectators and dead players can hear everyone
-	if listener:Team() == 1 || !listener:Alive() then
+	if listener:IsSpectator() || !listener:Alive() then
 		return true
 	end
 
 	// if the player is dead or a spectator we can't hear them
-	if !talker:Alive() || talker:Team() == 1 then
+	if !talker:Alive() || talker:IsSpectator() then
 		return false
 	end
 
@@ -620,7 +616,7 @@ end
 
 function GM:PlayerCanPickupWeapon(ply, wep)
 	if IsValid(wep) then
-		if ply:Team() == 3 then
+		if ply:IsProp() then
 			return false
 		end
 	end

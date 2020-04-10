@@ -1,19 +1,19 @@
 
 
 function GM:TeamsSetupPlayer(ply)
-	local cops = team.NumPlayers(2)
-	local robbers = team.NumPlayers(3)
+	local cops = team.NumPlayers(TEAM_HUNTER)
+	local robbers = team.NumPlayers(TEAM_PROP)
 	if robbers <= cops then
-		ply:SetTeam(3)
+		ply:SetTeam(TEAM_PROP)
 	else
-		ply:SetTeam(2)
+		ply:SetTeam(TEAM_HUNTER)
 	end
 end
 
 concommand.Add("car_jointeam", function (ply, com, args)
 	local curteam = ply:Team()
 	local newteam = tonumber(args[1] or "") or 0
-	if newteam == 1 && curteam != 1 then
+	if newteam == TEAM_SPEC && curteam != TEAM_SPEC then
 
 		ply:SetTeam(newteam)
 		if ply:Alive() then
@@ -21,10 +21,10 @@ concommand.Add("car_jointeam", function (ply, com, args)
 		end
 		GlobalChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
 
-	elseif newteam >= 2 && newteam <= 3 && newteam != curteam then
+	elseif newteam >= TEAM_HUNTER && newteam <= TEAM_PROP && newteam != curteam then
 
 		// make sure we can't join the bigger team
-		local otherteam = newteam == 2 and 3 or 2
+		local otherteam = newteam == TEAM_HUNTER and TEAM_PROP or TEAM_HUNTER
 		if team.NumPlayers(newteam) <= team.NumPlayers(otherteam) then
 			ply:SetTeam(newteam)
 			if ply:Alive() then
@@ -43,7 +43,7 @@ function GM:CheckTeamBalance()
 	if !self.TeamBalanceCheck || self.TeamBalanceCheck < CurTime() then
 		self.TeamBalanceCheck = CurTime() + 3 * 60 // check every 3 minutes
 
-		local diff = team.NumPlayers(2) - team.NumPlayers(3)
+		local diff = team.NumPlayers(TEAM_HUNTER) - team.NumPlayers(TEAM_PROP)
 		if diff < -1 || diff > 1 then // teams must be off by more than 2 for team balance
 			self.TeamBalanceTimer = CurTime() + 30 // balance in 30 seconds
 			for k,ply in pairs(player.GetAll()) do
@@ -58,12 +58,12 @@ function GM:CheckTeamBalance()
 end
 
 function GM:BalanceTeams(nokill)
-	local diff = team.NumPlayers(2) - team.NumPlayers(3)
+	local diff = team.NumPlayers(TEAM_HUNTER) - team.NumPlayers(TEAM_PROP)
 	if diff < -1 || diff > 1 then // teams must be off by more than 2 for team balance
-		local biggerTeam, smallerTeam = 3,2
+		local biggerTeam, smallerTeam = TEAM_PROP,TEAM_HUNTER
 		if diff > 0 then
-			biggerTeam = 2
-			smallerTeam = 3
+			biggerTeam = TEAM_HUNTER
+			smallerTeam = TEAM_PROP
 		end
 		diff = team.NumPlayers(biggerTeam) - team.NumPlayers(smallerTeam)
 		while diff > 1 do
@@ -81,10 +81,10 @@ end
 
 function GM:SwapTeams()
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() == 2 then
-			ply:SetTeam(3)
-		elseif ply:Team() == 3 then
-			ply:SetTeam(2)
+		if ply:IsHunter() then
+			ply:SetTeam(TEAM_PROP)
+		elseif ply:IsProp() then
+			ply:SetTeam(TEAM_HUNTER)
 		end
 	end
 	GlobalChatMsg(Color(50, 220, 150), "Teams have been swapped")
