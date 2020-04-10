@@ -22,7 +22,9 @@ local function doMapvoteOverride()
 	-- stuck and not do anything until manually fixed. This is because we're putting
 	-- complete faith that the mapvote addon will change the map, so Prophunters
 	-- will wait an infinite amount of time for that to happen.
-	if GAMEMODE.MapvoteOverrideType == "fretta" then
+	-- Look in FindMapvoteOverrides to see what addons the types are for.
+
+	if GAMEMODE.MapvoteOverrideType == "MapVote" then
 		MapVote.Start()
 	end
 end
@@ -32,10 +34,12 @@ function GM:FindMapvoteOverrides()
 
 	-- The current idea here is to just search hook tables for specific hook identifiers that indicate
 	-- which mapvote addon is being used.
-	local initHookTbl = hook.GetTable()["Initialize"]
-	if initHookTbl && initHookTbl["MapVoteConfigSetup"] then
+
+	-- This mapvote addon is: https://steamcommunity.com/sharedfiles/filedetails/?id=151583504
+	local initHookTbl = hook.GetTable().Initialize
+	if initHookTbl && initHookTbl.MapVoteConfigSetup then
 		self.MapvoteOverride = true
-		self.MapvoteOverrideType = "fretta"
+		self.MapvoteOverrideType = "MapVote"
 	end
 end
 
