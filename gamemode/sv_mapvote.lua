@@ -117,7 +117,7 @@ function GM:LoadMapList()
 end
 
 function GM:StartMapVote()
-	-- Check if we're using the MapVote addon. If so, ignore all of Prophunter's mapvote logic.
+	-- Check if we're using the MapVote addon. If so, ignore the builtin mapvote logic.
 	-- MapVote Workshop Link: https://steamcommunity.com/sharedfiles/filedetails/?id=151583504
 	local initHookTbl = hook.GetTable().Initialize
 	if initHookTbl && initHookTbl.MapVoteConfigSetup then
