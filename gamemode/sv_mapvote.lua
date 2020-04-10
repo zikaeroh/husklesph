@@ -122,7 +122,7 @@ function GM:StartMapVote()
 	local initHookTbl = hook.GetTable().Initialize
 	if initHookTbl && initHookTbl.MapVoteConfigSetup then
 		self:SetGameState(4)
-		MapVote.Start()	
+		MapVote.Start()
 		return
 	end
 
