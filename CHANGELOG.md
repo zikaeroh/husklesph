@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.10.1
+
+-   Add `ph_map_time_limit`, which sets a number of minutes before the "last round".
+    For example, if set to 20, then after 20 minutes the game will announce that it's
+    the "last round", and on round end will start the mapvote. By default this option is disabled (-1). (Thanks, Yolo!)
+
 ## v1.10.0
 
 -   Clean up chat message syste. (Thanks, Yolo!)
