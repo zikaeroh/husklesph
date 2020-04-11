@@ -2,56 +2,25 @@
 
 This is a fork of [MechanicalMind's Prop Hunters](https://github.com/MechanicalMind/prophunters),
 intended to fix a few bugs and add a few features.
-For now, things are backwards compatible with the original gamemode, but I may make breaking changes
-in the future.
 
-This is not shown as a fork in GitHub; I have unconnected them to make the search box work.
-Once GitHub allows forked to be searched, I'll fix up the repo to point back upstream.
+A full changelog can be found in [CHANGELOG.md](CHANGELOG.md).
 
 ## Improvements
 
-- On death, taunts no longer persist into spectator mode.
-- The taunt menu remembers your mouse position when reopened.
-- The taunt menu phrase is customizable. For example: `ph_taunt_menu_phrase "annoy the hunters"`
-- Taunt loader logging prints the full path to the loaded file, not just the filename itself.
-- Errors during taunt loading are no longer (mistakenly) ignored.
-- Versions are now prefixed with "v" to avoid version checks failing due to floating point coercion. (Plus, they're now semver.)
-- Auto taunts are natively supported!
-    - Enable with `ph_auto_taunt 1`. The default is disabled.
-    - Set `ph_auto_taunt_delay_min` and `ph_auto_taunt_delay_max` to control the frequency of auto taunts in seconds. If a player doesn't taunt (within a randomly selected time between those two values), they will be forced to taunt. The default range is `[60, 120]`.
-    - Set `ph_auto_taunt_props_only 0` to enable auto taunts for hunters. The default is to only auto taunt for props.
-- Prop deathsounds can be customized per-user by placing a key-value file named `ph_deathsounds.txt` into the `husklesph` directory. For example:
-```
-"PH_Deathsounds"
-{
-    "default"    "ambient/voices/f_scream1.wav"
-    "STEAM_0:1:12345678"
-    {
-        "1"    "vo/npc/male01/hacks01.wav"
-        "2"    "vo/npc/male01/hacks02.wav"
-        "3"    "vo/npc/male01/thehacks01.wav"
-        "4"    "vo/npc/male01/thehacks02.wav"
-    }
-    "STEAM_0:1:87654321" "vo/npc/male01/hacks01.wav"
-    "STEAM_0:1:13467928"
-    {
-        "1"    "vo/npc/male01/hacks01.wav"
-        "2"    "vo/npc/male01/hacks02.wav"
-    }
-}
-```
-- The `ph_endround` command forces a round to end on a tie.
-- Team colors and player colors should be consistent and not change when another mod changes the player model/color.
-- Taunts can be restricted to a specific player model. See the taunt docs for more info.
-- All (useful) commands and convars have ULX commands; this is not yet in this repo but comes in the Steam workshop item.
+For the full list, take a look at the [changelog](CHANGELOG.md), but here is a non-exhaustive list:
 
-## TODO
+-   On death, taunts no longer persist into spectator mode.
+-   The taunt menu remembers your mouse position when reopened.
+-   Auto taunts are natively supported!
+-   The `ph_endround` command forces a round to end on a tie.
+-   Taunts can be restricted to a specific player model. See the taunt docs for more info.
+-   All (useful) commands and convars have ULX commands; this is not yet in this repo but comes in the Steam workshop item.
+-   Large props can properly re-disguise.
+-   Spawn points are generated automatically from existing spawn points, leading to much greater success in spawning players when the map doesn't provide enough.
 
-- Better handle taunt durations.
-    - Allow each individual file to have its own duration, rather than one per taunt.
-    - Better handle non-wav file durations. ogg _kinda_ works, but sometimes `SoundDuration` gives the wrong duration and allows taunts to overlap.
-- General code cleanup.
-    - There's a lot of oddity in this codebase, along with loads of dead code copied from other gamemodes.
-- Improve disguising for large props.
-    - The reach of a large prop isn't always far enough to be able to change into something else.
-- Allow the builtin mapvote system to be swapped out for a more common one.
+## Contributors
+
+-   MechanicalMind (original author)
+-   Zikaeroh
+-   foodflare
+-   Yolopanther
