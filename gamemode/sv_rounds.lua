@@ -15,6 +15,45 @@ GM.Rounds = GAMEMODE and GAMEMODE.Rounds or 0
 // 3 END GAME RESET TIME
 // 4 MAP VOTE
 
+
+local function mapTimeLimitTimerResult()
+	if GAMEMODE.Rounds < GAMEMODE.RoundLimit:GetInt() then -- Only change if we haven't already hit the round limit
+		GAMEMODE.Rounds = GAMEMODE.RoundLimit:GetInt() - 1 -- Allows for 1 extra round before hitting the limit
+	end
+end
+
+
+local function changeMapTimeLimitTimer(oldValueMinutes, newValueMinutes)
+	local timerName = "ph_timer_map_time_limit"
+
+	if newValueMinutes == -1 then -- Timer should be disabled
+		timer.Remove(timerName)
+	else
+		local newValueSeconds = math.floor(newValueMinutes) * 60
+
+		-- If a timer exists then take its elapsed time into account when calculating our new time limit.
+		if timer.Exists(timerName) then
+			local oldValueSeconds = math.floor(oldValueMinutes) * 60
+			newValueSeconds = newValueSeconds - (oldValueSeconds - timer.TimeLeft(timerName))
+		end
+
+		-- Timers don't execute their callback if given a negative time.
+		-- newValueSeconds will be negative if oldValueMinutes was greater than newValueMinutes.
+		if newValueSeconds < 0 then
+			mapTimeLimitTimerResult()
+		else
+			-- This will create or update the timer with the new value.
+			timer.Create(timerName, newValueSeconds, 1, mapTimeLimitTimerResult)
+		end
+	end
+end
+
+
+cvars.AddChangeCallback("ph_map_time_limit", function (convar, oldValue, newValue)
+	changeMapTimeLimitTimer(tonumber(oldValue), tonumber(newValue))
+end)
+
+
 function GM:GetGameState()
 	return self.GameState
 end
@@ -112,6 +151,11 @@ function GM:SetupRound()
 	self:CleanupMap()
 	
 	self.Rounds = self.Rounds + 1
+
+	if self.Rounds == self.RoundLimit:GetInt() then
+		GlobalChatMsg(Color(255, 0, 0), "This is the LAST ROUND!")
+	end
+
 	hook.Run("OnSetupRound")
 	self:SetGameState(1)
 end

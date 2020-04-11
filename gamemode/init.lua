@@ -45,6 +45,7 @@ GM.PropsSmallSize = CreateConVar("ph_props_small_size", 200, bit.bor(FCVAR_NOTIF
 GM.PropsJumpPower = CreateConVar("ph_props_jumppower", 1.2, bit.bor(FCVAR_NOTIFY), "Jump power bonus for when props are disguised" )
 GM.PropsCamDistance = CreateConVar("ph_props_camdistance", 1, bit.bor(FCVAR_NOTIFY), "The camera distance multiplier for props when disguised")
 GM.TauntMenuPhrase = CreateConVar("ph_taunt_menu_phrase", TauntMenuPhrase, bit.bor(FCVAR_NOTIFY), "Phrase shown at the top of the taunt menu")
+GM.MapTimeLimit = CreateConVar("ph_map_time_limit", -1, bit.bor(FCVAR_NOTIFY), "Minutes before declaring the next round to be the last round (-1 to disable)")
 
 GM.AutoTauntEnabled = CreateConVar("ph_auto_taunt", 0, bit.bor(FCVAR_NOTIFY), "1 if auto taunts should be enabled")
 GM.AutoTauntMin = CreateConVar("ph_auto_taunt_delay_min", 60, bit.bor(FCVAR_NOTIFY), "Mininum time to go without taunting")
