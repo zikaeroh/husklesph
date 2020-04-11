@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.10.0
+
 -   Clean up chat message syste. (Thanks, Yolo!)
 -   Add UI element to show map start wait time. (Thanks, Yolo!)
 -   Massively improve spawn point creation, allowing maps with too few spawn points to still work. (Thanks, Yolo!)
