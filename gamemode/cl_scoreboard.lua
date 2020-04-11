@@ -1,4 +1,4 @@
-if GAMEMODE && IsValid(GAMEMODE.ScoreboardPanel) then
+﻿if GAMEMODE && IsValid(GAMEMODE.ScoreboardPanel) then
 	GAMEMODE.ScoreboardPanel:Remove()
 end
 
@@ -249,7 +249,7 @@ function GM:ScoreboardShow()
 			local tw,th = surface.GetTextSize(t)
 			draw.ShadowText(t, "RobotoHUD-25", 4, 0, Color(199, 49, 29), 0)
 
-			draw.ShadowText("by Zikaeroh, " .. tostring(GAMEMODE.Version or "error") .. " (originally by MechanicalMind)", "RobotoHUD-L15", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
+			draw.ShadowText(tostring(GAMEMODE.Version or "error") .. ", maintained by Zikaeroh, code by many cool people :)", "RobotoHUD-L12", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
 		end
 
 		function menu.Credits:PerformLayout()

@@ -21,6 +21,7 @@ for i = 5, 50, 5 do
 	createRoboto(i)
 end
 createRoboto(8)
+createRoboto(12)
 
 function draw.ShadowText(n, f, x, y, c, px, py, shadowColor)
 	draw.SimpleText(n, f, x + 1, y + 1, shadowColor or color_black, px, py)
