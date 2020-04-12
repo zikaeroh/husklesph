@@ -3,7 +3,7 @@ AddCSLuaFile("shared.lua")
 local rootFolder = (GM || GAMEMODE).Folder:sub(11) .. "/gamemode/"
 
 -- add cs lua all the cl_ and sh_ files
-local files, dirs = file.Find(rootFolder .. "*", "LUA")
+local files = file.Find(rootFolder .. "*", "LUA")
 for k, v in pairs(files) do
 	if v:sub(1,3) == "cl_" || v:sub(1,3) == "sh_" then
 		AddCSLuaFile(rootFolder .. v)

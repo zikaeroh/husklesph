@@ -59,7 +59,6 @@ local function fillList(mlist, taunts, cat)
 end
 
 local function addCat(clist, name, taunts, mlist)
-	local z = tonumber(util.CRC(name):sub(1, 8))
 	local dname = name:lower():gsub("[_]", " ")
 	dname = dname:sub(1, 1):upper() .. dname:sub(2)
 
@@ -185,7 +184,7 @@ local function openTauntMenu()
 	menu.CatList = clist
 	clist:Dock(FILL)
 	clist:DockMargin(0, 0, 0, 0)
-	local df = draw.GetFontHeight("RobotoHUD-15") * 1.6
+	-- local df = draw.GetFontHeight("RobotoHUD-15") * 1.6
 	function clist:Paint(w, h)
 		-- surface.SetDrawColor(60, 60, 60)
 		-- surface.DrawRect(0, 0, w, df)

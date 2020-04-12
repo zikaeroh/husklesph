@@ -75,18 +75,18 @@ function GM:DrawKillFeed()
 			table.remove(self.KillFeed, k)
 		else
 			surface.SetFont("RobotoHUD-15")
-			local twp, thp = surface.GetTextSize(t.playerName)
+			local twp = surface.GetTextSize(t.playerName)
 
 			if t.attackerName then
 				local killed = " " .. (t.message || "killed") .. " "
-				local twa, tha = surface.GetTextSize(t.attackerName)
-				local twk, thk = surface.GetTextSize(killed)
+				local twa = surface.GetTextSize(t.attackerName)
+				local twk = surface.GetTextSize(killed)
 				draw.ShadowText(t.attackerName, "RobotoHUD-15", ScrW() - 4 - twp - twk - twa, 4 + down * gap, t.attackerColor, 0)
 				draw.ShadowText(killed, "RobotoHUD-15", ScrW() - 4 - twp - twk, 4 + down * gap, color_white, 0)
 				draw.ShadowText(t.playerName, "RobotoHUD-15", ScrW() - 4 - twp, 4 + down * gap, t.playerColor, 0)
 			else
 				local killed = " " .. (t.messageSelf || "killed themself")
-				local twk, thk = surface.GetTextSize(killed)
+				local twk = surface.GetTextSize(killed)
 
 				draw.ShadowText(killed, "RobotoHUD-15", ScrW() - 4 - twk, 4 + down * gap, color_white, 0)
 				draw.ShadowText(t.playerName, "RobotoHUD-15", ScrW() - 4 - twp - twk, 4 + down * gap, t.playerColor, 0)

@@ -1,5 +1,4 @@
 local PlayerMeta = FindMetaTable("Player")
-local EntityMeta = FindMetaTable("Entity")
 
 function GM:PlayerInitialSpawn(ply)
 	self:RoundsSetupPlayer(ply)
@@ -338,7 +337,7 @@ local function pointsAroundSpawn(spwn)
 	if !IsValid(spwn) then return {} end
 	local pos = spwn:GetPos()
 
-	local w, h = 50, 72 -- Increased from the default 36, 72 as it seems to work better with Prophunters.
+	local w, _ = 50, 72 -- Increased from the default 36, 72 as it seems to work better with Prophunters.
 
 	-- all rigged positions
 	-- could be done without typing them out, but would take about as much time

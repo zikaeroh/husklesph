@@ -1,5 +1,3 @@
-local PlayerMeta = FindMetaTable("Player")
-
 util.AddNetworkString("gamestate")
 util.AddNetworkString("round_victor")
 util.AddNetworkString("gamerules")

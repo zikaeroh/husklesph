@@ -76,7 +76,6 @@ function GM:LoadMapList()
 	local jason = file.ReadDataAndContent("husklesph/maplist.txt")
 	if jason then
 		local tbl = {}
-		local i = 1
 		for map in jason:gmatch("[^\r\n]+") do
 			table.insert(tbl, map)
 		end
@@ -90,7 +89,7 @@ function GM:LoadMapList()
 			end
 		end
 
-		local files, dirs = file.Find("maps/*", "GAME")
+		local files = file.Find("maps/*", "GAME")
 		for k, v in pairs(files) do
 			local name = v:match("([^%.]+)%.bsp$")
 			if name then

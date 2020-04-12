@@ -47,7 +47,6 @@ function PlayerMeta:GetPropEyePos()
 	if !self:IsDisguised() then
 		return self:GetShootPos()
 	end
-	local angles = self:EyeAngles()
 	local maxs = self:GetNWVector("disguiseMaxs")
 	local mins = self:GetNWVector("disguiseMins")
 
@@ -73,8 +72,6 @@ function PlayerMeta:GetPropEyeTrace()
 		trace.mask = MASK_SHOT
 		return util.TraceLine(trace)
 	end
-	local maxs = self:GetNWVector("disguiseMaxs")
-	local mins = self:GetNWVector("disguiseMins")
 	local trace = {}
 	trace.start = self:GetPropEyePos()
 	trace.endpos = trace.start + self:GetAimVector() * 100000
@@ -132,7 +129,7 @@ function GM:PlayerCanDisguiseCurrentTarget(ply)
 			local propMaxZ = ply:OBBMaxs().z + propCurZ
 			local propMinZ = ply:OBBMins().z + propCurZ
 			local withinZRange = hitZ >= propMinZ - verticalLeniency && hitZ <= propMaxZ + verticalLeniency
-			local propXY, propZ = ply:GetPropSize()
+			local propXY = ply:GetPropSize()
 			local withinHorizRange = hitPosition:Distance(testPos) < math.max(propXY + horizLeniency, minHLeniency)
 			if withinHorizRange && withinZRange then
 				if ply:CanDisguiseAsProp(tr.Entity) then

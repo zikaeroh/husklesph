@@ -3,9 +3,6 @@ function GM:RealismThink()
 	for k, ply in pairs(player.GetAll()) do
 
 		if ply:Alive() then
-			local running = ply:GetVelocity():LengthSqr() > 1
-			local onground = ply:OnGround()
-
 			-- don't increase velocity when jumping off ground
 			if ply:KeyPressed(IN_JUMP) && ply.PrevOnGround then
 				ply.LastJump = CurTime()

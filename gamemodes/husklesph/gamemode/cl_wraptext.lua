@@ -41,12 +41,12 @@ function Builder:Run()
 				local spaces, rest = chunk:match("^([%s]*)(.*)$")
 				-- print(#spaces, "<" .. rest)
 
-				local sw, sh = surface.GetTextSize(spaces)
+				local sw = surface.GetTextSize(spaces)
 				self.curText = self.curText .. spaces
 				self.curWidth = self.curWidth + sw
 
 				for word in rest:gmatch("([^%s]+[%s]*)") do
-					local w, h = surface.GetTextSize(word)
+					local w = surface.GetTextSize(word)
 
 					-- can't we fit the word on the same line
 					if w + self.curWidth > self.maxWidth then
@@ -60,7 +60,7 @@ function Builder:Run()
 								-- find the number of chracters that can fit
 								local chars = 1
 								while true do
-									local aw, ah = surface.GetTextSize(word:sub(1, chars))
+									local aw = surface.GetTextSize(word:sub(1, chars))
 									if chars > #word then
 										print("error" .. chars)
 										break

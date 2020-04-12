@@ -50,7 +50,6 @@ end
 function GM:LoadBannedModels()
 	local bannedModels = file.Read("husklesph/bannedmodels.txt", "DATA")
 	if bannedModels then
-		local tbl = {}
 		for match in bannedModels:gmatch("[^\r\n]+") do
 			self:AddBannedModel(match)
 		end

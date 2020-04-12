@@ -246,7 +246,7 @@ function GM:ScoreboardShow()
 		function menu.Credits:Paint(w, h)
 			surface.SetFont("RobotoHUD-25")
 			local t = GAMEMODE.Name || ""
-			local tw,th = surface.GetTextSize(t)
+			local tw = surface.GetTextSize(t)
 			draw.ShadowText(t, "RobotoHUD-25", 4, 0, Color(199, 49, 29), 0)
 
 			draw.ShadowText(tostring(GAMEMODE.Version || "error") .. ", maintained by Zikaeroh, code by many cool people :)", "RobotoHUD-L12", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
@@ -254,7 +254,7 @@ function GM:ScoreboardShow()
 
 		function menu.Credits:PerformLayout()
 			surface.SetFont("RobotoHUD-25")
-			local w,h = surface.GetTextSize(GAMEMODE.Name || "")
+			local _, h = surface.GetTextSize(GAMEMODE.Name || "")
 			self:SetTall(h)
 		end
 
@@ -264,7 +264,7 @@ function GM:ScoreboardShow()
 		bottom:DockMargin(0, 8, 0, 0)
 
 		surface.SetFont("RobotoHUD-15")
-		local tw, th = surface.GetTextSize("Spectate")
+		local tw = surface.GetTextSize("Spectate")
 
 		function bottom:Paint(w, h)
 			local c

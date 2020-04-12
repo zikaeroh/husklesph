@@ -94,7 +94,7 @@ function GM:DrawGameHUD()
 
 	if help then
 		local fh = draw.GetFontHeight("RobotoHUD-L15")
-		local w, h = math.ceil(ScrW() * 0.09), #help * fh
+		local h = #help * fh
 		local x = 20
 		local y = ScrH() / 2 - h / 2
 
@@ -103,13 +103,12 @@ function GM:DrawGameHUD()
 		for k, t in pairs(help) do
 			surface.SetFont("RobotoHUD-15")
 			local name = keyName(t[1])
-			local w,h = surface.GetTextSize(name)
+			local w = surface.GetTextSize(name)
 			tw = math.max(tw, w)
 		end
 		for k, t in pairs(help) do
 			surface.SetFont("RobotoHUD-15")
 			local name = keyName(t[1])
-			local w,h = surface.GetTextSize(name)
 			draw.ShadowText(name, "RobotoHUD-15", x + tw / 2, y + i * fh, color_white, 1, 0)
 			draw.ShadowText(t[2], "RobotoHUD-L15", x + tw + 10, y + i * fh, color_white, 0, 0)
 			i = i + 1

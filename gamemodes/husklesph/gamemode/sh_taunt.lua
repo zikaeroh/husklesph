@@ -142,7 +142,7 @@ meta.__newindex = _G
 setmetatable(tempG, meta)
 
 local function loadTaunts(rootFolder)
-	local files, dirs = file.Find(rootFolder .. "*.lua", "LUA")
+	local files = file.Find(rootFolder .. "*.lua", "LUA")
 	for k, v in pairs(files) do
 		local filePath = rootFolder .. v
 		AddCSLuaFile(filePath)
