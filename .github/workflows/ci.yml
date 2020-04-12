@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  GLUALINT_VERSION: "1.14.0"
+
+jobs:
+  style:
+    name: Style
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install glualint ${{ env.GLUALINT_VERSION }}
+        run: |
+          curl -o glualint.zip -L https://github.com/FPtje/GLuaFixer/releases/download/$GLUALINT_VERSION/glualint-$GLUALINT_VERSION-linux.zip
+          unzip glualint.zip
+
+      - name: Run glualint
+        run: ./glualint .
