@@ -1,0 +1,10 @@
+{
+    "title": "Prop Hunters - Huskles Edition",
+    "type": "gamemode",
+    "tags": ["fun"],
+    "ignore": [
+        "*.git*",
+        "*/README.md",
+        "*/CHANGELOG.md"
+    ]
+}
