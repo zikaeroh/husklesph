@@ -2,31 +2,31 @@ local PlayerMeta = FindMetaTable("Player")
 local EntityMeta = FindMetaTable("Entity")
 
 local dtypes = {}
-dtypes[DMG_GENERIC]=""
-dtypes[DMG_CRUSH]="Blunt Force"
-dtypes[DMG_BULLET]="Bullet"
-dtypes[DMG_SLASH]="Laceration"
-dtypes[DMG_BURN]="Fire"
-dtypes[DMG_VEHICLE]="Blunt Force"
-dtypes[DMG_FALL]="Fall force"
-dtypes[DMG_BLAST]="Explosion"
-dtypes[DMG_CLUB]="Blunt Force"
-dtypes[DMG_SHOCK]="Shock"
-dtypes[DMG_SONIC]="Sonic"
-dtypes[DMG_ENERGYBEAM]="Enery"
-dtypes[DMG_DROWN]="Hydration"
-dtypes[DMG_PARALYZE]="Paralyzation"
-dtypes[DMG_NERVEGAS]="Nervegas"
-dtypes[DMG_POISON]="Poison"
-dtypes[DMG_RADIATION]="Radiation"
-dtypes[DMG_DROWNRECOVER]=""
-dtypes[DMG_ACID]="Acid"
-dtypes[DMG_PLASMA]="Plasma"
-dtypes[DMG_AIRBOAT]="Energy"
-dtypes[DMG_DISSOLVE]="Energy"
-dtypes[DMG_BLAST_SURFACE]=""
-dtypes[DMG_DIRECT]="Fire"
-dtypes[DMG_BUCKSHOT]="Bullet"
+dtypes[DMG_GENERIC] = ""
+dtypes[DMG_CRUSH] = "Blunt Force"
+dtypes[DMG_BULLET] = "Bullet"
+dtypes[DMG_SLASH] = "Laceration"
+dtypes[DMG_BURN] = "Fire"
+dtypes[DMG_VEHICLE] = "Blunt Force"
+dtypes[DMG_FALL] = "Fall force"
+dtypes[DMG_BLAST] = "Explosion"
+dtypes[DMG_CLUB] = "Blunt Force"
+dtypes[DMG_SHOCK] = "Shock"
+dtypes[DMG_SONIC] = "Sonic"
+dtypes[DMG_ENERGYBEAM] = "Enery"
+dtypes[DMG_DROWN] = "Hydration"
+dtypes[DMG_PARALYZE] = "Paralyzation"
+dtypes[DMG_NERVEGAS] = "Nervegas"
+dtypes[DMG_POISON] = "Poison"
+dtypes[DMG_RADIATION] = "Radiation"
+dtypes[DMG_DROWNRECOVER] = ""
+dtypes[DMG_ACID] = "Acid"
+dtypes[DMG_PLASMA] = "Plasma"
+dtypes[DMG_AIRBOAT] = "Energy"
+dtypes[DMG_DISSOLVE] = "Energy"
+dtypes[DMG_BLAST_SURFACE] = ""
+dtypes[DMG_DIRECT] = "Fire"
+dtypes[DMG_BUCKSHOT] = "Bullet"
 
 
 local DeathRagdollsPerPlayer = 3
@@ -38,7 +38,7 @@ end
 function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 	local ent = self:GetNWEntity("DeathRagdoll")
 
-	// remove old player ragdolls
+	-- remove old player ragdolls
 	if !self.DeathRagdolls then self.DeathRagdolls = {} end
 	local countPlayerRagdolls = 1
 	for k,rag in pairs(self.DeathRagdolls) do
@@ -60,7 +60,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 		end
 	end
 
-	// remove old server ragdolls
+	-- remove old server ragdolls
 	local c2 = 1
 	for k,rag in pairs(GAMEMODE.DeathRagdolls) do
 		if IsValid(rag) then
@@ -87,7 +87,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 	end
 
 	local ent = ents.Create( "prop_ragdoll" )
-		duplicator.DoGeneric( ent, Data )
+	duplicator.DoGeneric( ent, Data )
 	ent:Spawn()
 	ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 	ent:Fire("kill","",60 * 8)
@@ -95,14 +95,10 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 		ent:SetPlayerColor(self:GetPlayerColor())
 	end
 	ent:SetNWEntity("RagdollOwner", self)
-	
+
 	ent.Corpse = {}
 	ent.Corpse.Name = self:Nick()
 	ent.Corpse.CauseDeath = ""
-	if dmginfo then
-		local t = dmginfo:GetDamageType()
-		// do bitmasks
-	end
 	ent.Corpse.Attacker = ""
 	if IsValid(attacker) && attacker:IsPlayer() then
 		if attacker == self then
@@ -112,11 +108,10 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 		else
 			ent.Corpse.Attacker = attacker:Nick()
 		end
-		local wep = dmginfo:GetInflictor()
 		-- inflicter doesn't work, do on GM:PlayerDeath
 	end
 
-	// set velocities
+	-- set velocities
 	local Vel = self:GetVelocity()
 
 	local iNumPhysObjects = ent:GetPhysicsObjectCount()
@@ -134,7 +129,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 
 	end
 
-	// finish up
+	-- finish up
 	self:SetNWEntity("DeathRagdoll", ent )
 	table.insert(self.DeathRagdolls,ent)
 	table.insert(GAMEMODE.DeathRagdolls,ent)

@@ -213,7 +213,7 @@ local function openTauntMenu()
 		surface.DrawRect(1, 1, w - 2, h - 2)
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(8, 8, 8, 8)
 	function canvas:OnChildAdded( child )

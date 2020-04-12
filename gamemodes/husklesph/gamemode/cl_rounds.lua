@@ -1,7 +1,5 @@
-local PlayerMeta = FindMetaTable("Player")
-
-GM.GameState = GAMEMODE and GAMEMODE.GameState or 0
-GM.StateStart = GAMEMODE and GAMEMODE.StateStart or CurTime()
+GM.GameState = GAMEMODE && GAMEMODE.GameState || 0
+GM.StateStart = GAMEMODE && GAMEMODE.StateStart || CurTime()
 
 function GM:GetGameState()
 	return self.GameState
@@ -15,7 +13,7 @@ function GM:GetStateRunningTime()
 	return CurTime() - self.StateStart
 end
 
-net.Receive("gamestate", function (len)
+net.Receive("gamestate", function(len)
 	GAMEMODE.GameState = net.ReadUInt(32)
 	GAMEMODE.StateStart = net.ReadDouble()
 
@@ -29,13 +27,13 @@ net.Receive("gamestate", function (len)
 	end
 end)
 
-net.Receive("round_victor", function (len)
+net.Receive("round_victor", function(len)
 	local tab = {}
 	tab.reason = net.ReadUInt(8)
 	if tab.reason == 2 || tab.reason == 3 then
 		tab.winningTeam = net.ReadUInt(16)
 	end
-	
+
 	tab.playerAwards = {}
 	while net.ReadUInt(8) != 0 do
 		local k = net.ReadString()
@@ -49,13 +47,13 @@ net.Receive("round_victor", function (len)
 		}
 	end
 
-	// open the results panel
-	timer.Simple(2, function ()
+	-- open the results panel
+	timer.Simple(2, function()
 		GAMEMODE:EndRoundMenuResults(tab)
 	end)
 end)
 
-net.Receive("gamerules", function ()
+net.Receive("gamerules", function()
 
 	local settings = {}
 	while net.ReadUInt(8) != 0 do
@@ -69,6 +67,6 @@ net.Receive("gamerules", function ()
 end)
 
 function GM:GetRoundSettings()
-	self.RoundSettings = self.RoundSettings or {}
-	return self.RoundSettings 
+	self.RoundSettings = self.RoundSettings || {}
+	return self.RoundSettings
 end

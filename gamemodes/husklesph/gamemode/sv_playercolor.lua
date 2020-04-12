@@ -1,7 +1,7 @@
 local EntityMeta = FindMetaTable("Entity")
 
 function EntityMeta:GetPlayerColor()
-	return self.playerColor or Vector()
+	return self.playerColor || Vector()
 end
 
 function EntityMeta:SetPlayerColor(vec)

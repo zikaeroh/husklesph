@@ -1,8 +1,8 @@
 AddCSLuaFile("shared.lua")
 
-local rootFolder = (GM or GAMEMODE).Folder:sub(11) .. "/gamemode/"
+local rootFolder = (GM || GAMEMODE).Folder:sub(11) .. "/gamemode/"
 
-// add cs lua all the cl_ or sh_ files
+-- add cs lua all the cl_ and sh_ files
 local files, dirs = file.Find(rootFolder .. "*", "LUA")
 for k, v in pairs(files) do
 	if v:sub(1,3) == "cl_" || v:sub(1,3) == "sh_" then
@@ -64,14 +64,14 @@ function GM:Initialize()
 	self:StartAutoTauntTimer()
 end
 
-function GM:InitPostEntity() 
+function GM:InitPostEntity()
 	self:CheckForNewVersion()
 	self:InitPostEntityAndMapCleanup()
 
 	RunConsoleCommand("mp_show_voice_icons", "0")
 end
 
-function GM:InitPostEntityAndMapCleanup() 
+function GM:InitPostEntityAndMapCleanup()
 	for k, ent in pairs(ents.GetAll()) do
 		if ent:GetClass():find("door") then
 			ent:Fire("unlock","",0)
@@ -85,7 +85,7 @@ function GM:Think()
 end
 
 function GM:PlayerNoClip( ply )
-	timer.Simple(0, function () ply:CalculateSpeed() end)
+	timer.Simple(0, function() ply:CalculateSpeed() end)
 	return ply:IsSuperAdmin() || ply:GetMoveType() == MOVETYPE_NOCLIP
 end
 
@@ -105,7 +105,7 @@ function GM:EntityTakeDamage( ent, dmginfo )
 			local att = dmginfo:GetAttacker()
 			if IsValid(att) && att:IsPlayer() && att:Team() == 2 then
 
-				if bit.band(dmginfo:GetDamageType(), DMG_CRUSH) != DMG_CRUSH then					
+				if bit.band(dmginfo:GetDamageType(), DMG_CRUSH) != DMG_CRUSH then
 					local tdmg = DamageInfo()
 					tdmg:SetDamage(math.min(dmginfo:GetDamage(), math.max(self.HunterDamagePenalty:GetInt(), 1) ))
 					tdmg:SetDamageType(DMG_AIRBOAT)
@@ -116,8 +116,8 @@ function GM:EntityTakeDamage( ent, dmginfo )
 					tdmg:SetDamageForce(Vector(0, 0, 0))
 					att:TakeDamageInfo(tdmg)
 
-					// increase stat for end of round (Angriest Hunter)
-					att.PropDmgPenalty = (att.PropDmgPenalty or 0) + tdmg:GetDamage()
+					-- increase stat for end of round (Angriest Hunter)
+					att.PropDmgPenalty = (att.PropDmgPenalty || 0) + tdmg:GetDamage()
 				end
 			end
 		end

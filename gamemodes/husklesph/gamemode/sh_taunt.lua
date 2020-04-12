@@ -72,7 +72,7 @@ function TauntAllowedForPlayer(ply, tauntTable)
 	return PlayerModelTauntAllowed(ply, tauntTable.allowedModels)
 end
 
-// display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
+-- display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
 local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
 	if !name || type(name) ~= "string" then return end
 	if type(snd) ~= "table" then snd = {tostring(snd)} end
@@ -112,7 +112,7 @@ local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
 		count = count + 1
 
 		if SERVER then
-			// network the taunt
+			-- network the taunt
 			resource.AddFile("sound/" .. v)
 		end
 	end
@@ -135,7 +135,7 @@ end
 local tempG = {}
 tempG.addTaunt = addTaunt
 
-// inherit from _G
+-- inherit from _G
 local meta = {}
 meta.__index = _G
 meta.__newindex = _G
@@ -154,8 +154,8 @@ local function loadTaunts(rootFolder)
 		setfenv(f, tempG)
 		local b, err = pcall(f)
 
-		local s = SERVER and "Server" or "Client"
-		local c = SERVER and 90 or 0
+		local s = SERVER && "Server" || "Client"
+		local c = SERVER && 90 || 0
 		if !b then
 			MsgC(Color(255, 50, 50 + c), s .. " loading taunts failed: " .. filePath .. "\nError: " .. err .. "\n")
 		else
@@ -165,7 +165,7 @@ local function loadTaunts(rootFolder)
 end
 
 function GM:LoadTaunts()
-	loadTaunts((GM or GAMEMODE).Folder:sub(11) .. "/gamemode/taunts/")
+	loadTaunts((GM || GAMEMODE).Folder:sub(11) .. "/gamemode/taunts/")
 	loadTaunts("husklesph/taunts/")
 end
 

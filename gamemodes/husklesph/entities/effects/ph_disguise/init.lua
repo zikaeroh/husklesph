@@ -7,11 +7,11 @@ function EFFECT:Init( data )
 	self.pos = data:GetOrigin()
 	self.Scale = data:GetScale()
 	self.Mag = data:GetMagnitude()
-			
-	self.Emitter = ParticleEmitter( self.pos ) 
-	
+
+	self.Emitter = ParticleEmitter( self.pos )
+
 	for i = 1, 17 do
-		
+
 		-- local particle = self.Emitter:Add( "particle/particle_smokegrenade1", self.pos + VectorRand() * self.Scale / 2)
 		local t = Vector(math.Rand(-self.Scale, self.Scale), math.Rand(-self.Scale, self.Scale), math.Rand(0, self.Mag))
 		local particle = self.Emitter:Add( "particle/smokesprites_000" .. math.random(1, 9), self.pos + t)
@@ -20,16 +20,16 @@ function EFFECT:Init( data )
 		particle:SetStartAlpha( 20 )
 		particle:SetEndAlpha( 0 )
 		particle:SetStartSize( self.Scale * 2 )
-		particle:SetEndSize( self.Scale * 2 )   
+		particle:SetEndSize( self.Scale * 2 )
 		particle:SetRoll( math.random(0,360) )
-		//particle:SetRollDelta( 0 )
-		local i = math.random(50, 150)
-		particle:SetColor( i, i, i )
+		--particle:SetRollDelta( 0 )
+		local x = math.random(50, 150)
+		particle:SetColor( x, x, x )
 
 	end
 
-		
-	
+
+
 end
 
 function EFFECT:Think( )

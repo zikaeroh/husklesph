@@ -5,7 +5,7 @@ util.AddNetworkString("open_taunt_menu")
 local PlayerMeta = FindMetaTable("Player")
 
 function PlayerMeta:CanTaunt()
-	if !self:Alive() then 
+	if !self:Alive() then
 		return false
 	end
 
@@ -19,14 +19,14 @@ end
 function PlayerMeta:EmitTaunt(filename, durationOverride)
 	local duration = SoundDuration(filename)
 	if filename:match("%.mp3$") then
-		duration = durationOverride or 1
+		duration = durationOverride || 1
 	end
 
 	local sndName = FilenameToSoundname(filename)
 
 	self:EmitSound(sndName)
 	self.TauntEnd = CurTime() + duration + 0.1
-	self.TauntAmount = (self.TauntAmount or 0) + 1
+	self.TauntAmount = (self.TauntAmount || 0) + 1
 	self.AutoTauntDeadline = nil
 
 	if !self.TauntsUsed then self.TauntsUsed = {} end
@@ -44,7 +44,7 @@ end
 local function DoTaunt(ply, snd)
 	if !IsValid(ply) then return end
 	if !ply:CanTaunt() then return end
-	
+
 	local ats = AllowedTauntSounds[snd]
 	if !ats then return end
 
@@ -78,11 +78,11 @@ local function DoRandomTaunt(ply)
 	ply:EmitTaunt(snd, t.soundDurationOverride)
 end
 
-concommand.Add("ph_taunt", function (ply, com, args, full)
-	DoTaunt(ply, args[1] or "")
+concommand.Add("ph_taunt", function(ply, com, args, full)
+	DoTaunt(ply, args[1] || "")
 end)
 
-concommand.Add("ph_taunt_random", function (ply, com, args, full)
+concommand.Add("ph_taunt_random", function(ply, com, args, full)
 	DoRandomTaunt(ply)
 end)
 
@@ -99,7 +99,7 @@ function GM:SetTauntMenuPhrase(phrase, ply)
 end
 
 cvars.AddChangeCallback("ph_taunt_menu_phrase", function(convar_name, value_old, value_new)
-	(GM or GAMEMODE):SetTauntMenuPhrase(value_new)
+	(GM || GAMEMODE):SetTauntMenuPhrase(value_new)
 end)
 
 function GM:AutoTauntCheck()
@@ -118,9 +118,9 @@ function GM:AutoTauntCheck()
 
 		local begin
 		if ply.AutoTauntDeadline then
-			local secsLeft = ply.AutoTauntDeadline - CurTime() 
+			local secsLeft = ply.AutoTauntDeadline - CurTime()
 			if secsLeft > 0 then
-				continue 
+				continue
 			end
 
 			if !ply.TauntEnd || CurTime() > ply.AutoTauntDeadline then
@@ -140,7 +140,7 @@ function GM:AutoTauntCheck()
 end
 
 function GM:StartAutoTauntTimer()
-	timer.Destroy("AutoTauntCheck")
+	timer.Remove("AutoTauntCheck")
 	local start = self.AutoTauntEnabled:GetBool()
 
 	if start then
@@ -151,5 +151,5 @@ function GM:StartAutoTauntTimer()
 end
 
 cvars.AddChangeCallback("ph_auto_taunt", function(convar_name, value_old, value_new)
-	(GM or GAMEMODE):StartAutoTauntTimer()
+	(GM || GAMEMODE):StartAutoTauntTimer()
 end)

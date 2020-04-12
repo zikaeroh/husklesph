@@ -10,9 +10,9 @@ function GM:TeamsSetupPlayer(ply)
 	end
 end
 
-concommand.Add("car_jointeam", function (ply, com, args)
+concommand.Add("car_jointeam", function(ply, com, args)
 	local curteam = ply:Team()
-	local newteam = tonumber(args[1] or "") or 0
+	local newteam = tonumber(args[1] || "") || 0
 	if newteam == 1 && curteam != 1 then
 
 		ply:SetTeam(newteam)
@@ -23,8 +23,8 @@ concommand.Add("car_jointeam", function (ply, com, args)
 
 	elseif newteam >= 2 && newteam <= 3 && newteam != curteam then
 
-		// make sure we can't join the bigger team
-		local otherteam = newteam == 2 and 3 or 2
+		-- make sure we can't join the bigger team
+		local otherteam = newteam == 2 && 3 || 2
 		if team.NumPlayers(newteam) <= team.NumPlayers(otherteam) then
 			ply:SetTeam(newteam)
 			if ply:Alive() then
@@ -41,11 +41,11 @@ end)
 
 function GM:CheckTeamBalance()
 	if !self.TeamBalanceCheck || self.TeamBalanceCheck < CurTime() then
-		self.TeamBalanceCheck = CurTime() + 3 * 60 // check every 3 minutes
+		self.TeamBalanceCheck = CurTime() + 3 * 60 -- check every 3 minutes
 
 		local diff = team.NumPlayers(2) - team.NumPlayers(3)
-		if diff < -1 || diff > 1 then // teams must be off by more than 2 for team balance
-			self.TeamBalanceTimer = CurTime() + 30 // balance in 30 seconds
+		if diff < -1 || diff > 1 then -- teams must be off by more than 2 for team balance
+			self.TeamBalanceTimer = CurTime() + 30 -- balance in 30 seconds
 			for k,ply in pairs(player.GetAll()) do
 				ply:ChatPrint("Auto team balance in 30 seconds")
 			end
@@ -59,7 +59,7 @@ end
 
 function GM:BalanceTeams(nokill)
 	local diff = team.NumPlayers(2) - team.NumPlayers(3)
-	if diff < -1 || diff > 1 then // teams must be off by more than 2 for team balance
+	if diff < -1 || diff > 1 then -- teams must be off by more than 2 for team balance
 		local biggerTeam, smallerTeam = 3,2
 		if diff > 0 then
 			biggerTeam = 2

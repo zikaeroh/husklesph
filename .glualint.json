@@ -1,3 +1,7 @@
 {
-    "lint_maxScopeDepth": 0
+    "lint_syntaxErrors": true,
+    "lint_maxScopeDepth": 0,
+    "lint_redundantIfStatements": false,
+    "lint_shadowing": false,
+    "lint_unusedVars": false
 }

@@ -7,7 +7,7 @@ function GM:PlayerInitialSpawn(ply)
 	self:TeamsSetupPlayer(ply)
 
 	if self:GetGameState() != 0 then
-		timer.Simple(0, function ()
+		timer.Simple(0, function()
 			if IsValid(ply) then
 				ply:KillSilent()
 			end
@@ -25,7 +25,7 @@ function GM:PlayerLoadedLocalPlayer(ply)
 	self:SetTauntMenuPhrase(self.TauntMenuPhrase:GetString(), ply)
 end
 
-net.Receive("clientIPE", function (len, ply)
+net.Receive("clientIPE", function(len, ply)
 	if !ply.ClientIPE then
 		ply.ClientIPE = true
 		hook.Call("PlayerLoadedLocalPlayer", GAMEMODE, ply)
@@ -58,10 +58,10 @@ function GM:PlayerSpawn( ply )
 	self:PlayerSetupHands(ply)
 
 	local col = team.GetColor(ply:Team())
- 	local vec = Vector(col.r / 255,col.g / 255,col.b / 255)
- 	ply:SetPlayerColor(vec)
+	local vec = Vector(col.r / 255,col.g / 255,col.b / 255)
+	ply:SetPlayerColor(vec)
 
- 	ply.LastSpawnTime = CurTime()
+	ply.LastSpawnTime = CurTime()
 end
 
 function GM:PlayerSetupHands(ply)
@@ -90,11 +90,11 @@ function GM:PlayerSetupHands(ply)
 		ply:DeleteOnRemove( hands )
 
 		hands:Spawn()
- 	end
+	end
 end
 
 function PlayerMeta:CalculateSpeed()
-	// set the defaults
+	-- set the defaults
 	local settings = {
 		walkSpeed = 250,
 		runSpeed = 50,
@@ -104,7 +104,7 @@ function PlayerMeta:CalculateSpeed()
 		canJump = true
 	}
 
-	// speed penalty for small objects (popcan, small bottles, mouse, etc)
+	-- speed penalty for small objects (popcan, small bottles, mouse, etc)
 	if self:IsDisguised() then
 		if GAMEMODE.PropsSmallSize:GetFloat() > 0 then
 			local mul = math.Clamp(self:GetNWFloat("disguiseVolume", 1) / GAMEMODE.PropsSmallSize:GetFloat(), 0.5, 1)
@@ -119,11 +119,11 @@ function PlayerMeta:CalculateSpeed()
 	hook.Call("PlayerCalculateSpeed", ply, settings)
 
 
-	// set out new speeds
+	-- set out new speeds
 	if settings.canRun then
-		self:SetRunSpeed(settings.runSpeed or 1)
+		self:SetRunSpeed(settings.runSpeed || 1)
 	else
-		self:SetRunSpeed(settings.walkSpeed or 1)
+		self:SetRunSpeed(settings.walkSpeed || 1)
 	end
 	if self:GetMoveType() != MOVETYPE_NOCLIP then
 		if settings.canMove then
@@ -133,8 +133,8 @@ function PlayerMeta:CalculateSpeed()
 		end
 	end
 	self.CanRun = settings.canRun
-	self:SetWalkSpeed(settings.walkSpeed or 1)
-	self:SetJumpPower(settings.jumpPower or 1)
+	self:SetWalkSpeed(settings.walkSpeed || 1)
+	self:SetJumpPower(settings.jumpPower || 1)
 end
 
 function GM:PlayerLoadout(ply)
@@ -254,7 +254,7 @@ function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
 	-- positions
 	local pos = rigged && spwn || spwn:GetPos()
 
-	if not util.IsInWorld(pos) then return false end
+	if !util.IsInWorld(pos) then return false end
 
 	local blocking = ents.FindInBox(pos + Vector( -32, -32, 0 ), pos + Vector( 32, 32, 64 )) -- Changed from (-16, -16, 0) (16, 16, 64)
 
@@ -316,7 +316,7 @@ local function getSpawnEnts(plyTeam, force_all)
 	end
 
 	-- If necessary, ignore the plyTeam restriction and use ALL spawnpoints.
-	if force_all or #tbl == 0 then
+	if force_all || #tbl == 0 then
 		local allSpawnTypes = mergeTables(propSpawnTypes, hunterSpawnTypes, spectatorSpawnTypes)
 		for _, classname in ipairs(allSpawnTypes) do
 			for _, e in ipairs(ents.FindByClass(classname)) do
@@ -418,7 +418,7 @@ function GM:PlayerSelectSpawn(ply)
 					rigSpwn:SetPos(rig)
 					rigSpwn:Spawn()
 
-					ErrorNoHalt("PROPHUNTERS WARNING: Map has too few spawn points, using a rigged spawn for ".. tostring(ply:Nick()) .. "\n")
+					ErrorNoHalt("PROPHUNTERS WARNING: Map has too few spawn points, using a rigged spawn for " .. tostring(ply:Nick()) .. "\n")
 
 					self.HaveRiggedSpawn = true
 					return rigSpwn
@@ -454,13 +454,13 @@ function GM:PlayerDeathThink(ply)
 end
 
 local defaultDeathsound = Sound("ambient/voices/f_scream1.wav")
-local deathsoundsFile = file.Read(GM.Folder .. "/ph_deathsounds.txt", "GAME") or ""
+local deathsoundsFile = file.Read(GM.Folder .. "/ph_deathsounds.txt", "GAME") || ""
 local deathsounds = util.KeyValuesToTable(deathsoundsFile, true, true)
 
 for _, v in pairs(deathsounds) do
 	if type(v) == "string" then
 		resource.AddFile(Sound(v))
-		continue 
+		continue
 	end
 
 	for _, s in ipairs(v) do
@@ -477,7 +477,7 @@ local function chooseDeathsound(key)
 end
 
 local function randomDeathsound(ply)
-	return chooseDeathsound(ply:SteamID()) or chooseDeathsound("default") or defaultDeathsound
+	return chooseDeathsound(ply:SteamID()) || chooseDeathsound("default") || defaultDeathsound
 end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo)
@@ -495,15 +495,15 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 	ply.TauntEnd = nil
 	ply.AutoTauntDeadline = nil
 
-	// are they a prop
+	-- are they a prop
 	if ply:Team() == 3 then
-		// set the last death award
+		-- set the last death award
 		self.LastPropDeath = ply
 	end
 	ply:UnDisguise()
 
-	ply:Freeze(false) // why?, *sigh*
-	
+	ply:Freeze(false) -- why?, *sigh*
+
 	ply:CreateRagdoll()
 
 	local ent = ply:GetNWEntity("DeathRagdoll")
@@ -519,13 +519,13 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 		else
 			attacker:AddFrags(1)
 
-			// did a hunter kill a prop
+			-- did a hunter kill a prop
 			if attacker:Team() == 2 && ply:Team() == 3 then
 
-				// increase their round kills
-				attacker.HunterKills = (attacker.HunterKills or 0) + 1
+				-- increase their round kills
+				attacker.HunterKills = (attacker.HunterKills || 0) + 1
 
-				// set the first hunter kill award
+				-- set the first hunter kill award
 				if self.FirstHunterKill == nil then
 					self.FirstHunterKill = attacker
 				end
@@ -541,7 +541,7 @@ function GM:PlayerDeath(ply, inflictor, attacker )
 	ply.NextSpawnTime = CurTime() + 1
 	ply.DeathTime = CurTime()
 
-	// time until player can spectate another player
+	-- time until player can spectate another player
 	ply.SpectateTime = CurTime() + 2
 
 end
@@ -550,7 +550,6 @@ function GM:KeyPress(ply, key)
 	if ply:Alive() then
 		if key == IN_ATTACK then
 			self:PlayerDisguise(ply)
-		elseif key == IN_ATTACK2 then
 		end
 	end
 end
@@ -568,7 +567,7 @@ end
 
 function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, speaker )
 	if !IsValid(speaker) then return false end
-	local canhear = self:PlayerCanHearChatVoice(listener, speaker, "chat", teamOnly) 
+	local canhear = self:PlayerCanHearChatVoice(listener, speaker, "chat", teamOnly)
 	return canhear
 end
 
@@ -583,9 +582,9 @@ end
 
 
 local sv_alltalk = GetConVar( "sv_alltalk" )
-function GM:PlayerCanHearPlayersVoice( listener, talker ) 
+function GM:PlayerCanHearPlayersVoice( listener, talker )
 	if !IsValid(talker) then return false end
-	return self:PlayerCanHearChatVoice(listener, talker, "voice") 
+	return self:PlayerCanHearChatVoice(listener, talker, "voice")
 end
 
 
@@ -599,17 +598,17 @@ function GM:PlayerCanHearChatVoice( listener, talker, typ, teamOnly )
 	if sv_alltalk:GetBool() then
 		return true
 	end
-	
+
 	if self:GetGameState() == 3 || self:GetGameState() == 0 then
 		return true
 	end
 
-	// spectators and dead players can hear everyone
+	-- spectators and dead players can hear everyone
 	if listener:Team() == 1 || !listener:Alive() then
 		return true
 	end
 
-	// if the player is dead or a spectator we can't hear them
+	-- if the player is dead or a spectator we can't hear them
 	if !talker:Alive() || talker:Team() == 1 then
 		return false
 	end

@@ -1,10 +1,10 @@
-// mapvote
+-- mapvote
 
 util.AddNetworkString("ph_mapvote")
 util.AddNetworkString("ph_mapvotevotes")
 
-GM.MapVoteTime = GAMEMODE and GAMEMODE.MapVoteTime or 30
-GM.MapVoteStart = GAMEMODE and GAMEMODE.MapVoteStart or CurTime()
+GM.MapVoteTime = GAMEMODE && GAMEMODE.MapVoteTime || 30
+GM.MapVoteStart = GAMEMODE && GAMEMODE.MapVoteStart || CurTime()
 
 function GM:IsMapVoting()
 	return self.MapVoting
@@ -20,7 +20,7 @@ end
 
 function GM:RotateMap()
 	local map = game.GetMap()
-	local index 
+	local index
 	for k, map2 in pairs(self.MapList) do
 		if map == map2 then
 			index = k
@@ -32,7 +32,7 @@ function GM:RotateMap()
 		index = 1
 	end
 	local nextMap = self.MapList[index]
-	self:ChangeMapTo(map)
+	self:ChangeMapTo(nextMap)
 end
 
 function GM:ChangeMapTo(map)
@@ -44,7 +44,7 @@ function GM:ChangeMapTo(map)
 	print("[husklesph] Rotate changing map to " .. map)
 	GlobalChatMsg("Changing map to ", map)
 	hook.Call("OnChangeMap", GAMEMODE)
-	timer.Simple(5, function ()
+	timer.Simple(5, function()
 		RunConsoleCommand("changelevel", map)
 	end)
 end
@@ -60,7 +60,7 @@ local defaultMapList = {
 
 function GM:SaveMapList()
 
-	// ensure the folders are there
+	-- ensure the folders are there
 	if !file.Exists("husklesph/","DATA") then
 		file.CreateDir("husklesph")
 	end
@@ -72,7 +72,7 @@ function GM:SaveMapList()
 	file.Write("husklesph/maplist.txt", txt)
 end
 
-function GM:LoadMapList() 
+function GM:LoadMapList()
 	local jason = file.ReadDataAndContent("husklesph/maplist.txt")
 	if jason then
 		local tbl = {}
@@ -131,14 +131,14 @@ function GM:StartMapVote()
 	self.MapVoting = true
 	self.MapVotes = {}
 
-	// randomise the order of maps so people choose different ones
+	-- randomise the order of maps so people choose different ones
 	local maps = {}
 	for k, v in pairs(self.MapList) do
 		table.insert(maps, math.random(#maps) + 1, v)
 	end
 	self.MapList = maps
 
-	// make bots vote for a map
+	-- make bots vote for a map
 	-- for k, ply in pairs(player.GetAll()) do
 	-- 	if ply:IsBot() then
 	-- 		self.MapVotes[ply] = maps[math.random(#maps)]
@@ -156,7 +156,7 @@ function GM:MapVoteThink()
 			local votes = {}
 			for ply, map in pairs(self.MapVotes) do
 				if IsValid(ply) && ply:IsPlayer() then
-					votes[map] = (votes[map] or 0) + 1
+					votes[map] = (votes[map] || 0) + 1
 				end
 			end
 
@@ -224,7 +224,7 @@ function GM:NetworkMapVotes(ply)
 	end
 end
 
-concommand.Add("ph_votemap", function (ply, com, args)
+concommand.Add("ph_votemap", function(ply, com, args)
 	if GAMEMODE.MapVoting then
 		if #args < 1 then
 			return

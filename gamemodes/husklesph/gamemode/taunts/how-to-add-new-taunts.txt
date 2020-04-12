@@ -1,6 +1,6 @@
 Create a file in (if the folders don't exist, create them)
 
-	garrysmod/lua/husklesph/taunts/ 
+	garrysmod/lua/husklesph/taunts/
 
 called
 
@@ -15,7 +15,7 @@ Place your sound files in
 in something.lua list your taunts in the form
 
 	addTaunt("name", {
-		"husklesph/sound1.wav", 
+		"husklesph/sound1.wav",
 		"husklesph/sound2.wav"
 	}, "team", "gender", {"category1", "category2"}, durationOverride, allowedModels)
 
@@ -34,7 +34,7 @@ examples
 	addTaunt("Farts", {
 		"husklesph/fart1.mp3",
 		"husklesph/fart2.mp3"
-	}, "props", "both", {"farts"}, 5) // NOTE the 5 specifying the length, this is required for mp3s
+	}, "props", "both", {"farts"}, 5) -- NOTE the 5 specifying the length, this is required for mp3s
 
 	addTaunt("Get the hell out", {
 		"vo/npc/male01/gethellout.wav"
@@ -46,7 +46,7 @@ examples
 		"npc/zombie/zombie_alert3.wav"
 	}, "props", "both", {"zombie", "growls"})
 
-	
+
 	addTaunt("Radio", {
 		"music/radio1.mp3"
 	}, "props", nil, {"music"}, 39)

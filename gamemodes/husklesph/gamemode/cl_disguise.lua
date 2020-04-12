@@ -35,17 +35,12 @@ local function renderDis(self)
 					-- ent:DrawModel()
 				end
 			end
-		else
-			local ent = ply:GetNWEntity("disguiseEntity")
-			if IsValid(ent) then
-				-- ent:SetNoDraw(true)
-			end
 		end
 	end
 end
 
 function GM:RenderDisguises()
-	
+
 	cam.Start3D( EyePos(), EyeAngles() )
 	local b, err = pcall(renderDis, self)
 	cam.End3D()
@@ -69,7 +64,7 @@ function GM:RenderDisguiseHalo()
 
 		local tab = {}
 		for k, ply in pairs(player.GetAll()) do
-			if ply != client and ply:Team() == 3 and ply:IsDisguised() then
+			if ply != client && ply:Team() == 3 && ply:IsDisguised() then
 				if IsValid(ply.PropMod) then
 					table.insert(tab, ply.PropMod)
 				end

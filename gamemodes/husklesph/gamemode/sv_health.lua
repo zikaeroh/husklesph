@@ -8,5 +8,5 @@ function PlayerMeta:SetHMaxHealth(amo)
 end
 
 function PlayerMeta:GetHMaxHealth()
-	return self.HMaxHealth or 100
+	return self.HMaxHealth || 100
 end

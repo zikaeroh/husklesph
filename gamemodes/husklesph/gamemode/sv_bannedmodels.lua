@@ -58,7 +58,7 @@ function GM:LoadBannedModels()
 end
 
 
-net.Receive("ph_bannedmodels_getall", function (len, ply)
+net.Receive("ph_bannedmodels_getall", function(len, ply)
 	net.Start("ph_bannedmodels_getall")
 
 	for key, value in pairs(GAMEMODE.BannedModels) do
@@ -72,7 +72,7 @@ net.Receive("ph_bannedmodels_getall", function (len, ply)
 end)
 
 
-net.Receive("ph_bannedmodels_add", function (len, ply)
+net.Receive("ph_bannedmodels_add", function(len, ply)
 	if !ply:IsAdmin() then return end
 
 	local model = net.ReadString()
@@ -85,7 +85,7 @@ net.Receive("ph_bannedmodels_add", function (len, ply)
 end)
 
 
-net.Receive("ph_bannedmodels_remove", function (len, ply)
+net.Receive("ph_bannedmodels_remove", function(len, ply)
 	if !ply:IsAdmin() then return end
 
 	local model = net.ReadString()

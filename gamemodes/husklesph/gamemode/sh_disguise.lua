@@ -31,7 +31,7 @@ function PlayerMeta:CanFitHull(hullx, hully, hullz)
 	trace.maxs = Vector(hullx, hully, hullz)
 	trace.mins = Vector(-hullx, -hully, 0)
 	local tr = util.TraceHull(trace)
-	if tr.Hit then 
+	if tr.Hit then
 		return false
 	end
 	return true
@@ -115,11 +115,11 @@ end
 
 function GM:PlayerCanDisguiseCurrentTarget(ply)
 	if !IsValid(ply) then return false, nil end
-	
+
 	local horizLeniency = 50
 	local minHLeniency = 100
-	local verticalLeniency = 100	
-	
+	local verticalLeniency = 100
+
 	if ply:Team() == 3 then
 		local tr = ply:GetPropEyeTrace()
 		if IsValid(tr.Entity) then
@@ -134,10 +134,10 @@ function GM:PlayerCanDisguiseCurrentTarget(ply)
 			local withinZRange = hitZ >= propMinZ - verticalLeniency && hitZ <= propMaxZ + verticalLeniency
 			local propXY, propZ = ply:GetPropSize()
 			local withinHorizRange = hitPosition:Distance(testPos) < math.max(propXY + horizLeniency, minHLeniency)
-			if withinHorizRange and withinZRange then
+			if withinHorizRange && withinZRange then
 				if ply:CanDisguiseAsProp(tr.Entity) then
 					return true, tr.Entity
-				end	
+				end
 			end
 		end
 	end

@@ -5,10 +5,10 @@ local function addHelpText(heading, size, text, color)
 
 	local t = {}
 	t.heading = heading
-	t.size = size or 1
+	t.size = size || 1
 	t.category = cat
 	t.text = text
-	t.color = color 
+	t.color = color
 	table.insert(categories, t)
 end
 
@@ -76,7 +76,7 @@ local function openHelpScreen()
 		function catlist:Paint(w, h)
 		end
 
-		// child positioning
+		-- child positioning
 		local canvas = catlist:GetCanvas()
 		canvas:DockPadding(0, 0, 0, 0)
 		function canvas:OnChildAdded( child )
@@ -129,7 +129,7 @@ local function openHelpScreen()
 			surface.DrawRect(1, 1, w - 2, h - 2)
 		end
 
-		// child positioning
+		-- child positioning
 		local canvas = textscroll:GetCanvas()
 		canvas:DockPadding(0, 0, 0, 0)
 		function canvas:OnChildAdded( child )

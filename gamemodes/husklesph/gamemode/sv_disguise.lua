@@ -1,12 +1,11 @@
 include("sh_disguise.lua")
 
 local PlayerMeta = FindMetaTable("Player")
-local EntityMeta = FindMetaTable("Entity")
 
 function GM:PlayerDisguise(ply)
 	local canDisguise, target = self:PlayerCanDisguiseCurrentTarget(ply)
 	if canDisguise then
-		if ply.LastDisguise and ply.LastDisguise + 1 > CurTime() then
+		if ply.LastDisguise && ply.LastDisguise + 1 > CurTime() then
 			return
 		end
 		ply:DisguiseAsProp(target)
@@ -20,15 +19,15 @@ function PlayerMeta:DisguiseAsProp(ent)
 		self:PlayerChatMsg(Color(255, 50, 50), "Not enough room to change")
 		return
 	end
-	
+
 	if !self:IsDisguised() then
 		self.OldPlayerModel = self:GetModel()
 	end
 	self:Flashlight(false)
 
 
-	// create an entity for the disguise
-	// we can't use a clientside entity as it needs a shadow
+	-- create an entity for the disguise
+	-- we can't use a clientside entity as it needs a shadow
 	local dent = self:GetNWEntity("disguiseEntity")
 	if !IsValid(dent) then
 		dent = ents.Create("ph_disguise")
@@ -39,7 +38,7 @@ function PlayerMeta:DisguiseAsProp(ent)
 		dent:Spawn()
 	end
 	dent:SetModel(ent:GetModel())
-	
+
 	self:SetNWBool("disguised", true)
 	self:SetNWString("disguiseModel", ent:GetModel())
 	self:SetNWVector("disguiseMins", ent:OBBMins())
@@ -61,7 +60,7 @@ function PlayerMeta:DisguiseAsProp(ent)
 		maxHealth = math.Clamp(math.Round(phys:GetVolume() / 230), 1, 200)
 		volume = phys:GetVolume()
 	end
-	self.PercentageHealth = math.min(self:Health() / self:GetHMaxHealth(), self.PercentageHealth or 1)
+	self.PercentageHealth = math.min(self:Health() / self:GetHMaxHealth(), self.PercentageHealth || 1)
 	local per = math.Clamp(self.PercentageHealth * maxHealth, 1, 200)
 	self:SetHealth(per)
 	self:SetHMaxHealth(maxHealth)
@@ -106,7 +105,7 @@ function PlayerMeta:UnDisguise()
 	end
 	self:SetViewOffset(Vector(0, 0, 64))
 	self:SetViewOffsetDucked(Vector(0, 0, 28))
-	
+
 	self:CalculateSpeed()
 end
 
@@ -142,7 +141,7 @@ function PlayerMeta:DisguiseUnlockRotation()
 	GAMEMODE:PlayerSetHull(self, hullxy, hullxy, hullz, hullz)
 end
 
-concommand.Add("ph_lockrotation", function (ply, com, args)
+concommand.Add("ph_lockrotation", function(ply, com, args)
 	if !IsValid(ply) then return end
 	if !ply:IsDisguised() then return end
 	if ply:DisguiseRotationLocked() then

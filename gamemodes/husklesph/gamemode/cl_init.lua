@@ -57,12 +57,12 @@ end
 
 local function lerp(from, to, step)
 	if from < to then
-		return math.min(from + step, to)	
+		return math.min(from + step, to)
 	end
 	return math.max(from - step, to)
 end
 
-local camDis, camHeight = 0,0 
+local camDis, camHeight = 0,0
 function GM:CalcView(ply, pos, angles, fov)
 	if self:IsCSpectating() && IsValid(self:GetCSpectatee()) then
 		ply = self:GetCSpectatee()
@@ -109,7 +109,7 @@ function GM:ShouldDrawLocalPlayer()
 	return false
 end
 
-net.Receive("hull_set", function (len)
+net.Receive("hull_set", function(len)
 	local ply = net.ReadEntity()
 	if !IsValid(ply) then return end
 	local hullx = net.ReadFloat()
@@ -130,11 +130,11 @@ function GM:EntityRemoved(ent)
 	end
 end
 
-concommand.Add("+menu_context", function ()
+concommand.Add("+menu_context", function()
 	RunConsoleCommand("ph_lockrotation")
 end)
 
-net.Receive("player_model_sex", function ()
+net.Receive("player_model_sex", function()
 	local sex = net.ReadString()
 	if #sex == 0 then
 		sex = nil
@@ -144,7 +144,7 @@ end)
 
 function GM:StartChat()
 	if IsValid(self.EndRoundPanel) && self.EndRoundPanel:IsVisible() then
-		timer.Simple(0, function () chat.Close() end)
+		timer.Simple(0, function() chat.Close() end)
 
 		self.EndRoundPanel:SetKeyboardInputEnabled(true)
 		self.EndRoundPanel.ChatTextEntry:RequestFocus()

@@ -23,10 +23,8 @@ function ENT:Initialize()
 	if SERVER then
 		self:SetMoveType( MOVETYPE_NONE )
 		self:SetSolid( SOLID_NONE )
-	else 
-		
 	end
-	
+
 end
 
 if ( CLIENT ) then

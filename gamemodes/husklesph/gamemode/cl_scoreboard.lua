@@ -48,11 +48,11 @@ local function addPlayerItem(self, mlist, ply, pteam)
 			if ply:IsMuted() then
 				surface.SetMaterial(muted)
 
-				// draw shadow
+				-- draw shadow
 				-- surface.SetDrawColor(color_black)
 				-- surface.DrawTexturedRect(s + 1, h / 2 - 16 + 1, 32, 32)
 
-				// draw mute icon
+				-- draw mute icon
 				surface.SetDrawColor(150, 150, 150, 255)
 				surface.DrawTexturedRect(s, h / 2 - 16, 32, 32)
 				s = s + 32 + 4
@@ -98,7 +98,7 @@ local function doPlayerItems(self, mlist, pteam)
 			del = true
 		end
 	end
-	// make sure the rest of the elements are moved up
+	-- make sure the rest of the elements are moved up
 	if del then
 		timer.Simple(0, function() mlist:GetCanvas():InvalidateLayout() end)
 	end
@@ -118,7 +118,7 @@ local function makeTeamList(parent, pteam)
 		surface.DrawLine(0, hs, 0, h - 1)
 		surface.DrawLine(w - 1, hs, w - 1, h - 1)
 		surface.DrawLine(0, h - 1, w, h - 1)
-		
+
 		surface.SetDrawColor(55, 55, 55, 120)
 		surface.DrawRect(1, hs, w - 2, h - hs)
 	end
@@ -135,7 +135,7 @@ local function makeTeamList(parent, pteam)
 	headp:DockMargin(0,0,0,4)
 	headp:Dock(TOP)
 	headp:SetTall(hs)
-	function headp:Paint(w, h) 
+	function headp:Paint(w, h)
 		surface.SetDrawColor(68, 68, 68, 255)
 		-- surface.DrawRect(0, 0, w, h)
 
@@ -179,10 +179,10 @@ local function makeTeamList(parent, pteam)
 	mlist = vgui.Create("DScrollPanel", pnl)
 	mlist:Dock(FILL)
 	function mlist:Paint(w, h)
-		
+
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(8, 8, 8, 8)
 	function canvas:OnChildAdded( child )
@@ -243,18 +243,18 @@ function GM:ScoreboardShow()
 		menu.Credits = vgui.Create("DPanel", menu)
 		menu.Credits:Dock(TOP)
 		menu.Credits:DockMargin(0, 0, 0, 4)
-		function menu.Credits:Paint(w, h) 
+		function menu.Credits:Paint(w, h)
 			surface.SetFont("RobotoHUD-25")
-			local t = GAMEMODE.Name or ""
+			local t = GAMEMODE.Name || ""
 			local tw,th = surface.GetTextSize(t)
 			draw.ShadowText(t, "RobotoHUD-25", 4, 0, Color(199, 49, 29), 0)
 
-			draw.ShadowText(tostring(GAMEMODE.Version or "error") .. ", maintained by Zikaeroh, code by many cool people :)", "RobotoHUD-L12", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
+			draw.ShadowText(tostring(GAMEMODE.Version || "error") .. ", maintained by Zikaeroh, code by many cool people :)", "RobotoHUD-L12", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
 		end
 
 		function menu.Credits:PerformLayout()
 			surface.SetFont("RobotoHUD-25")
-			local w,h = surface.GetTextSize(GAMEMODE.Name or "")
+			local w,h = surface.GetTextSize(GAMEMODE.Name || "")
 			self:SetTall(h)
 		end
 

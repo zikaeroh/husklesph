@@ -48,21 +48,21 @@ function Builder:Run()
 				for word in rest:gmatch("([^%s]+[%s]*)") do
 					local w, h = surface.GetTextSize(word)
 
-					// can't we fit the word on the same line
+					-- can't we fit the word on the same line
 					if w + self.curWidth > self.maxWidth then
 
-						// is the word too long for a single line (then we need to split it)
+						-- is the word too long for a single line (then we need to split it)
 						if w > self.maxWidth then
 
-							// while our current word cannot fit in the line
+							-- while our current word cannot fit in the line
 							while self.curWidth + w > self.maxWidth do
 
-								// find the number of chracters that can fit
+								-- find the number of chracters that can fit
 								local chars = 1
 								while true do
 									local aw, ah = surface.GetTextSize(word:sub(1, chars))
 									if chars > #word then
-										print('error' .. chars)
+										print("error" .. chars)
 										break
 									end
 									if aw + self.curWidth > self.maxWidth then
@@ -72,11 +72,11 @@ function Builder:Run()
 									chars = chars + 1
 								end
 
-								// add the partial word to line
+								-- add the partial word to line
 								self.curText = self.curText .. word:sub(1, chars)
 								self:WriteBlock(true)
 
-								// start a new line with the rest of the characters
+								-- start a new line with the rest of the characters
 								self.curWidth = 0
 								self.curText = ""
 
@@ -87,22 +87,19 @@ function Builder:Run()
 							self.curWidth = w
 							self.curText = word
 						else
-							// put the word on a new line
+							-- put the word on a new line
 							self:WriteBlock(true)
 
 							self.curWidth = w
 							self.curText = word
 						end
 					else
-						// add the word to the current line
+						-- add the word to the current line
 						self.curText = self.curText .. word
 						self.curWidth = self.curWidth + w
 					end
 				end
-				if #chunk == 0 then
-					-- self:WriteBlock(true)
-				end
-			end // end chunk loop
+			end -- end chunk loop
 		end
 	end
 	self:WriteBlock(true)
@@ -118,7 +115,7 @@ end
 function Builder:Paint(bx, by)
 	local y = 4
 	for k, line in pairs(self.blocks) do
-		draw.DrawText(line.text, self.font, bx + line.startX, by + y, line.color or color_white, 0)
+		draw.DrawText(line.text, self.font, bx + line.startX, by + y, line.color || color_white, 0)
 		if line.newLine then
 			y = y + draw.GetFontHeight(self.font)
 		end

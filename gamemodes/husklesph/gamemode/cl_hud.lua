@@ -24,13 +24,11 @@ createRoboto(8)
 createRoboto(12)
 
 function draw.ShadowText(n, f, x, y, c, px, py, shadowColor)
-	draw.SimpleText(n, f, x + 1, y + 1, shadowColor or color_black, px, py)
+	draw.SimpleText(n, f, x + 1, y + 1, shadowColor || color_black, px, py)
 	draw.SimpleText(n, f, x, y, c, px, py)
 end
 
 function GM:HUDPaint()
-	if LocalPlayer():Alive() then
-	end
 	self:DrawGameHUD()
 	-- DebugInfo(1, tostring(LocalPlayer():GetVelocity():Length()))
 
@@ -50,9 +48,6 @@ local function keyName(str)
 end
 
 function GM:DrawGameHUD()
-	if LocalPlayer():Alive() then
-	end
-
 	local ply = LocalPlayer()
 	if self:IsCSpectating() && IsValid(self:GetCSpectatee()) && self:GetCSpectatee():IsPlayer() then
 		ply = self:GetCSpectatee()
@@ -69,16 +64,16 @@ function GM:DrawGameHUD()
 
 	local shouldDraw = hook.Run("HUDShouldDraw", "PropHuntersPlayerNames")
 	if shouldDraw != false then
-		// draw names
+		-- draw names
 		if IsValid(tr.Entity) && tr.Entity:IsPlayer() && tr.HitPos:Distance(tr.StartPos) < 500 then
-			// hunters can only see their teams names
+			-- hunters can only see their teams names
 			if ply:Team() != 2 || ply:Team() == tr.Entity:Team() then
 				self.LastLooked = tr.Entity
 				self.LookedFade = CurTime()
 			end
 		end
 		if IsValid(self.LastLooked) && self.LookedFade + 2 > CurTime() then
-			local name = self.LastLooked:Nick() or "error"
+			local name = self.LastLooked:Nick() || "error"
 			local col = table.Copy(team.GetColor(self.LastLooked:Team()))
 			col.a = (1 - (CurTime() - self.LookedFade) / 2) * 255
 			draw.ShadowText(name, "RobotoHUD-20", ScrW() / 2, ScrH() / 2 + 80, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, Color(0, 0, 0, col.a))
@@ -86,7 +81,7 @@ function GM:DrawGameHUD()
 	end
 
 
-	local help 
+	local help
 	if LocalPlayer():Alive() then
 		if LocalPlayer():Team() == 3 then
 			if self:GetGameState() == 1 || (self:GetGameState() == 2 && !LocalPlayer():IsDisguised()) then
@@ -165,9 +160,6 @@ local function drawPoly(x, y, w, h, percent)
 end
 
 function GM:DrawHealth(ply)
-
-	local client = LocalPlayer()
-
 	local x = 20
 	local w,h = math.ceil(ScrW() * 0.09), 80
 	h = w
@@ -214,14 +206,14 @@ function GM:DrawHealth(ply)
 
 
 	render.SetStencilEnable( false )
- 
+
 	render.SetStencilWriteMask( 0 );
 		render.SetStencilReferenceValue( 0 );
 		render.SetStencilTestMask( 0 );
 		render.SetStencilEnable( false )
 		render.OverrideDepthEnable( false )
 		render.SetBlend( 1 )
-		
+
 		cam.IgnoreZ( false )
 
 	if ply:IsDisguised() && ply:DisguiseRotationLocked() then
@@ -262,12 +254,12 @@ function GM:DrawRoundTimer()
 			draw.ShadowText("GO!", "RobotoHUD-50", ScrW() / 2, ScrH() / 3, color_white, 1, 1)
 		end
 		local settings = self:GetRoundSettings()
-		local roundTime = settings.RoundTime or 5 * 60
+		local roundTime = settings.RoundTime || 5 * 60
 		local time = math.max(0, roundTime - self:GetStateRunningTime())
 		local m = math.floor(time / 60)
 		local s = math.floor(time % 60)
 		m = tostring(m)
-		s = s < 10 and "0" .. s or tostring(s)
+		s = s < 10 && "0" .. s || tostring(s)
 		local fh = draw.GetFontHeight("RobotoHUD-L15") * 1
 		draw.ShadowText("Props win in", "RobotoHUD-L15", ScrW() / 2, 20, color_white, 1, 3)
 		draw.ShadowText(m .. ":" .. s, "RobotoHUD-20", ScrW() / 2, fh + 20, color_white, 1, 3)
@@ -276,9 +268,6 @@ end
 
 function GM:PreDrawHUD()
 	local client = LocalPlayer()
-	if !client:Alive() then
-	end
-
 	if self:GetGameState() == 1 then
 		if client:Team() == 2 then
 			surface.SetDrawColor(25, 25, 25, 255)

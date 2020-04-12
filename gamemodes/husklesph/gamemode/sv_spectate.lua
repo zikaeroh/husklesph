@@ -2,8 +2,8 @@ util.AddNetworkString("spectating_status")
 
 local PlayerMeta = FindMetaTable("Player")
 
-function PlayerMeta:CSpectate(mode, spectatee) 
-	mode = mode or OBS_MODE_IN_EYE
+function PlayerMeta:CSpectate(mode, spectatee)
+	mode = mode || OBS_MODE_IN_EYE
 	self:Spectate(mode)
 	if IsValid(spectatee) then
 		self:SpectateEntity(spectatee)
@@ -15,12 +15,12 @@ function PlayerMeta:CSpectate(mode, spectatee)
 	self.SpectateMode = mode
 	self.Spectating = true
 	net.Start("spectating_status")
-	net.WriteInt(self.SpectateMode or -1, 8)
-	net.WriteEntity(self.Spectatee or Entity(-1))
+	net.WriteInt(self.SpectateMode || -1, 8)
+	net.WriteEntity(self.Spectatee || Entity(-1))
 	net.Send(self)
 end
 
-function PlayerMeta:UnCSpectate(mode, spectatee) 
+function PlayerMeta:UnCSpectate(mode, spectatee)
 	self:UnSpectate()
 	self.SpectateMode = nil
 	self.Spectatee = nil
@@ -31,15 +31,15 @@ function PlayerMeta:UnCSpectate(mode, spectatee)
 	net.Send(self)
 end
 
-function PlayerMeta:IsCSpectating() 
+function PlayerMeta:IsCSpectating()
 	return self.Spectating
 end
 
-function PlayerMeta:GetCSpectatee() 
+function PlayerMeta:GetCSpectatee()
 	return self.Spectatee
 end
 
-function PlayerMeta:GetCSpectateMode() 
+function PlayerMeta:GetCSpectateMode()
 	return self.SpectateMode
 end
 
@@ -53,13 +53,13 @@ function GM:SpectateThink()
 end
 
 function GM:SpectateNext(ply, direction)
-	direction = direction or 1
+	direction = direction || 1
 
 	local players = {}
 	local index = 1
 	for k, v in pairs(player.GetAll()) do
 		if v != ply then
-			// can only spectate same team and alive
+			-- can only spectate same team and alive
 			if v:Alive() && (v:Team() == ply:Team() || ply:Team() == 1) then
 				table.insert(players, v)
 				if v == ply:GetCSpectatee() then
@@ -104,7 +104,7 @@ function GM:SpectateNext(ply, direction)
 	end
 end
 
-function GM:ChooseSpectatee(ply) 
+function GM:ChooseSpectatee(ply)
 
 	if !ply.SpectateTime || ply.SpectateTime < CurTime() then
 
@@ -114,7 +114,7 @@ function GM:ChooseSpectatee(ply)
 			end
 		else
 
-			local direction 
+			local direction
 			if ply:KeyPressed(IN_ATTACK) then
 				direction = 1
 			elseif ply:KeyPressed(IN_ATTACK2) then
@@ -127,7 +127,7 @@ function GM:ChooseSpectatee(ply)
 		end
 	end
 
-	// if invalid or dead
+	-- if invalid or dead
 	if !IsValid(ply:GetCSpectatee()) && ply:GetCSpectateMode() != OBS_MODE_ROAMING then
 		self:SpectateNext(ply)
 	end

@@ -28,7 +28,7 @@ function GM:RemoveBannedModel(model)
 end
 
 
-net.Receive("ph_bannedmodels_getall", function (len)
+net.Receive("ph_bannedmodels_getall", function(len)
 	GAMEMODE.BannedModels = {}
 
 	local model = net.ReadString()
@@ -39,19 +39,19 @@ net.Receive("ph_bannedmodels_getall", function (len)
 end)
 
 
-net.Receive("ph_bannedmodels_add", function (len)
+net.Receive("ph_bannedmodels_add", function(len)
 	local model = net.ReadString()
 	GAMEMODE:AddBannedModel(model)
 end)
 
 
-net.Receive("ph_bannedmodels_remove", function (len)
+net.Receive("ph_bannedmodels_remove", function(len)
 	local model = net.ReadString()
 	GAMEMODE:RemoveBannedModel(model)
 end)
 
 
-concommand.Add("ph_bannedmodels_menu", function (client)
+concommand.Add("ph_bannedmodels_menu", function(client)
 	menu:SetVisible(true)
 end)
 
@@ -119,7 +119,7 @@ function GM:CreateBannedModelsMenu()
 	-- there are enough items in the list to require it.
 	local scrollPanel = vgui.Create("DScrollPanel", menu)
 	scrollPanel:Dock(FILL)
-	
+
 	local modelIconWidth = 128
 	local modelIconHeight = 128
 	local usableWidthForModelIcons = menu:GetWide() - scrollPanel:GetVBar():GetWide() -- Don't want icons to overlap the scroll bar.
@@ -137,7 +137,7 @@ function GM:CreateBannedModelsMenu()
 
 	-- Allows functions outside of the menu to update the icons. Useful for updating the menu
 	-- live if it's open when a net message is received to add a model.
-	menu.AddModel = function (model)
+	menu.AddModel = function(model)
 		local modelIcon = vgui.Create("SpawnIcon")
 		modelIcon:SetPos(75, 75)
 		modelIcon:SetSize(modelIconWidth, modelIconHeight)
@@ -171,7 +171,7 @@ function GM:CreateBannedModelsMenu()
 	end
 
 	-- Same as menu.AddModel but for removing models from the grid.
-	menu.RemoveModel = function (model)
+	menu.RemoveModel = function(model)
 		for _, value in pairs(menu.grid:GetItems()) do
 			if value:GetModelName() == model then
 				menu.grid:RemoveItem(value)

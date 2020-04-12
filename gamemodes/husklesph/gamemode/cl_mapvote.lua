@@ -1,7 +1,7 @@
-GM.MapVoteTime = GAMEMODE and GAMEMODE.MapVoteTime or 30
-GM.MapVoteStart = GAMEMODE and GAMEMODE.MapVoteStart or CurTime()
+GM.MapVoteTime = GAMEMODE && GAMEMODE.MapVoteTime || 30
+GM.MapVoteStart = GAMEMODE && GAMEMODE.MapVoteStart || CurTime()
 
-net.Receive("ph_mapvote", function (len)
+net.Receive("ph_mapvote", function(len)
 	GAMEMODE.MapVoteStart = net.ReadFloat()
 	GAMEMODE.MapVoteTime = net.ReadFloat()
 
@@ -13,16 +13,16 @@ net.Receive("ph_mapvote", function (len)
 		local map = net.ReadString()
 		table.insert(mapList, map)
 	end
-	
+
 	GAMEMODE.SelfMapVote = nil
 	GAMEMODE.MapVotes = {}
 	GAMEMODE.MapVotesByMap = {}
 	GAMEMODE.MapList = mapList
-	
+
 	GAMEMODE:EndRoundMapVote()
 end)
 
-net.Receive("ph_mapvotevotes", function (len)
+net.Receive("ph_mapvotevotes", function(len)
 
 	local mapVotes = {}
 
@@ -38,14 +38,14 @@ net.Receive("ph_mapvotevotes", function (len)
 
 	local byMap = {}
 	for ply, map in pairs(mapVotes) do
-		byMap[map] = byMap[map] or {}
+		byMap[map] = byMap[map] || {}
 		table.insert(byMap[map], ply)
 
 		if ply == LocalPlayer() then
 			GAMEMODE.SelfMapVote = map
 		end
 	end
-	
+
 	GAMEMODE.MapVotes = mapVotes
 	GAMEMODE.MapVotesByMap = byMap
 end)

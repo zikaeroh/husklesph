@@ -36,7 +36,7 @@ local function addPlayerItem(self, mlist, ply)
 				local x, y = self:LocalToScreen(0, 0)
 				render.SetScissorRect(x, y, x + s + 32 * (0.5 + v / 2), y + h, true)
 
-				// draw mute icon
+				-- draw mute icon
 				surface.SetDrawColor(255, 255, 255, 255)
 				-- surface.SetDrawColor(255, 255, 255, 255 * math.Clamp(v, 0.1, 1))
 				surface.DrawTexturedRect(s, h / 2 - 16, 32, 32)
@@ -48,7 +48,7 @@ local function addPlayerItem(self, mlist, ply)
 			if ply:IsMuted() then
 				surface.SetMaterial(muted)
 
-				// draw mute icon
+				-- draw mute icon
 				surface.SetDrawColor(150, 150, 150, 255)
 				surface.DrawTexturedRect(s, h / 2 - 16, 32, 32)
 				s = s + 32 + 4
@@ -95,27 +95,27 @@ local function doPlayerItems(self, mlist)
 			del = true
 		end
 	end
-	// make sure the rest of the elements are sorted and moved up to fill gaps
+	-- make sure the rest of the elements are sorted and moved up to fill gaps
 	if del || add then
-		timer.Simple(0, function() 
+		timer.Simple(0, function()
 			local childs = mlist:GetCanvas():GetChildren()
-			table.sort(childs, function (a, b)
+			table.sort(childs, function(a, b)
 				if !IsValid(a) then print(a, b, 1) return false end
 				if !IsValid(b) then print(a, b, 2) return false end
 				if !IsValid(a.player) then print(a, b, 3) return false end
 				if !IsValid(b.player) then print(a, b, 4) return false end
 				return a.player:Team() * 1000 + a.player:EntIndex() < b.player:Team() * 1000 + b.player:EntIndex()
 			end)
-			
+
 			for k, v in pairs(childs) do
 				v:SetParent(mlist)
 			end
-			mlist:GetCanvas():InvalidateLayout() 
+			mlist:GetCanvas():InvalidateLayout()
 		end)
 	end
 end
 
-concommand.Add("ph_endroundmenu_close", function ()
+concommand.Add("ph_endroundmenu_close", function()
 	if IsValid(menu) then
 		menu:Close()
 	end
@@ -150,16 +150,16 @@ function GM:OpenEndRoundMenu()
 
 		local Fraction = 0.4
 
-		surface.SetMaterial( matBlurScreen )	
+		surface.SetMaterial( matBlurScreen )
 		surface.SetDrawColor( 255, 255, 255, 255 )
 
-		for i=0.33, 1, 0.33 do
+		for i = 0.33, 1, 0.33 do
 			matBlurScreen:SetFloat( "$blur", Fraction * 5 * i )
 			matBlurScreen:Recompute()
 			if ( render ) then render.UpdateScreenEffectTexture() end
 			surface.DrawTexturedRect( x * -1, y * -1, ScrW(), ScrH() )
 		end
-		
+
 		surface.SetDrawColor(40,40,40,230)
 		surface.DrawRect(-x, -y, ScrW(), ScrH())
 
@@ -174,7 +174,7 @@ function GM:OpenEndRoundMenu()
 	function leftpnl:Paint(w, h)
 	end
 
-	// player list section
+	-- player list section
 	local listpnl = vgui.Create("DPanel", leftpnl)
 	listpnl:Dock(FILL)
 	function listpnl:Paint(w, h)
@@ -205,7 +205,7 @@ function GM:OpenEndRoundMenu()
 		end
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = plist:GetCanvas()
 	canvas:DockPadding(0, 0, 0, 0)
 	function canvas:OnChildAdded( child )
@@ -213,7 +213,7 @@ function GM:OpenEndRoundMenu()
 		child:DockMargin(0, 0, 0, 1)
 	end
 
-	// chat section
+	-- chat section
 	local pnl = vgui.Create("DPanel", leftpnl)
 	pnl:Dock(BOTTOM)
 	pnl:DockMargin(0, 20, 0, 0)
@@ -266,7 +266,7 @@ function GM:OpenEndRoundMenu()
 	function entry:OnEnter(...)
 		RunConsoleCommand("say", self:GetValue())
 		self:SetText("")
-		timer.Simple(0, function ()
+		timer.Simple(0, function()
 			menu:SetKeyboardInputEnabled(true)
 			self:RequestFocus()
 		end)
@@ -274,7 +274,7 @@ function GM:OpenEndRoundMenu()
 	local colCursor = Color(255, 0, 0)
 	local colText = Color(180, 180, 180)
 	function entry:Paint(w, h)
-		self:DrawTextEntryText( self.Focused and color_white or colText, self.m_colHighlight, colCursor )
+		self:DrawTextEntryText( self.Focused && color_white || colText, self.m_colHighlight, colCursor )
 	end
 	function entry:OnGetFocus()
 		self.Focused = true
@@ -292,7 +292,7 @@ function GM:OpenEndRoundMenu()
 	function mlist:Paint(w, h)
 	end
 
-	// child positioning
+	-- child positioning
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(0, 0, 0, 0)
 	function canvas:OnChildAdded( child )
@@ -310,13 +310,13 @@ function GM:OpenEndRoundMenu()
 		self:SetEnabled( _canvassize_ > _barsize_ )
 
 		self:InvalidateLayout()
-		
+
 		if self:GetScroll() == oldSize || (oldSize == 1 && self:GetScroll() == 0) then
-			self:SetScroll(self.CanvasSize) 
+			self:SetScroll(self.CanvasSize)
 		end
 	end
 
-	// results section
+	-- results section
 	local respnl = vgui.Create("DPanel", menu)
 	menu.ResultsPanel = respnl
 	respnl:Dock(FILL)
@@ -351,7 +351,7 @@ function GM:OpenEndRoundMenu()
 	function timeleft:Paint(w, h)
 		if GAMEMODE:GetGameState() == 3 then
 			local settings = GAMEMODE:GetRoundSettings()
-			local roundTime = settings.NextRoundTime or 30
+			local roundTime = settings.NextRoundTime || 30
 			local time = math.max(0, roundTime - GAMEMODE:GetStateRunningTime())
 			draw.SimpleText("Next round in " .. math.ceil(time), "RobotoHUD-20", w - 4, 0, col, 2)
 		end
@@ -371,7 +371,7 @@ function GM:OpenEndRoundMenu()
 		child:DockMargin(0, 0, 0, 16)
 	end
 
-	// map vote
+	-- map vote
 	local votepnl = vgui.Create("DPanel", menu)
 	votepnl:SetVisible(false)
 	menu.VotePanel = votepnl
@@ -397,7 +397,7 @@ function GM:OpenEndRoundMenu()
 	local col = Color(150, 150, 150)
 	function timeleft:Paint(w, h)
 		if GAMEMODE:GetGameState() == 4 then
-			local voteTime = GAMEMODE.MapVoteTime or 30
+			local voteTime = GAMEMODE.MapVoteTime || 30
 			local time = math.max(0, voteTime - GAMEMODE:GetMapVoteRunningTime())
 			draw.SimpleText("Voting ends in " .. math.ceil(time), "RobotoHUD-20", w - 4, 0, col, 2)
 		end
@@ -471,7 +471,7 @@ function GM:EndRoundMenuResults(res)
 		menu.WinningTeam:SetColor(Color(150, 150, 150))
 	end
 
-	//randomise award order, preserve keys
+	--randomise award order, preserve keys
 	local random = {}
 	for k, award in pairs(awards) do
 		table.insert(random, math.random(#random) + 1, {k, award})
@@ -524,7 +524,7 @@ function GM:EndRoundMapVote()
 			end
 		end
 		local dname = map:gsub("^%a%a%a?_", ""):gsub("_?v[%d%.%-]+$", "")
-		dname = dname:gsub("[_]", " "):gsub("([%a])([%a]+)", function (a, b) return a:upper() .. b end)
+		dname = dname:gsub("[_]", " "):gsub("([%a])([%a]+)", function(a, b) return a:upper() .. b end)
 		local z = tonumber(util.CRC(dname):sub(1, 8))
 		local mcol = Color(z % 255, z / 255 % 255, z / 255 / 255 % 255, 50)
 		local gray = Color(150, 150, 150)
@@ -558,7 +558,7 @@ function GM:EndRoundMapVote()
 
 			local fg2 = draw.GetFontHeight("RobotoHUD-L15")
 			if votes > 0 then
-				draw.SimpleText(votes .. (votes > 1 and " votes" or " vote"), "RobotoHUD-L15", 128 + 20, 20 + fg + 20 + fg2, color_white, 0)
+				draw.SimpleText(votes .. (votes > 1 && " votes" || " vote"), "RobotoHUD-L15", 128 + 20, 20 + fg + 20 + fg2, color_white, 0)
 			end
 
 			local i = 0

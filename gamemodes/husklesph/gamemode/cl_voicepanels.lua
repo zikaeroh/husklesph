@@ -21,9 +21,9 @@ function PANEL:Setup( ply )
 	self.ply = ply
 	-- self.LabelName:SetText( ply:Nick() )
 	self.Avatar:SetPlayer( ply )
-	
+
 	self.Color = team.GetColor( ply:Team() )
-	
+
 	self:InvalidateLayout()
 
 end
@@ -50,7 +50,6 @@ function PANEL:Paint( w, h )
 	surface.SetDrawColor(0, 0, 0, 255)
 	surface.DrawOutlinedRect(0, 0, w * volume, h)
 
-	local f = draw.ShadowText or draw.SimpleText
 	draw.ShadowText(self.ply:Nick(), "GModNotify", 4 + 32 + 4, h / 2, color_white, 0, 1)
 
 end
@@ -64,17 +63,17 @@ function PANEL:Think( )
 end
 
 function PANEL:FadeOut( anim, delta, data )
-	
+
 	if ( anim.Finished ) then
-	
+
 		if ( IsValid( PlayerVoicePanels[ self.ply ] ) ) then
 			PlayerVoicePanels[ self.ply ]:Remove()
 			PlayerVoicePanels[ self.ply ] = nil
 			return
 		end
-		
+
 	return end
-			
+
 	self:SetAlpha( 255 - (255 * delta) )
 
 end
@@ -86,7 +85,7 @@ derma.DefineControl( "VoiceNotify", "", PANEL, "DPanel" )
 function GM:PlayerStartVoice( ply )
 
 	if ( !IsValid( g_VoicePanelList ) ) then return end
-	
+
 	-- There'd be an exta one if voice_loopback is on, so remove it.
 	GAMEMODE:PlayerEndVoice( ply )
 
@@ -108,20 +107,20 @@ function GM:PlayerStartVoice( ply )
 
 	local pnl = g_VoicePanelList:Add( "VoiceNotify" )
 	pnl:Setup( ply )
-	
+
 	PlayerVoicePanels[ ply ] = pnl
-	
+
 end
 
 
 local function VoiceClean()
 
 	for k, v in pairs( PlayerVoicePanels ) do
-	
+
 		if ( !IsValid( k ) || !k:IsPlayer() ) then
 			GAMEMODE:PlayerEndVoice( k )
 		end
-	
+
 	end
 
 end
@@ -130,7 +129,7 @@ timer.Create( "VoiceClean", 10, 0, VoiceClean )
 
 
 function GM:PlayerEndVoice( ply )
-	
+
 	if ( IsValid( PlayerVoicePanels[ ply ] ) ) then
 
 		if ( PlayerVoicePanels[ ply ].fadeAnim ) then return end
@@ -139,7 +138,7 @@ function GM:PlayerEndVoice( ply )
 		PlayerVoicePanels[ ply ].fadeAnim:Start( 2 )
 
 	end
-	
+
 end
 
 
@@ -150,7 +149,7 @@ local function CreateVoiceVGUI()
 	g_VoicePanelList:ParentToHUD()
 	g_VoicePanelList:SetPos( ScrW() - 300, 100 )
 	g_VoicePanelList:SetSize( 250, ScrH() - 200 )
-	g_VoicePanelList:SetDrawBackground( false )
+	g_VoicePanelList:SetPaintBackground( false )
 
 end
 

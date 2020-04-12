@@ -1,12 +1,12 @@
-local tabFile = file.Read(GM.Folder .. "/husklesph.txt", "GAME") or ""
+local tabFile = file.Read(GM.Folder .. "/husklesph.txt", "GAME") || ""
 local tab = util.KeyValuesToTable(tabFile)
 
-GM.Name 	= tab["title"] or "Prop Hunters - Huskles Edition"
+GM.Name 	= tab["title"] || "Prop Hunters - Huskles Edition"
 GM.Author 	= "Zikaeroh, MechanicalMind"
-// Credits to waddlesworth for the logo and icon
+-- Credits to waddlesworth for the logo and icon
 GM.Email 	= "N/A"
 GM.Website 	= "N/A"
-GM.Version  = tab["version"] or "unknown"
+GM.Version  = tab["version"] || "unknown"
 
 GM.StartWaitTime = CreateConVar("ph_mapstartwait", 30, bit.bor(FCVAR_NOTIFY, FCVAR_REPLICATED), "Number of seconds to wait for players on map start before starting round" )
 
@@ -19,10 +19,10 @@ function GM:PlayerSetNewHull(ply, s, hullz, duckz)
 end
 
 function GM:PlayerSetHull(ply, hullx, hully, hullz, duckz)
-	hullx = hullx or 16
-	hully = hully or 16
-	hullz = hullz or 72
-	duckz = duckz or hullz / 2
+	hullx = hullx || 16
+	hully = hully || 16
+	hullz = hullz || 72
+	duckz = duckz || hullz / 2
 	ply:SetHull(Vector(-hullx, -hully, 0), Vector(hullx, hully, hullz))
 	ply:SetHullDuck(Vector(-hullx, -hully, 0), Vector(hullx, hully, duckz))
 
@@ -34,6 +34,6 @@ function GM:PlayerSetHull(ply, hullx, hully, hullz, duckz)
 		net.WriteFloat(hullz)
 		net.WriteFloat(duckz)
 		net.Broadcast()
-		// TODO send on player spawn
+		-- TODO send on player spawn
 	end
 end

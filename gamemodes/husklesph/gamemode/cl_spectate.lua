@@ -1,5 +1,5 @@
 
-net.Receive("spectating_status", function (length)
+net.Receive("spectating_status", function(length)
 	GAMEMODE.SpectateMode = net.ReadInt(8)
 	GAMEMODE.Spectating = false
 	GAMEMODE.Spectatee = nil
@@ -10,14 +10,14 @@ net.Receive("spectating_status", function (length)
 
 end)
 
-function GM:IsCSpectating() 
+function GM:IsCSpectating()
 	return self.Spectating
 end
 
-function GM:GetCSpectatee() 
+function GM:GetCSpectatee()
 	return self.Spectatee
 end
 
-function GM:GetCSpectateMode() 
+function GM:GetCSpectateMode()
 	return self.SpectateMode
 end

@@ -1,10 +1,10 @@
 addTaunt("About Time", {
-	"vo/npc/male01/abouttime01.wav", 
+	"vo/npc/male01/abouttime01.wav",
 	"vo/npc/male01/abouttime02.wav"
 }, "props", "male", {"talk"})
 
 addTaunt("About Time", {
-	"vo/npc/female01/abouttime01.wav", 
+	"vo/npc/female01/abouttime01.wav",
 	"vo/npc/female01/abouttime02.wav"
 }, "props", "female", {"talk"})
 

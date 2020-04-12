@@ -1,7 +1,7 @@
 GM.KillFeed = {}
 
 
-net.Receive("kill_feed_add", function (len)
+net.Receive("kill_feed_add", function(len)
 	local ply = net.ReadEntity()
 	local attacker = net.ReadEntity()
 	local damageType = net.ReadUInt(32)
@@ -54,9 +54,9 @@ net.Receive("kill_feed_add", function (len)
 	if IsValid(attacker) && attacker:IsPlayer() && attacker != ply then
 		t.attackerName = attacker:Nick()
 		t.attackerColor = team.GetColor(attacker:Team())
-		Msg(attacker:Nick() .. " " .. (t.message or "killed") .. " " .. ply:Nick() .. "\n")
+		Msg(attacker:Nick() .. " " .. (t.message || "killed") .. " " .. ply:Nick() .. "\n")
 	else
-		Msg(ply:Nick() .. " " .. (t.messageSelf or "killed themself") .. "\n")
+		Msg(ply:Nick() .. " " .. (t.messageSelf || "killed themself") .. "\n")
 	end
 
 	table.insert(GAMEMODE.KillFeed, t)
@@ -78,14 +78,14 @@ function GM:DrawKillFeed()
 			local twp, thp = surface.GetTextSize(t.playerName)
 
 			if t.attackerName then
-				local killed = " " .. (t.message or "killed") .. " "
+				local killed = " " .. (t.message || "killed") .. " "
 				local twa, tha = surface.GetTextSize(t.attackerName)
 				local twk, thk = surface.GetTextSize(killed)
 				draw.ShadowText(t.attackerName, "RobotoHUD-15", ScrW() - 4 - twp - twk - twa, 4 + down * gap, t.attackerColor, 0)
 				draw.ShadowText(killed, "RobotoHUD-15", ScrW() - 4 - twp - twk, 4 + down * gap, color_white, 0)
 				draw.ShadowText(t.playerName, "RobotoHUD-15", ScrW() - 4 - twp, 4 + down * gap, t.playerColor, 0)
 			else
-				local killed = " " .. (t.messageSelf or "killed themself")
+				local killed = " " .. (t.messageSelf || "killed themself")
 				local twk, thk = surface.GetTextSize(killed)
 
 				draw.ShadowText(killed, "RobotoHUD-15", ScrW() - 4 - twk, 4 + down * gap, color_white, 0)
