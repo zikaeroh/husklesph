@@ -18,6 +18,21 @@ For the full list, take a look at the [changelog](CHANGELOG.md), but here is a n
 -   Large props can properly re-disguise.
 -   Spawn points are generated automatically from existing spawn points, leading to much greater success in spawning players when the map doesn't provide enough.
 
+## Development
+
+To test this gamemode, clone this repo in subdirectory of the addons folder, for example:
+
+```ps
+cd C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\addons
+git clone git@github.com:zikaeroh/husklesph.git
+```
+
+You may also clone this repo elsewhere and symlink it. If the addon is checked out in `C:\work\husklesph`, you can run:
+
+```ps
+mklink \D C:\work\husklesph C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\addons\husklesph
+```
+
 ## Contributors
 
 -   MechanicalMind (original author)
