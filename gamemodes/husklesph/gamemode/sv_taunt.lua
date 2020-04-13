@@ -103,7 +103,7 @@ cvars.AddChangeCallback("ph_taunt_menu_phrase", function(convar_name, value_old,
 end)
 
 function GM:AutoTauntCheck()
-	if self.GameState ~= 2 then return end
+	if self.GameState ~= ROUND_SEEK then return end
 
 	local propsOnly = self.AutoTauntPropsOnly:GetBool()
 	local minDeadline = self.AutoTauntMin:GetInt()
@@ -111,7 +111,7 @@ function GM:AutoTauntCheck()
 	local badMinMax = minDeadline <= 0 || maxDeadline <= 0 || minDeadline > maxDeadline
 
 	for i, ply in ipairs(player.GetAll()) do
-		if propsOnly && ply:Team() ~= 3 then
+		if propsOnly && !ply:IsProp() then
 			ply.AutoTauntDeadline = nil
 			continue
 		end
