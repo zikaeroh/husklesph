@@ -188,19 +188,14 @@ function GM:StartRound()
 	GlobalChatMsg("Round has started")
 end
 
-function GM:EndRound(reason)
-	local winningTeam
-	if reason == WIN_NONE then
+function GM:EndRound(winningTeam)
+	if winningTeam == WIN_NONE then
 		GlobalChatMsg("Tie everybody loses")
-	elseif reason == WIN_HUNTER then
-		GlobalChatMsg(team.GetColor(TEAM_HUNTER), team.GetName(TEAM_HUNTER), " win")
-		winningTeam = TEAM_HUNTER
-	elseif reason == WIN_PROP then
-		GlobalChatMsg(team.GetColor(TEAM_PROP), team.GetName(TEAM_PROP), " win")
-		winningTeam = TEAM_PROP
+	else
+		GlobalChatMsg(team.GetColor(winningTeam), team.GetName(winningTeam), " win")
 	end
 
-	self.LastRoundResult = reason
+	self.LastRoundResult = winningTeam
 
 	local awards = {}
 	for awardKey, award in pairs(PlayerAwards) do -- PlayerAwards comes from sv_awards.lua
@@ -222,10 +217,7 @@ function GM:EndRound(reason)
 	end
 
 	net.Start("round_victor")
-	net.WriteUInt(reason, 8)
-	if winningTeam then
-		net.WriteUInt(winningTeam, 16)
-	end
+	net.WriteUInt(winningTeam, 8)
 	net.WriteTable(awards)
 	net.Broadcast()
 
