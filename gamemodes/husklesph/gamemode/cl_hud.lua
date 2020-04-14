@@ -225,6 +225,9 @@ function GM:DrawRoundTimer()
 		if time > 0 then
 			draw.ShadowText("Waiting for players to join", "RobotoHUD-25", ScrW() / 2, ScrH() / 10 - draw.GetFontHeight("RobotoHUD-40") / 4, color_white, 1, 4)
 			draw.ShadowText("Game starts in " .. tostring(time) .. " second" .. (time > 1 && "s" || ""), "RobotoHUD-15", ScrW() / 2, ScrH() / 10, color_white, 1, 1)
+		else
+			draw.ShadowText("Not enough players to start game", "RobotoHUD-25", ScrW() / 2, ScrH() / 10 - draw.GetFontHeight("RobotoHUD-40") / 4, color_white, 1, 4)
+			draw.ShadowText("Waiting for more players to join", "RobotoHUD-15", ScrW() / 2, ScrH() / 10, color_white, 1, 1)
 		end
 	elseif self:GetGameState() == ROUND_HIDE then
 		local time = math.ceil(30 - self:GetStateRunningTime())
