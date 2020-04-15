@@ -288,7 +288,7 @@ function GM:RoundsThink()
 	elseif self:GetGameState() == ROUND_SEEK then
 		self:CheckForVictory()
 		for k, ply in pairs(self:GetPlayingPlayers()) do
-			if ply:IsProp() then
+			if ply:IsProp() && ply:Alive() then
 				ply.PropMovement = (ply.PropMovement || 0) + ply:GetVelocity():Length()
 			end
 		end
