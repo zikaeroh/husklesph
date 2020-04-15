@@ -26,5 +26,5 @@ jobs:
 
       - name: Run glualint
         run: |
-          echo ::add-matcher:.github/workflows/glualint-matcher.json
+          echo "::add-matcher::.github/workflows/glualint-matcher.json"
           ./glualint .
