@@ -1,14 +1,14 @@
 function GM:TeamsSetupPlayer(ply)
-	local cops = team.NumPlayers(TEAM_HUNTER)
-	local robbers = team.NumPlayers(TEAM_PROP)
-	if robbers <= cops then
+	local hunters = team.NumPlayers(TEAM_HUNTER)
+	local props = team.NumPlayers(TEAM_PROP)
+	if props <= hunters then
 		ply:SetTeam(TEAM_PROP)
 	else
 		ply:SetTeam(TEAM_HUNTER)
 	end
 end
 
-concommand.Add("car_jointeam", function(ply, com, args)
+concommand.Add("ph_jointeam", function(ply, com, args)
 	local curteam = ply:Team()
 	local newteam = tonumber(args[1] || "") || 0
 	if newteam == TEAM_SPEC && curteam != TEAM_SPEC then

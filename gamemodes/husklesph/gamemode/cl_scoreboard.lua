@@ -135,7 +135,7 @@ local function makeTeamList(parent, pteam)
 	but:SetWide(tw + 6)
 
 	function but:DoClick()
-		RunConsoleCommand("car_jointeam", pteam)
+		RunConsoleCommand("ph_jointeam", pteam)
 	end
 
 	function but:Paint(w, h)
@@ -214,8 +214,8 @@ function GM:ScoreboardShow()
 		menu:DockPadding(8, 8, 8, 8)
 
 		function menu:PerformLayout()
-			if IsValid(menu.CopsList) then
-				menu.CopsList:SetWidth((self:GetWide() - 16) * 0.5)
+			if IsValid(menu.HuntersList) then
+				menu.HuntersList:SetWidth((self:GetWide() - 16) * 0.5)
 			end
 		end
 
@@ -285,7 +285,7 @@ function GM:ScoreboardShow()
 		end
 
 		function but:DoClick()
-			RunConsoleCommand("car_jointeam", TEAM_SPEC)
+			RunConsoleCommand("ph_jointeam", TEAM_SPEC)
 		end
 
 		local main = vgui.Create("DPanel", menu)
@@ -295,11 +295,11 @@ function GM:ScoreboardShow()
 			surface.SetDrawColor(40, 40, 40, 230)
 		end
 
-		menu.CopsList = makeTeamList(main, TEAM_HUNTER)
-		menu.CopsList:Dock(LEFT)
-		menu.CopsList:DockMargin(0, 0, 8, 0)
-		menu.RobbersList = makeTeamList(main, TEAM_PROP)
-		menu.RobbersList:Dock(FILL)
+		menu.HuntersList = makeTeamList(main, TEAM_HUNTER)
+		menu.HuntersList:Dock(LEFT)
+		menu.HuntersList:DockMargin(0, 0, 8, 0)
+		menu.PropsList = makeTeamList(main, TEAM_PROP)
+		menu.PropsList:Dock(FILL)
 	end
 end
 
