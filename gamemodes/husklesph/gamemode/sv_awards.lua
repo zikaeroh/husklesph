@@ -36,7 +36,8 @@ local function mostTauntsCalcuation()
 		end
 	end
 
-	return (maxPly && maxPly.TauntAmount > 0) && maxPly || nil
+	if maxPly && maxPly.TauntAmount > 0 then return maxPly end
+	return nil
 end
 
 
@@ -58,7 +59,8 @@ local function mostKillsCalcuation()
 		end
 	end
 
-	return (maxPly && maxPly.HunterKills > 0) && maxPly || nil
+	if maxPly && maxPly.HunterKills > 0 then return maxPly end
+	return nil
 end
 
 
@@ -74,7 +76,8 @@ local function propDamageCalcuation()
 		end
 	end
 
-	return (maxPly && maxPly.PropDmgPenalty > 0) && maxPly || nil
+	if maxPly && maxPly.PropDmgPenalty > 0 then return maxPly end
+	return nil
 end
 
 
@@ -90,7 +93,8 @@ local function mostMovementCalcuation()
 		end
 	end
 
-	return (maxPly && maxPly.PropMovement > 0) && maxPly || nil
+	if maxPly && maxPly.PropMovement > 0 then return maxPly end
+	return nil
 end
 
 
