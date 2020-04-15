@@ -103,7 +103,7 @@ function GM:EntityTakeDamage( ent, dmginfo )
 		end
 		if ent:IsDisguisableAs() then
 			local att = dmginfo:GetAttacker()
-			if IsValid(att) && att:IsPlayer() && att:Team() == 2 then
+			if IsValid(att) && att:IsPlayer() and att:Team() == 2 then
 
 				if bit.band(dmginfo:GetDamageType(), DMG_CRUSH) != DMG_CRUSH then
 					local tdmg = DamageInfo()
@@ -116,8 +116,8 @@ function GM:EntityTakeDamage( ent, dmginfo )
 					tdmg:SetDamageForce(Vector(0, 0, 0))
 					att:TakeDamageInfo(tdmg)
 
-					-- increase stat for end of round (Angriest Hunter)
-					att.PropDmgPenalty = (att.PropDmgPenalty || 0) + tdmg:GetDamage()
+					// increase stat for end of round (Angriest Hunter)
+					att.PropDmgPenalty = (att.PropDmgPenalty or 0) + tdmg:GetDamage()
 				end
 			end
 		end

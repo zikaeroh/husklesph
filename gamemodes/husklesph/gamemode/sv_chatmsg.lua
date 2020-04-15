@@ -21,3 +21,9 @@ function GlobalChatMsg(...)
 	net.WriteTable({...})
 	net.Broadcast()
 end
+
+
+local function hey()
+	local message = "hi"
+	print(massage)
+end

@@ -1,13 +1,13 @@
 
 
 function GM:TeamsSetupPlayer(ply)
-	local cops = team.NumPlayers(2)
-	local robbers = team.NumPlayers(3)
-	if robbers <= cops then
-		ply:SetTeam(3)
-	else
-		ply:SetTeam(2)
-	end
+    local cops = team.NumPlayers(2)
+    local robbers = team.NumPlayers(3)
+    if robbers <= cops then
+        ply:SetTeam(3)
+    else
+        ply:SetTeam(2)
+    end
 end
 
 concommand.Add("car_jointeam", function(ply, com, args)

@@ -5,7 +5,9 @@ net.Receive("kill_feed_add", function(len)
 	local ply = net.ReadEntity()
 	local attacker = net.ReadEntity()
 	local damageType = net.ReadUInt(32)
-	if !IsValid(ply) then return end
+	if not IsValid(ply) then
+        return
+	end
 
 	local t = {}
 	t.time = CurTime()
@@ -63,6 +65,7 @@ net.Receive("kill_feed_add", function(len)
 end)
 
 function GM:DrawKillFeed()
+	local asdf = nil
 	local gap = draw.GetFontHeight("RobotoHUD-15") + 4
 	local down = 0
 	local k = 1
