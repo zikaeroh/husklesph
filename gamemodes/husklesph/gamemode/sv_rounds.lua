@@ -1,3 +1,5 @@
+include("sv_awards.lua")
+
 util.AddNetworkString("gamestate")
 util.AddNetworkString("round_victor")
 util.AddNetworkString("gamerules")
@@ -210,83 +212,17 @@ function GM:EndRound(reason)
 	self.LastRoundResult = reason
 
 	self.PlayerAwards = {}
+	for awardKey, award in pairs(PlayerAwardsTemplate) do
+		local result = award.getWinner()
 
-	local propPly, propDmg = nil, 0
-	local killsPly, killsAmo = nil, 0
-	local leastMovePly, leastMoveAmo
-	local mostMovePly, mostMoveAmo
-	local tauntsPly, tauntsAmo = nil, 0
-	for k, ply in pairs(self:GetPlayingPlayers()) do
-
-		-- TODO replace with better statistic tracker
-		ply.HunterKills = ply.HunterKills || 0
-		ply.PropDmgPenalty = ply.PropDmgPenalty || 0
-		ply.TauntAmount = ply.TauntAmount || 0
-		ply.PropMovement = ply.PropMovement || 0
-
-		if ply:Team() == 2 then -- hunters
-
-			-- get hunter with most prop damage
-			if ply.PropDmgPenalty > propDmg then
-				propDmg = ply.PropDmgPenalty
-				propPly = ply
-			end
-
-			-- get hunter with most kills
-			if ply.HunterKills > killsAmo then
-				killsAmo = ply.PropDmgPenalty
-				killsPly = ply
-			end
-		else
-
-			-- get prop with least movement
-			if leastMoveAmo == nil || ply.PropMovement < leastMoveAmo then
-				leastMoveAmo = ply.PropMovement
-				leastMovePly = ply
-			end
-
-			-- get prop with most movement
-			if mostMoveAmo == nil || ply.PropMovement > mostMoveAmo then
-				mostMoveAmo = ply.PropMovement
-				mostMovePly = ply
-			end
-
-			-- get prop with most taunts
-			if ply.TauntAmount > tauntsAmo then
-				tauntsAmo = ply.TauntAmount
-				tauntsPly = ply
-			end
+		-- nil values cannot exist in self.PlayerAwards otherwise the net.WriteTable below will break
+		if type(result) == "Player" then
+			self.PlayerAwards[awardKey] = {
+				name = award.name,
+				desc = award.desc,
+				winner = result
+			}
 		end
-	end
-
-	if propPly then
-		self.PlayerAwards["PropDamage"] = propPly
-	end
-
-	if leastMovePly then
-		self.PlayerAwards["LeastMovement"] = leastMovePly
-	end
-
-	if mostMovePly then
-		self.PlayerAwards["MostMovement"] = mostMovePly
-	end
-
-	if killsPly then
-		self.PlayerAwards["MostKills"] = killsPly
-	end
-
-	if tauntsPly then
-		self.PlayerAwards["MostTaunts"] = tauntsPly
-	end
-
-	-- last prop death award
-	if IsValid(self.LastPropDeath) && reason == 2 then
-		self.PlayerAwards["LastPropStanding"] = self.LastPropDeath
-	end
-
-	-- first hunter kill award
-	if IsValid(self.FirstHunterKill) then
-		self.PlayerAwards["FirstHunterKill"] = self.FirstHunterKill
 	end
 
 	net.Start("round_victor")
@@ -294,14 +230,7 @@ function GM:EndRound(reason)
 	if winningTeam then
 		net.WriteUInt(winningTeam, 16)
 	end
-	for k, v in pairs(self.PlayerAwards) do
-		net.WriteUInt(1, 8)
-		net.WriteString(tostring(k))
-		net.WriteEntity(v)
-		net.WriteVector(v:GetPlayerColor())
-		net.WriteString(v:Nick())
-	end
-	net.WriteUInt(0, 8)
+	net.WriteTable(self.PlayerAwards)
 	net.Broadcast()
 
 	self.RoundSettings.NextRoundTime = 15
