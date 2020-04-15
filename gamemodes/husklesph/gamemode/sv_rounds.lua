@@ -237,12 +237,6 @@ function GM:EndRound(reason)
 
 	self.RoundSettings.NextRoundTime = 15
 	self:NetworkGameSettings()
-
-	-- for k, ply in pairs(self:GetPlayingPlayers()) do
-	-- 	if ply:Team() == winningTeam then
-	-- 	else
-	-- 	end
-	-- end
 	self:SetGameState(ROUND_POST)
 end
 

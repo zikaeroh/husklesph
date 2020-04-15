@@ -109,10 +109,6 @@ function GM:EntityTakeDamage( ent, dmginfo )
 					local tdmg = DamageInfo()
 					tdmg:SetDamage(math.min(dmginfo:GetDamage(), math.max(self.HunterDamagePenalty:GetInt(), 1) ))
 					tdmg:SetDamageType(DMG_AIRBOAT)
-
-					-- tdmg:SetAttacker(ent)
-					-- tdmg:SetInflictor(ent)
-
 					tdmg:SetDamageForce(Vector(0, 0, 0))
 					att:TakeDamageInfo(tdmg)
 

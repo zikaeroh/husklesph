@@ -96,8 +96,6 @@ function GM:CalcView(ply, pos, angles, fov)
 			local camPos = trace.start * 1
 			camPos.z = ply:GetPos().z + camHeight
 			view.origin = camPos + (trace.endpos - trace.start):GetNormal() * camDis
-			-- view.origin = tr.HitPos
-
 			view.angles = angles
 			view.fov = fov
 			return view

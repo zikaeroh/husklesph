@@ -124,7 +124,6 @@ function GM:AutoTauntCheck()
 			end
 
 			if !ply.TauntEnd || CurTime() > ply.AutoTauntDeadline then
-				-- ply:ChatPrint("I warned you!")
 				DoRandomTaunt(ply)
 				begin = ply.TauntEnd
 			end
@@ -135,7 +134,6 @@ function GM:AutoTauntCheck()
 
 		local delta = math.random(minDeadline, maxDeadline)
 		ply.AutoTauntDeadline = begin + delta
-		-- ply:ChatPrint("If you don't taunt within " .. tostring(delta) .. " seconds, the server will do it for you!")
 	end
 end
 

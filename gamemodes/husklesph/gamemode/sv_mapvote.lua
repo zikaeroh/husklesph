@@ -136,14 +136,6 @@ function GM:StartMapVote()
 		table.insert(maps, math.random(#maps) + 1, v)
 	end
 	self.MapList = maps
-
-	-- make bots vote for a map
-	-- for k, ply in pairs(player.GetAll()) do
-	-- 	if ply:IsBot() then
-	-- 		self.MapVotes[ply] = maps[math.random(#maps)]
-	-- 	end
-	-- end
-
 	self:SetGameState(ROUND_MAPVOTE)
 	self:NetworkMapVoteStart()
 end

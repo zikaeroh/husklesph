@@ -53,7 +53,6 @@ local function openHelpScreen()
 		menu:SetDraggable(false)
 		menu:ShowCloseButton(true)
 		menu:SetTitle("")
-		-- menu:DockPadding(0, 0, 0, 0)
 		menu:DockPadding(8, 8 + draw.GetFontHeight("RobotoHUD-25"), 8, 8)
 		function menu:PerformLayout()
 		end
@@ -154,8 +153,6 @@ local function openHelpScreen()
 		end
 
 		function pnl:Paint(w, h)
-			-- surface.SetDrawColor(0, 0, 0, 255)
-			-- surface.DrawOutlinedRect(0, 0, w, h)
 			if self.TextLines then
 				self.TextLines:Paint(8, 4)
 			end

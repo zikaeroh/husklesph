@@ -34,7 +34,6 @@ function PlayerMeta:DisguiseAsProp(ent)
 		self:SetNWEntity("disguiseEntity", dent)
 		dent.PropOwner = self
 		dent:SetPos(self:GetPos())
-		-- dent:SetParent(self)
 		dent:Spawn()
 	end
 	dent:SetModel(ent:GetModel())

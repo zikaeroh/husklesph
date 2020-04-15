@@ -33,7 +33,6 @@ local function addPlayerItem(self, mlist, ply, pteam)
 	function but:Paint(w, h)
 
 		surface.SetDrawColor(color_black)
-		-- surface.DrawOutlinedRect(0, 0, w, h)
 
 		if IsValid(ply) && ply:IsPlayer() then
 			local s = 4
@@ -47,10 +46,6 @@ local function addPlayerItem(self, mlist, ply, pteam)
 
 			if ply:IsMuted() then
 				surface.SetMaterial(muted)
-
-				-- draw shadow
-				-- surface.SetDrawColor(color_black)
-				-- surface.DrawTexturedRect(s + 1, h / 2 - 16 + 1, 32, 32)
 
 				-- draw mute icon
 				surface.SetDrawColor(150, 150, 150, 255)
@@ -112,8 +107,6 @@ local function makeTeamList(parent, pteam)
 	local hs = math.Round(draw.GetFontHeight("RobotoHUD-25") * 1.1)
 	function pnl:Paint(w, h)
 		surface.SetDrawColor(220, 220, 220, 50)
-		-- surface.DrawRect(0, 0, w, h)
-
 		surface.SetDrawColor(68, 68, 68, 120)
 		surface.DrawLine(0, hs, 0, h - 1)
 		surface.DrawLine(w - 1, hs, w - 1, h - 1)
@@ -137,10 +130,7 @@ local function makeTeamList(parent, pteam)
 	headp:SetTall(hs)
 	function headp:Paint(w, h)
 		surface.SetDrawColor(68, 68, 68, 255)
-		-- surface.DrawRect(0, 0, w, h)
-
 		draw.RoundedBoxEx(4, 0, 0, w, h, Color(68, 68, 68, 120), true, true, false, false)
-
 		draw.ShadowText(team.GetName(pteam), "RobotoHUD-25", 6, 0, team.GetColor(pteam), 0)
 	end
 
@@ -155,20 +145,16 @@ local function makeTeamList(parent, pteam)
 	end
 	function but:Paint(w, h)
 		surface.SetDrawColor(team.GetColor(pteam))
-		-- surface.DrawRect(0, 0, w, h)
 		surface.SetDrawColor(color_black)
-		-- surface.DrawOutlinedRect(0, 0, w, h)
 
 		local col = table.Copy(team.GetColor(pteam))
 		if self:IsDown() then
 			surface.SetDrawColor(12,50,50,120)
-			-- surface.DrawRect(1, 1, w - 2, h - 2)
 			col.r = col.r * 0.8
 			col.g = col.g * 0.8
 			col.b = col.b * 0.8
 		elseif self:IsHovered() then
 			surface.SetDrawColor(255,255,255,30)
-			-- surface.DrawRect(1, 1, w - 2, h - 2)
 			col.r = col.r * 1.2
 			col.g = col.g * 1.2
 			col.b = col.b * 1.2
@@ -307,7 +293,6 @@ function GM:ScoreboardShow()
 		main:Dock(FILL)
 		function main:Paint(w, h)
 			surface.SetDrawColor(40,40,40,230)
-			-- surface.DrawRect(0, 0, w, h)
 		end
 
 		menu.CopsList = makeTeamList(main, TEAM_HUNTER)

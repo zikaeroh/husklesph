@@ -18,7 +18,6 @@ local function addPlayerItem(self, mlist, ply)
 	function but:Paint(w, h)
 
 		surface.SetDrawColor(color_black)
-		-- surface.DrawOutlinedRect(0, 0, w, h)
 
 		if IsValid(ply) && ply:IsPlayer() then
 			local col = team.GetColor(ply:Team())
@@ -38,7 +37,6 @@ local function addPlayerItem(self, mlist, ply)
 
 				-- draw mute icon
 				surface.SetDrawColor(255, 255, 255, 255)
-				-- surface.SetDrawColor(255, 255, 255, 255 * math.Clamp(v, 0.1, 1))
 				surface.DrawTexturedRect(s, h / 2 - 16, 32, 32)
 				s = s + 32 + 4
 
@@ -446,7 +444,6 @@ function GM:EndRoundMenuResults(res)
 		pnl:SetTall(math.max(draw.GetFontHeight("RobotoHUD-35"), draw.GetFontHeight("RobotoHUD-15") + draw.GetFontHeight("RobotoHUD-20") * 1.1))
 		function pnl:Paint(w, h)
 			surface.SetDrawColor(50, 50, 50)
-			-- surface.DrawOutlinedRect(0, 0, w, h)
 			draw.DrawText(award.name, "RobotoHUD-20", 0, 0, Color(220, 220, 220), 0)
 			draw.DrawText(award.desc, "RobotoHUD-15", 0, draw.GetFontHeight("RobotoHUD-20"), Color(120, 120, 120), 0)
 			draw.DrawText(award.winnerName, "RobotoHUD-25", w, h / 2 - draw.GetFontHeight("RobotoHUD-25") / 2, team.GetColor(award.winnerTeam), 2)
@@ -563,8 +560,6 @@ function GM:EndRoundAddChatText(...)
 	end
 
 	function pnl:Paint(w, h)
-		-- surface.SetDrawColor(255, 0, 0, 255)
-		-- surface.DrawOutlinedRect(0, 0, w, h)
 		if self.TextLines then
 			self.TextLines:Paint(4, draw.GetFontHeight("RobotoHUD-15") * -0.2)
 		end

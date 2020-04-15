@@ -30,8 +30,6 @@ end
 
 function GM:HUDPaint()
 	self:DrawGameHUD()
-	-- DebugInfo(1, tostring(LocalPlayer():GetVelocity():Length()))
-
 	self:DrawRoundTimer()
 	self:DrawKillFeed()
 end
@@ -132,8 +130,6 @@ local function drawPoly(x, y, w, h, percent)
 		table.insert(vertexes, {x = x + w / 2, y = y + h})
 		table.insert(vertexes, {x = x + w / 2, y = y + h / 2})
 
-		-- for i = 1, #vertexes do draw.DrawText(i, "Default", vertexes[i].x, vertexes[i].y, color_white, 0) end
-
 		surface.SetTexture(polyTex)
 		surface.DrawPoly(vertexes)
 	end
@@ -151,8 +147,6 @@ local function drawPoly(x, y, w, h, percent)
 	end
 	table.insert(vertexes, {x = x + w / 2, y = y})
 	table.insert(vertexes, {x = x + w / 2, y = y + h / 2})
-
-	-- for i = 1, #vertexes do draw.DrawText(i, "Default", vertexes[i].x, vertexes[i].y, color_white, 0) end
 
 	surface.SetTexture(polyTex)
 	surface.DrawPoly(vertexes)
@@ -182,7 +176,6 @@ function GM:DrawHealth(ply)
 	render.SetBlend( 0 )
 
 	render.OverrideDepthEnable( true, false )
-	-- render.DrawScreenQuadEx(tx, ty, tw, th)
 
 	surface.SetDrawColor(26, 120, 245, 1)
 	drawPoly(x + w * ps, y + h * ps, w * (1 - 2 * ps), h * (1 - 2 * ps), 1)
@@ -226,7 +219,6 @@ function GM:HUDShouldDraw(name)
 	if name == "CHudHealth" then return false end
 	if name == "CHudVoiceStatus" then return false end
 	if name == "CHudVoiceSelfStatus" then return false end
-	-- if name == "CHudAmmo" then return false end
 	if name == "CHudChat" then
 		if IsValid(self.EndRoundPanel) && self.EndRoundPanel:IsVisible() then
 			return false

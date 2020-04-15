@@ -14,7 +14,6 @@ local function renderDis(self)
 
 				local ent = ply:GetNWEntity("disguiseEntity")
 				if IsValid(ent) then
-					-- ent:SetNoDraw(false)
 					local mins = ply:GetNWVector("disguiseMins")
 					local maxs = ply:GetNWVector("disguiseMaxs")
 					local ang = ply:EyeAngles()
@@ -29,10 +28,7 @@ local function renderDis(self)
 					center:Rotate(ang)
 					ent:SetPos(pos - center)
 					ent:SetAngles(ang)
-					-- ent:SetupBones()
 					ent:SetSkin(ply:GetNWInt("disguiseSkin", 1))
-					-- ent:DrawShadow()
-					-- ent:DrawModel()
 				end
 			end
 		end

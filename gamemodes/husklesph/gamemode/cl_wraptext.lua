@@ -39,8 +39,6 @@ function Builder:Run()
 				end
 				firstChunk = false
 				local spaces, rest = chunk:match("^([%s]*)(.*)$")
-				-- print(#spaces, "<" .. rest)
-
 				local sw = surface.GetTextSize(spaces)
 				self.curText = self.curText .. spaces
 				self.curWidth = self.curWidth + sw

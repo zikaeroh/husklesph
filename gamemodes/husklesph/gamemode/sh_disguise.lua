@@ -101,8 +101,6 @@ function PlayerMeta:CalculateRotatedDisguiseMinsMaxs()
 	checkCorner(nmins, nmaxs, Vector(mins.x, mins.y), ang)
 	checkCorner(nmins, nmaxs, Vector(mins.x, maxs.y), ang)
 
-	-- print(mins, maxs, nmins, nmaxs)
-
 	return nmins, nmaxs
 end
 

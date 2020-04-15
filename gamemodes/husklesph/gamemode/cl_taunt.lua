@@ -139,8 +139,6 @@ local function openTauntMenu()
 	function menu:Paint(w, h)
 		surface.SetDrawColor(40,40,40,230)
 		surface.DrawRect(0, 0, w, h)
-
-		-- draw.ShadowText("Taunts", "RobotoHUD-15", 8, 4, color_white, 0)
 		surface.SetFont("RobotoHUD-25")
 		local t = "Taunts"
 		local tw,th = surface.GetTextSize(t)
@@ -184,12 +182,8 @@ local function openTauntMenu()
 	menu.CatList = clist
 	clist:Dock(FILL)
 	clist:DockMargin(0, 0, 0, 0)
-	-- local df = draw.GetFontHeight("RobotoHUD-15") * 1.6
-	function clist:Paint(w, h)
-		-- surface.SetDrawColor(60, 60, 60)
-		-- surface.DrawRect(0, 0, w, df)
 
-		-- draw.SimpleText("Categories", "RobotoHUD-15", w / 2, df / 2, color_white, 1, 1)
+	function clist:Paint(w, h)
 	end
 
 	local canvas = clist:GetCanvas()

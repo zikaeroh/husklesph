@@ -19,7 +19,6 @@ end
 function PANEL:Setup( ply )
 
 	self.ply = ply
-	-- self.LabelName:SetText( ply:Nick() )
 	self.Avatar:SetPlayer( ply )
 
 	self.Color = team.GetColor( ply:Team() )
@@ -32,7 +31,6 @@ function PANEL:Paint( w, h )
 
 	if ( !IsValid( self.ply ) ) then return end
 
-	-- local volume = (math.sin(CurTime()) / 2 + 0.5)
 	local volume = self.ply:VoiceVolume()
 
 	col = team.GetColor(self.ply:Team())
