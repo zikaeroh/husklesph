@@ -25,4 +25,6 @@ jobs:
           unzip glualint.zip
 
       - name: Run glualint
-        run: ./glualint .
+        run: |
+          echo ::add-matcher:.github/workflows/glualint-matcher.json
+          ./glualint .
