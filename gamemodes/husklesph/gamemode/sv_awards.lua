@@ -1,6 +1,6 @@
 -- last prop death award
 local function lastPropStandingCalcuation()
-	if GAMEMODE.LastRoundResult == 2 then
+	if GAMEMODE.LastRoundResult == WIN_HUNTER then
 		return GAMEMODE.LastPropDeath
 	end
 
@@ -13,7 +13,7 @@ local function leastMovementCalcuation()
 	local minPly
 
 	for _, ply in ipairs(GAMEMODE:GetPlayingPlayers()) do
-		if ply:Team() != 3 then continue end
+		if !ply:IsProp() then continue end
 
 		if !minPly || ply.PropMovement < minPly.PropMovement then
 			minPly = ply
@@ -29,7 +29,7 @@ local function mostTauntsCalcuation()
 	local maxPly
 
 	for _, ply in ipairs(GAMEMODE:GetPlayingPlayers()) do
-		if ply:Team() != 3 then continue end
+		if !ply:IsProp() then continue end
 
 		if !maxPly || ply.TauntAmount > maxPly.TauntAmount then
 			maxPly = ply
@@ -52,7 +52,7 @@ local function mostKillsCalcuation()
 	local maxPly
 
 	for _, ply in ipairs(GAMEMODE:GetPlayingPlayers()) do
-		if ply:Team() != 2 then continue end
+		if !ply:IsHunter() then continue end
 
 		if !killsPly || ply.HunterKills > maxPly.HunterKills then
 			maxPly = ply
@@ -69,7 +69,7 @@ local function propDamageCalcuation()
 	local maxPly
 
 	for _, ply in ipairs(GAMEMODE:GetPlayingPlayers()) do
-		if ply:Team() != 2 then continue end
+		if !ply:IsHunter() then continue end
 
 		if !maxPly || ply.PropDmgPenalty > maxPly.PropDmgPenalty then
 			maxPly = ply
@@ -86,7 +86,7 @@ local function mostMovementCalcuation()
 	local maxPly
 
 	for _, ply in ipairs(GAMEMODE:GetPlayingPlayers()) do
-		if ply:Team() != 3 then continue end
+		if !ply:IsProp() then continue end
 
 		if !maxPly || ply.PropMovement > maxPly.PropMovement then
 			maxPly = ply
