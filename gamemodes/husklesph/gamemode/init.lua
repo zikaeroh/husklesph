@@ -103,7 +103,7 @@ function GM:EntityTakeDamage( ent, dmginfo )
 		end
 		if ent:IsDisguisableAs() then
 			local att = dmginfo:GetAttacker()
-			if IsValid(att) && att:IsPlayer() && att:Team() == 2 then
+			if IsValid(att) && att:IsPlayer() && att:IsHunter() then
 
 				if bit.band(dmginfo:GetDamageType(), DMG_CRUSH) != DMG_CRUSH then
 					local tdmg = DamageInfo()

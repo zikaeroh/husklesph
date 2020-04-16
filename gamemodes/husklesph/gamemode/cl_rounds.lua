@@ -1,4 +1,4 @@
-GM.GameState = GAMEMODE && GAMEMODE.GameState || 0
+GM.GameState = GAMEMODE && GAMEMODE.GameState || ROUND_WAIT
 GM.StateStart = GAMEMODE && GAMEMODE.StateStart || CurTime()
 
 function GM:GetGameState()
@@ -17,12 +17,12 @@ net.Receive("gamestate", function(len)
 	GAMEMODE.GameState = net.ReadUInt(32)
 	GAMEMODE.StateStart = net.ReadDouble()
 
-	if GAMEMODE.GameState == 1 then
+	if GAMEMODE.GameState == ROUND_HIDE then
 		GAMEMODE.UpgradesNotif = {}
 		GAMEMODE.KillFeed = {}
 	end
 
-	if GAMEMODE.GameState != 2 then
+	if GAMEMODE.GameState != ROUND_SEEK then
 		GAMEMODE:CloseEndRoundMenu()
 	end
 end)
@@ -30,7 +30,7 @@ end)
 net.Receive("round_victor", function(len)
 	local tab = {}
 	tab.reason = net.ReadUInt(8)
-	if tab.reason == 2 || tab.reason == 3 then
+	if tab.reason == WIN_HUNTER || tab.reason == WIN_PROP then
 		tab.winningTeam = net.ReadUInt(16)
 	end
 
