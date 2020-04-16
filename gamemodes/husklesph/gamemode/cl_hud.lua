@@ -67,7 +67,7 @@ function GM:DrawGameHUD()
 		-- draw names
 		if IsValid(tr.Entity) && tr.Entity:IsPlayer() && tr.HitPos:Distance(tr.StartPos) < 500 then
 			-- hunters can only see their teams names
-			if ply:Team() != 2 || ply:Team() == tr.Entity:Team() then
+			if !ply:IsHunter() || ply:Team() == tr.Entity:Team() then
 				self.LastLooked = tr.Entity
 				self.LookedFade = CurTime()
 			end
@@ -83,8 +83,8 @@ function GM:DrawGameHUD()
 
 	local help
 	if LocalPlayer():Alive() then
-		if LocalPlayer():Team() == 3 then
-			if self:GetGameState() == 1 || (self:GetGameState() == 2 && !LocalPlayer():IsDisguised()) then
+		if LocalPlayer():IsProp() then
+			if self:GetGameState() == ROUND_HIDE || (self:GetGameState() == ROUND_SEEK && !LocalPlayer():IsDisguised()) then
 				help = helpKeysProps
 			end
 		end
@@ -236,19 +236,19 @@ function GM:HUDShouldDraw(name)
 end
 
 function GM:DrawRoundTimer()
-	if self:GetGameState() == 0 then
+	if self:GetGameState() == ROUND_WAIT then
 		local time = math.ceil(self.StartWaitTime:GetFloat() - self:GetStateRunningTime())
 		if time > 0 then
 			draw.ShadowText("Waiting for players to join", "RobotoHUD-25", ScrW() / 2, ScrH() / 10 - draw.GetFontHeight("RobotoHUD-40") / 4, color_white, 1, 4)
 			draw.ShadowText("Game starts in " .. tostring(time) .. " second" .. (time > 1 && "s" || ""), "RobotoHUD-15", ScrW() / 2, ScrH() / 10, color_white, 1, 1)
 		end
-	elseif self:GetGameState() == 1 then
+	elseif self:GetGameState() == ROUND_HIDE then
 		local time = math.ceil(30 - self:GetStateRunningTime())
 		if time > 0 then
 			draw.ShadowText("Hunters will be released in", "RobotoHUD-15", ScrW() / 2, ScrH() / 3 - draw.GetFontHeight("RobotoHUD-40") / 2, color_white, 1, 4)
 			draw.ShadowText(time, "RobotoHUD-40", ScrW() / 2, ScrH() / 3, color_white, 1, 1)
 		end
-	elseif self:GetGameState() == 2 then
+	elseif self:GetGameState() == ROUND_SEEK then
 		if self:GetStateRunningTime() < 2 then
 			draw.ShadowText("GO!", "RobotoHUD-50", ScrW() / 2, ScrH() / 3, color_white, 1, 1)
 		end
@@ -267,8 +267,8 @@ end
 
 function GM:PreDrawHUD()
 	local client = LocalPlayer()
-	if self:GetGameState() == 1 then
-		if client:Team() == 2 then
+	if self:GetGameState() == ROUND_HIDE then
+		if client:IsHunter() then
 			surface.SetDrawColor(25, 25, 25, 255)
 			surface.DrawRect(-10, -10, ScrW() + 20, ScrH() + 20)
 		end

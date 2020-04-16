@@ -5,7 +5,7 @@ local allowClasses = {"prop_physics", "prop_physics_multiplayer"}
 
 function PlayerMeta:CanDisguiseAsProp(ent)
 	if !self:Alive() then return false end
-	if self:Team() != 3 then return false end
+	if !self:IsProp() then return false end
 	if !IsValid(ent) then return false end
 
 	if !table.HasValue(allowClasses, ent:GetClass()) then
@@ -117,7 +117,7 @@ function GM:PlayerCanDisguiseCurrentTarget(ply)
 	local minHLeniency = 100
 	local verticalLeniency = 100
 
-	if ply:Team() == 3 then
+	if ply:IsProp() then
 		local tr = ply:GetPropEyeTrace()
 		if IsValid(tr.Entity) then
 			if self:IsModelBanned(tr.Entity:GetModel()) then return false, nil end

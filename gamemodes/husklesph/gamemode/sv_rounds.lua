@@ -4,16 +4,9 @@ util.AddNetworkString("gamestate")
 util.AddNetworkString("round_victor")
 util.AddNetworkString("gamerules")
 
-GM.GameState = GAMEMODE && GAMEMODE.GameState || 0
+GM.GameState = GAMEMODE && GAMEMODE.GameState || ROUND_WAIT
 GM.StateStart = GAMEMODE && GAMEMODE.StateStart || CurTime()
 GM.Rounds = GAMEMODE && GAMEMODE.Rounds || 0
-
--- STATES
--- 0 WAITING FOR PLAYERS
--- 1 STARTING ROUND
--- 2 PLAYING
--- 3 END GAME RESET TIME
--- 4 MAP VOTE
 
 
 local function mapTimeLimitTimerResult()
@@ -69,7 +62,7 @@ end
 function GM:GetPlayingPlayers()
 	local players = {}
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 1 && ply:GetNWBool("RoundInGame") then
+		if !ply:IsSpectator() && ply:GetNWBool("RoundInGame") then
 			table.insert(players, ply)
 		end
 	end
@@ -84,7 +77,7 @@ end
 
 function GM:NetworkGameState(ply)
 	net.Start("gamestate")
-	net.WriteUInt(self.GameState || 0, 32)
+	net.WriteUInt(self.GameState || ROUND_WAIT, 32)
 	net.WriteDouble(self.StateStart || 0)
 	net.Broadcast()
 end
@@ -116,20 +109,20 @@ end
 function GM:SetupRound()
 	local c = 0
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 1 then -- ignore spectators
+		if !ply:IsSpectator() then -- ignore spectators
 			c = c + 1
 		end
 	end
 	if c < 2 then
 		GlobalChatMsg("Not enough players to start round")
-		self:SetGameState(0)
+		self:SetGameState(ROUND_WAIT)
 		return
 	end
 
 	self:BalanceTeams()
 
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 1 then -- ignore spectators
+		if !ply:IsSpectator() then -- ignore spectators
 			ply:SetNWBool("RoundInGame", true)
 			ply:KillSilent()
 			ply:Spawn()
@@ -137,7 +130,7 @@ function GM:SetupRound()
 			local col = team.GetColor(ply:Team())
 			ply:SetPlayerColor(Vector(col.r / 255, col.g / 255, col.b / 255))
 
-			if ply:Team() == 2 then
+			if ply:IsHunter() then
 				ply:Freeze(true)
 			end
 
@@ -157,7 +150,7 @@ function GM:SetupRound()
 	end
 
 	hook.Run("OnSetupRound")
-	self:SetGameState(1)
+	self:SetGameState(ROUND_HIDE)
 end
 
 function GM:StartRound()
@@ -172,9 +165,9 @@ function GM:StartRound()
 		ply.PropMovement = 0
 		ply.HunterKills = 0
 		ply.TauntAmount = 0
-		if ply:Team() == 2 then
+		if ply:IsHunter() then
 			hunters = hunters + 1
-		elseif ply:Team() == 3 then
+		elseif ply:IsProp() then
 			props = props + 1
 		end
 	end
@@ -192,7 +185,7 @@ function GM:StartRound()
 	print("Round time is " .. (self.RoundSettings.RoundTime / 60) .. " (" .. c .. " props)")
 
 	self:NetworkGameSettings()
-	self:SetGameState(2)
+	self:SetGameState(ROUND_SEEK)
 
 	GlobalChatMsg("Round has started")
 
@@ -200,14 +193,14 @@ end
 
 function GM:EndRound(reason)
 	local winningTeam
-	if reason == 1 then
+	if reason == WIN_NONE then
 		GlobalChatMsg("Tie everybody loses")
-	elseif reason == 2 then
-		GlobalChatMsg(team.GetColor(2), team.GetName(2), " win")
-		winningTeam = 2
-	elseif reason == 3 then
-		GlobalChatMsg(team.GetColor(3), team.GetName(3), " win")
-		winningTeam = 3
+	elseif reason == WIN_HUNTER then
+		GlobalChatMsg(team.GetColor(TEAM_HUNTER), team.GetName(TEAM_HUNTER), " win")
+		winningTeam = TEAM_HUNTER
+	elseif reason == WIN_PROP then
+		GlobalChatMsg(team.GetColor(TEAM_PROP), team.GetName(TEAM_PROP), " win")
+		winningTeam = TEAM_PROP
 	end
 	self.LastRoundResult = reason
 
@@ -241,7 +234,7 @@ function GM:EndRound(reason)
 	-- 	else
 	-- 	end
 	-- end
-	self:SetGameState(3)
+	self:SetGameState(ROUND_POST)
 end
 
 function GM:RoundsSetupPlayer(ply)
@@ -256,70 +249,70 @@ function GM:CheckForVictory()
 	local settings = self:GetRoundSettings()
 	local roundTime = settings.RoundTime || 5 * 60
 	if self:GetStateRunningTime() > roundTime then
-		self:EndRound(3)
+		self:EndRound(WIN_PROP)
 		return
 	end
 
 	local red, blue = 0, 0
 	for k, ply in pairs(self:GetPlayingPlayers()) do
 		if ply:Alive() then
-			if ply:Team() == 2 then
+			if ply:IsHunter() then
 				red = red + 1
-			elseif ply:Team() == 3 then
+			elseif ply:IsProp() then
 				blue = blue + 1
 			end
 		end
 	end
 	if red == 0 && blue == 0 then
-		self:EndRound(1)
+		self:EndRound(WIN_NONE)
 		return
 	end
 
 	if red == 0 then
-		self:EndRound(3)
+		self:EndRound(WIN_PROP)
 		return
 	end
 	if blue == 0 then
-		self:EndRound(2)
+		self:EndRound(WIN_HUNTER)
 		return
 	end
 end
 
 function GM:RoundsThink()
-	if self:GetGameState() == 0 then
+	if self:GetGameState() == ROUND_WAIT then
 		local c = 0
 		for k, ply in pairs(player.GetAll()) do
-			if ply:Team() != 1 then -- ignore spectators
+			if !ply:IsSpectator() then -- ignore spectators
 				c = c + 1
 			end
 		end
 		if c >= 2 && self.RoundWaitForPlayers + self.StartWaitTime:GetFloat() < CurTime() then
 			self:SetupRound()
 		end
-	elseif self:GetGameState() == 1 then
+	elseif self:GetGameState() == ROUND_HIDE then
 		if self:GetStateRunningTime() > 30 then
 			self:StartRound()
 		end
-	elseif self:GetGameState() == 2 then
+	elseif self:GetGameState() == ROUND_SEEK then
 		self:CheckForVictory()
 
 		for k, ply in pairs(self:GetPlayingPlayers()) do
-			if ply:Team() == 3 then
+			if ply:IsProp() then
 				ply.PropMovement = (ply.PropMovement || 0) + ply:GetVelocity():Length()
 			end
 		end
-	elseif self:GetGameState() == 3 then
+	elseif self:GetGameState() == ROUND_POST then
 		if self:GetStateRunningTime() > (self.RoundSettings.NextRoundTime || 30) then
 			if self.RoundLimit:GetInt() > 0 && self.Rounds >= self.RoundLimit:GetInt() then
 				self:StartMapVote()
 			else
-				if self.LastRoundResult != 3 || !self.PropsWinStayProps:GetBool() then
+				if self.LastRoundResult != WIN_PROP || !self.PropsWinStayProps:GetBool() then
 					self:SwapTeams()
 				end
 				self:SetupRound()
 			end
 		end
-	elseif self:GetGameState() == 4 then
+	elseif self:GetGameState() == ROUND_MAPVOTE then
 		self:MapVoteThink()
 	end
 end
@@ -328,7 +321,7 @@ local function ForceEndRound(ply, command, args)
 	-- ply is nil on dedicated server console
 	if (!IsValid(ply)) || ply:IsAdmin() || ply:IsSuperAdmin() || cvars.Bool("sv_cheats", 0) then
 		GAMEMODE.RoundSettings = GAMEMODE.RoundSettings || {}
-		GAMEMODE:EndRound(1)
+		GAMEMODE:EndRound(WIN_NONE)
 	else
 		ply:PrintMessage(HUD_PRINTCONSOLE, "You must be a GMod Admin or SuperAdmin on the server to use this command, or sv_cheats must be enabled.")
 	end

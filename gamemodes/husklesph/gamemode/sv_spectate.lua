@@ -60,7 +60,7 @@ function GM:SpectateNext(ply, direction)
 	for k, v in pairs(player.GetAll()) do
 		if v != ply then
 			-- can only spectate same team and alive
-			if v:Alive() && (v:Team() == ply:Team() || ply:Team() == 1) then
+			if v:Alive() && (v:Team() == ply:Team() || ply:IsSpectator()) then
 				table.insert(players, v)
 				if v == ply:GetCSpectatee() then
 					index = #players
@@ -79,7 +79,7 @@ function GM:SpectateNext(ply, direction)
 
 		local ent = players[index]
 		if IsValid(ent) then
-			if ent:IsPlayer() && ent:Team() == 2 then
+			if ent:IsPlayer() && ent:IsHunter() then
 				ply:CSpectate(OBS_MODE_IN_EYE, ent)
 			else
 				ply:CSpectate(OBS_MODE_CHASE, ent)
@@ -109,7 +109,7 @@ function GM:ChooseSpectatee(ply)
 	if !ply.SpectateTime || ply.SpectateTime < CurTime() then
 
 		if ply:KeyPressed(IN_JUMP) then
-			if ply:GetCSpectateMode() != OBS_MODE_ROAMING && (ply:Team() == 1 || self.DeadSpectateRoam:GetBool()) then
+			if ply:GetCSpectateMode() != OBS_MODE_ROAMING && (ply:IsSpectator() || self.DeadSpectateRoam:GetBool()) then
 				ply:CSpectate(OBS_MODE_ROAMING)
 			end
 		else

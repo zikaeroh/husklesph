@@ -51,7 +51,7 @@ end
 
 function GM:RenderDisguiseHalo()
 	local client = LocalPlayer()
-	if client:Team() == 3 then
+	if client:IsProp() then
 		local canDisguise, target = self:PlayerCanDisguiseCurrentTarget(client)
 		if canDisguise then
 			local col = Color(50, 220, 50)
@@ -64,12 +64,12 @@ function GM:RenderDisguiseHalo()
 
 		local tab = {}
 		for k, ply in pairs(player.GetAll()) do
-			if ply != client && ply:Team() == 3 && ply:IsDisguised() then
+			if ply != client && ply:IsProp() && ply:IsDisguised() then
 				if IsValid(ply.PropMod) then
 					table.insert(tab, ply.PropMod)
 				end
 			end
 		end
-		halo.Add(tab, team.GetColor(3), 2, 2, 2, true, false)
+		halo.Add(tab, team.GetColor(TEAM_PROP), 2, 2, 2, true, false)
 	end
 end
