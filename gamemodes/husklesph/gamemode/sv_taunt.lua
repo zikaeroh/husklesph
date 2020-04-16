@@ -103,7 +103,7 @@ cvars.AddChangeCallback("ph_taunt_menu_phrase", function(convar_name, value_old,
 end)
 
 function GM:AutoTauntCheck()
-	if self.GameState ~= ROUND_SEEK then return end
+	if self.GameState != ROUND_SEEK then return end
 
 	local propsOnly = self.AutoTauntPropsOnly:GetBool()
 	local minDeadline = self.AutoTauntMin:GetInt()
