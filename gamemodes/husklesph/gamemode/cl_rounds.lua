@@ -34,20 +34,7 @@ net.Receive("round_victor", function(len)
 		tab.winningTeam = net.ReadUInt(16)
 	end
 
-	-- TODO: Can this be sent by the server, rather than being reconstructed?
-	tab.playerAwards = {}
-	while net.ReadUInt(8) != 0 do
-		local k = net.ReadString()
-		local v = net.ReadEntity()
-		net.ReadVector() -- TODO: Remove this on both sides.
-		local name = net.ReadString()
-
-		tab.playerAwards[k] = {
-			player = v,
-			name = name,
-			color = team.GetColor(v:Team())
-		}
-	end
+	tab.playerAwards = net.ReadTable()
 
 	-- open the results panel
 	timer.Simple(2, function()

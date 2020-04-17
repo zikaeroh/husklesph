@@ -424,36 +424,6 @@ function GM:CloseEndRoundMenu()
 	end
 end
 
-local awards = {
-	LastPropStanding = {
-		name = "Longest Survivor",
-		desc = "Prop who survived longest"
-	},
-	LeastMovement = {
-		name = "Least Movement",
-		desc = "Prop who moved the least"
-	},
-	MostTaunts = {
-		name = "Most Taunts",
-		desc = "Prop who taunted the most"
-	},
-	FirstHunterKill = {
-		name = "First Blood",
-		desc = "Hunter who had the first kill"
-	},
-	MostKills = {
-		name = "Most Kills",
-		desc = "Hunter who had the most kills"
-	},
-	PropDamage = {
-		name = "Angriest Player",
-		desc = "Hunter who shot at props the most"
-	},
-	MostMovement = {
-		name = "Most Movement",
-		desc = "Prop who moved the most"
-	}
-}
 
 function GM:EndRoundMenuResults(res)
 	self:OpenEndRoundMenu()
@@ -471,28 +441,18 @@ function GM:EndRoundMenuResults(res)
 		menu.WinningTeam:SetColor(Color(150, 150, 150))
 	end
 
-	--randomise award order, preserve keys
-	local random = {}
-	for k, award in pairs(awards) do
-		table.insert(random, math.random(#random) + 1, {k, award})
-	end
-
-	for _, v in pairs(random) do
-		local k, award = v[1], v[2]
-		if res.playerAwards[k] then
-			local t = res.playerAwards[k]
-			local pnl = vgui.Create("DPanel")
-			pnl:SetTall(math.max(draw.GetFontHeight("RobotoHUD-35"), draw.GetFontHeight("RobotoHUD-15") + draw.GetFontHeight("RobotoHUD-20") * 1.1))
-			function pnl:Paint(w, h)
-				surface.SetDrawColor(50, 50, 50)
-				-- surface.DrawOutlinedRect(0, 0, w, h)
-				draw.DrawText(award.name, "RobotoHUD-20", 0, 0, Color(220, 220, 220), 0)
-				draw.DrawText(award.desc, "RobotoHUD-15", 0, draw.GetFontHeight("RobotoHUD-20"), Color(120, 120, 120), 0)
-				draw.DrawText(t.name, "RobotoHUD-25", w, h / 2 - draw.GetFontHeight("RobotoHUD-25") / 2, t.color, 2)
-			end
-
-			menu.ResultList:AddItem(pnl)
+	for _, award in pairs(res.playerAwards) do
+		local pnl = vgui.Create("DPanel")
+		pnl:SetTall(math.max(draw.GetFontHeight("RobotoHUD-35"), draw.GetFontHeight("RobotoHUD-15") + draw.GetFontHeight("RobotoHUD-20") * 1.1))
+		function pnl:Paint(w, h)
+			surface.SetDrawColor(50, 50, 50)
+			-- surface.DrawOutlinedRect(0, 0, w, h)
+			draw.DrawText(award.name, "RobotoHUD-20", 0, 0, Color(220, 220, 220), 0)
+			draw.DrawText(award.desc, "RobotoHUD-15", 0, draw.GetFontHeight("RobotoHUD-20"), Color(120, 120, 120), 0)
+			draw.DrawText(award.winnerName, "RobotoHUD-25", w, h / 2 - draw.GetFontHeight("RobotoHUD-25") / 2, team.GetColor(award.winnerTeam), 2)
 		end
+
+		menu.ResultList:AddItem(pnl)
 	end
 end
 
