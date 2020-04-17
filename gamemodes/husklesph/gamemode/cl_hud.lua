@@ -174,7 +174,7 @@ function GM:DrawHealth(ply)
 	surface.SetDrawColor(26, 120, 245, 1)
 	drawPoly(x + w * ps, y + h * ps, w * (1 - 2 * ps), h * (1 - 2 * ps), 1)
 
-	render.SetStencilEnable(true);
+	render.SetStencilEnable(true)
 	render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL)
 	render.SetStencilPassOperation(STENCILOPERATION_REPLACE)
 	render.SetStencilReferenceValue(1)
@@ -190,9 +190,9 @@ function GM:DrawHealth(ply)
 	draw.ShadowText(math.Round(health) .. "", "RobotoHUD-25", x + w / 2, y + h / 2, color_white, 1, 1)
 
 	render.SetStencilEnable(false)
-	render.SetStencilWriteMask(0);
-	render.SetStencilReferenceValue(0);
-	render.SetStencilTestMask(0);
+	render.SetStencilWriteMask(0)
+	render.SetStencilReferenceValue(0)
+	render.SetStencilTestMask(0)
 	render.SetStencilEnable(false)
 	render.OverrideDepthEnable(false)
 	render.SetBlend(1)

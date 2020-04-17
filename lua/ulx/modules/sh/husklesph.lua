@@ -1,4 +1,4 @@
-if engine.ActiveGamemode() ~= "husklesph" then return end
+if engine.ActiveGamemode() != "husklesph" then return end
 
 local CATEGORY_NAME = "HusklesPH"
 

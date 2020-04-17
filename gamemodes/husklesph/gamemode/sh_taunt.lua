@@ -49,10 +49,10 @@ end
 function TauntAllowedForPlayer(ply, tauntTable)
 	if tauntTable.sex then
 		if GAMEMODE && GAMEMODE.PlayerModelSex then
-			if tauntTable.sex ~= GAMEMODE.PlayerModelSex then
+			if tauntTable.sex != GAMEMODE.PlayerModelSex then
 				return false
 			end
-		elseif tauntTable.sex ~= ply.ModelSex then
+		elseif tauntTable.sex != ply.ModelSex then
 			return false
 		end
 	end
@@ -61,7 +61,7 @@ function TauntAllowedForPlayer(ply, tauntTable)
 		if !table.HasValue(tauntTable.team, ply:Team()) then
 			return false
 		end
-	elseif tauntTable.team ~= ply:Team() then
+	elseif tauntTable.team != ply:Team() then
 		return false
 	end
 
@@ -70,8 +70,8 @@ end
 
 -- display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
 local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
-	if !name || type(name) ~= "string" then return end
-	if type(snd) ~= "table" then snd = {tostring(snd)} end
+	if !name || type(name) != "string" then return end
+	if type(snd) != "table" then snd = {tostring(snd)} end
 	if #snd == 0 then error("No sounds for " .. name) return end
 
 	local t = {}

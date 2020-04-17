@@ -3,7 +3,7 @@ local PlayerVoicePanels = {}
 
 function PANEL:Init()
 	self.Avatar = vgui.Create("AvatarImage", self)
-	self.Avatar:Dock(LEFT);
+	self.Avatar:Dock(LEFT)
 	self.Avatar:SetSize(32, 32)
 	self.Color = color_transparent
 	self:SetSize(250, 32 + 8)
@@ -74,7 +74,7 @@ function GM:PlayerStartVoice(ply)
 		end
 
 		PlayerVoicePanels[ply]:SetAlpha(255)
-		return;
+		return
 	end
 
 	if (!IsValid(ply)) then return end

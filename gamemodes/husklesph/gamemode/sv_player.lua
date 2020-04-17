@@ -335,7 +335,7 @@ local function pointsAroundSpawn(spwn)
 		pos + Vector(-w, -w,  0),
 		pos + Vector(-w,  w,  0),
 		pos + Vector(w, -w,  0)
-	};
+	}
 end
 
 function GM:PlayerSelectSpawn(ply)
