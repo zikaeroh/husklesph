@@ -1,5 +1,3 @@
-
-
 Taunts = {}
 TauntCategories = {}
 AllowedTauntSounds = {}
@@ -16,9 +14,7 @@ function PlayerModelTauntAllowed(ply, whitelist)
 
 	local mod = ply:GetModel()
 	mod = player_manager.TranslateToPlayerModelName(mod)
-
 	local models = player_manager.AllValidModels()
-
 	for _, v in pairs(whitelist) do
 		if !models[v] then
 			-- v was not a name, so check it as a path
@@ -88,12 +84,14 @@ local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
 	else
 		t.team = tonumber(pteam)
 	end
+
 	if sex && #sex > 0 then
 		t.sex = sex
 		if sex == "both" || sex == "nil" then
 			t.sex = nil
 		end
 	end
+
 	t.name = name
 	t.allowedModels = allowedModels
 
@@ -151,6 +149,7 @@ local function loadTaunts(rootFolder)
 		if !f then
 			return
 		end
+
 		setfenv(f, tempG)
 		local b, err = pcall(f)
 

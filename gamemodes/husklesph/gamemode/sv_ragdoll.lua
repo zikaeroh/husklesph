@@ -28,18 +28,19 @@ dtypes[DMG_BLAST_SURFACE] = ""
 dtypes[DMG_DIRECT] = "Fire"
 dtypes[DMG_BUCKSHOT] = "Bullet"
 
-
 local DeathRagdollsPerPlayer = 3
 local DeathRagdollsPerServer = 22
 
 if !PlayerMeta.CreateRagdollOld then
 	PlayerMeta.CreateRagdollOld = PlayerMeta.CreateRagdoll
 end
+
 function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 	local ent = self:GetNWEntity("DeathRagdoll")
 
 	-- remove old player ragdolls
 	if !self.DeathRagdolls then self.DeathRagdolls = {} end
+
 	local countPlayerRagdolls = 1
 	for k,rag in pairs(self.DeathRagdolls) do
 		if IsValid(rag) then
@@ -48,6 +49,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 			self.DeathRagdolls[k] = nil
 		end
 	end
+
 	if DeathRagdollsPerPlayer >= 0 && countPlayerRagdolls > DeathRagdollsPerPlayer then
 		for i = 0,countPlayerRagdolls do
 			if countPlayerRagdolls > DeathRagdollsPerPlayer then
@@ -69,6 +71,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 			GAMEMODE.DeathRagdolls[k] = nil
 		end
 	end
+
 	if DeathRagdollsPerServer >= 0 && c2 > DeathRagdollsPerServer then
 		for i = 0,c2 do
 			if c2 > DeathRagdollsPerServer then
@@ -81,19 +84,20 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 		end
 	end
 
-	local Data = duplicator.CopyEntTable( self )
+	local Data = duplicator.CopyEntTable(self)
 	if !util.IsValidRagdoll(Data.Model) then
 		return
 	end
 
-	local ent = ents.Create( "prop_ragdoll" )
-	duplicator.DoGeneric( ent, Data )
+	local ent = ents.Create("prop_ragdoll")
+	duplicator.DoGeneric(ent, Data)
 	ent:Spawn()
 	ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 	ent:Fire("kill","",60 * 8)
 	if ent.SetPlayerColor then
 		ent:SetPlayerColor(self:GetPlayerColor())
 	end
+
 	ent:SetNWEntity("RagdollOwner", self)
 
 	ent.Corpse = {}
@@ -113,24 +117,19 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 
 	-- set velocities
 	local Vel = self:GetVelocity()
-
 	local iNumPhysObjects = ent:GetPhysicsObjectCount()
 	for Bone = 0, iNumPhysObjects-1 do
-
-		local PhysObj = ent:GetPhysicsObjectNum( Bone )
+		local PhysObj = ent:GetPhysicsObjectNum(Bone)
 		if IsValid(PhysObj) then
-
-			local Pos, Ang = self:GetBonePosition( ent:TranslatePhysBoneToBone( Bone ) )
-			PhysObj:SetPos( Pos )
-			PhysObj:SetAngles( Ang )
-			PhysObj:AddVelocity( Vel )
-
+			local Pos, Ang = self:GetBonePosition(ent:TranslatePhysBoneToBone(Bone))
+			PhysObj:SetPos(Pos)
+			PhysObj:SetAngles(Ang)
+			PhysObj:AddVelocity(Vel)
 		end
-
 	end
 
 	-- finish up
-	self:SetNWEntity("DeathRagdoll", ent )
+	self:SetNWEntity("DeathRagdoll", ent)
 	table.insert(self.DeathRagdolls,ent)
 	table.insert(GAMEMODE.DeathRagdolls,ent)
 end
@@ -138,21 +137,25 @@ end
 if !PlayerMeta.GetRagdollEntityOld then
 	PlayerMeta.GetRagdollEntityOld = PlayerMeta.GetRagdollEntity
 end
+
 function PlayerMeta:GetRagdollEntity()
 	local ent = self:GetNWEntity("DeathRagdoll")
 	if IsValid(ent) then
 		return ent
 	end
+
 	return self:GetRagdollEntityOld()
 end
 
 if !PlayerMeta.GetRagdollOwnerOld then
 	PlayerMeta.GetRagdollOwnerOld = PlayerMeta.GetRagdollOwner
 end
+
 function EntityMeta:GetRagdollOwner()
 	local ent = self:GetNWEntity("RagdollOwner")
 	if IsValid(ent) then
 		return ent
 	end
+
 	return self:GetRagdollOwnerOld()
 end

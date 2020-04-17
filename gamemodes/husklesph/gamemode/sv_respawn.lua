@@ -1,5 +1,3 @@
-
-
 function GM:CanRespawn(ply)
 	if ply:IsSpectator() then
 		return false

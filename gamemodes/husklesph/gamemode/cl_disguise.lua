@@ -11,7 +11,6 @@ local function renderDis(self)
 		if ply:Alive() && ply:IsDisguised() then
 			local model = ply:GetNWString("disguiseModel")
 			if model && model != "" then
-
 				local ent = ply:GetNWEntity("disguiseEntity")
 				if IsValid(ent) then
 					local mins = ply:GetNWVector("disguiseMins")
@@ -36,8 +35,7 @@ local function renderDis(self)
 end
 
 function GM:RenderDisguises()
-
-	cam.Start3D( EyePos(), EyeAngles() )
+	cam.Start3D(EyePos(), EyeAngles())
 	local b, err = pcall(renderDis, self)
 	cam.End3D()
 	if !b then

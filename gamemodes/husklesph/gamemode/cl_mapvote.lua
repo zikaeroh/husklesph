@@ -6,7 +6,6 @@ net.Receive("ph_mapvote", function(len)
 	GAMEMODE.MapVoteTime = net.ReadFloat()
 
 	local mapList = {}
-
 	while true do
 		local k = net.ReadUInt(16)
 		if k <= 0 then break end
@@ -23,9 +22,7 @@ net.Receive("ph_mapvote", function(len)
 end)
 
 net.Receive("ph_mapvotevotes", function(len)
-
 	local mapVotes = {}
-
 	while true do
 		local k = net.ReadUInt(8)
 		if k <= 0 then break end

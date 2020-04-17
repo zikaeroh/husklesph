@@ -43,7 +43,6 @@ net.Receive("round_victor", function(len)
 end)
 
 net.Receive("gamerules", function()
-
 	local settings = {}
 	while net.ReadUInt(8) != 0 do
 		local k = net.ReadString()

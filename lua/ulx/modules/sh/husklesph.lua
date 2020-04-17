@@ -85,7 +85,6 @@ commandToUlx("ph_taunt_menu_phrase", function(c)
     c:help("Set the taunt menu phrase.")
 end)
 
-
 commandToUlx("ph_auto_taunt", function(c)
     c:addParam{ type = ULib.cmds.BoolArg, hint = "enabled", ULib.cmds.optional }
     c:help("Enable/disable auto taunt.")
@@ -107,7 +106,6 @@ autoTauntDelay:defaultAccess(ULib.ACCESS_ADMIN)
 autoTauntDelay:addParam{ type = ULib.cmds.NumArg, default = 60, min = 5, max = 600, hint = "minimum", ULib.cmds.round, ULib.cmds.optional }
 autoTauntDelay:addParam{ type = ULib.cmds.NumArg, default = 120, min = 5, max = 600, hint = "minimum", ULib.cmds.round, ULib.cmds.optional }
 autoTauntDelay:help("Set the auto taunt delay range.")
-
 
 commandToUlx("ph_endround", function(c)
     c:help("Ends the round on a tie.")

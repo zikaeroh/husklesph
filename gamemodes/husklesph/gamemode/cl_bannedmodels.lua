@@ -2,15 +2,12 @@
 -- menu. It is used locally to determine if a model is viable (aka
 -- whether or not it gets an outline when moused over).
 
-
 GM.BannedModels = {} -- This is used as a hash table where the key is the model string and the value is true.
 local menu
-
 
 function GM:IsModelBanned(model)
 	return self.BannedModels[model] == true
 end
-
 
 function GM:AddBannedModel(model)
 	if self.BannedModels[model] == true then return end
@@ -19,14 +16,12 @@ function GM:AddBannedModel(model)
 	menu.AddModel(model)
 end
 
-
 function GM:RemoveBannedModel(model)
 	if self.BannedModels[model] != true then return end
 
 	self.BannedModels[model] = nil
 	menu.RemoveModel(model)
 end
-
 
 net.Receive("ph_bannedmodels_getall", function(len)
 	GAMEMODE.BannedModels = {}
@@ -38,23 +33,19 @@ net.Receive("ph_bannedmodels_getall", function(len)
 	end
 end)
 
-
 net.Receive("ph_bannedmodels_add", function(len)
 	local model = net.ReadString()
 	GAMEMODE:AddBannedModel(model)
 end)
-
 
 net.Receive("ph_bannedmodels_remove", function(len)
 	local model = net.ReadString()
 	GAMEMODE:RemoveBannedModel(model)
 end)
 
-
 concommand.Add("ph_bannedmodels_menu", function(client)
 	menu:SetVisible(true)
 end)
-
 
 -- This is all the code to create the banned models menu.
 function GM:CreateBannedModelsMenu()

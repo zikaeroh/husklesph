@@ -8,17 +8,14 @@ GM.GameState = GAMEMODE && GAMEMODE.GameState || ROUND_WAIT
 GM.StateStart = GAMEMODE && GAMEMODE.StateStart || CurTime()
 GM.Rounds = GAMEMODE && GAMEMODE.Rounds || 0
 
-
 local function mapTimeLimitTimerResult()
 	if GAMEMODE.Rounds < GAMEMODE.RoundLimit:GetInt() then -- Only change if we haven't already hit the round limit
 		GAMEMODE.Rounds = GAMEMODE.RoundLimit:GetInt() - 1 -- Allows for 1 extra round before hitting the limit
 	end
 end
 
-
 local function changeMapTimeLimitTimer(oldValueMinutes, newValueMinutes)
 	local timerName = "ph_timer_map_time_limit"
-
 	if newValueMinutes == -1 then -- Timer should be disabled
 		timer.Remove(timerName)
 	else
@@ -41,11 +38,9 @@ local function changeMapTimeLimitTimer(oldValueMinutes, newValueMinutes)
 	end
 end
 
-
 cvars.AddChangeCallback("ph_map_time_limit", function(convar, oldValue, newValue)
 	changeMapTimeLimitTimer(tonumber(oldValue), tonumber(newValue))
 end)
-
 
 function GM:GetGameState()
 	return self.GameState
@@ -66,6 +61,7 @@ function GM:GetPlayingPlayers()
 			table.insert(players, ply)
 		end
 	end
+
 	return players
 end
 
@@ -113,6 +109,7 @@ function GM:SetupRound()
 			c = c + 1
 		end
 	end
+
 	if c < 2 then
 		GlobalChatMsg("Not enough players to start round")
 		self:SetGameState(ROUND_WAIT)
@@ -145,8 +142,8 @@ function GM:SetupRound()
 			ply:SetNWBool("RoundInGame", false)
 		end
 	end
-	self:CleanupMap()
 
+	self:CleanupMap()
 	self.Rounds = self.Rounds + 1
 
 	if self.Rounds == self.RoundLimit:GetInt() then
@@ -158,7 +155,6 @@ function GM:SetupRound()
 end
 
 function GM:StartRound()
-
 	self.LastPropDeath = nil
 	self.FirstHunterKill = nil
 
@@ -187,12 +183,9 @@ function GM:StartRound()
 	self.RoundSettings.RoundTime = math.Round((c * 0.5 / hunters + 60 * 4)  * math.sqrt(props / hunters))
 	self.RoundSettings.PropsCamDistance = self.PropsCamDistance:GetFloat()
 	print("Round time is " .. (self.RoundSettings.RoundTime / 60) .. " (" .. c .. " props)")
-
 	self:NetworkGameSettings()
 	self:SetGameState(ROUND_SEEK)
-
 	GlobalChatMsg("Round has started")
-
 end
 
 function GM:EndRound(reason)
@@ -206,6 +199,7 @@ function GM:EndRound(reason)
 		GlobalChatMsg(team.GetColor(TEAM_PROP), team.GetName(TEAM_PROP), " win")
 		winningTeam = TEAM_PROP
 	end
+
 	self.LastRoundResult = reason
 
 	local awards = {}
@@ -266,6 +260,7 @@ function GM:CheckForVictory()
 			end
 		end
 	end
+
 	if red == 0 && blue == 0 then
 		self:EndRound(WIN_NONE)
 		return
@@ -275,6 +270,7 @@ function GM:CheckForVictory()
 		self:EndRound(WIN_PROP)
 		return
 	end
+
 	if blue == 0 then
 		self:EndRound(WIN_HUNTER)
 		return
@@ -289,6 +285,7 @@ function GM:RoundsThink()
 				c = c + 1
 			end
 		end
+
 		if c >= 2 && self.RoundWaitForPlayers + self.StartWaitTime:GetFloat() < CurTime() then
 			self:SetupRound()
 		end
@@ -298,7 +295,6 @@ function GM:RoundsThink()
 		end
 	elseif self:GetGameState() == ROUND_SEEK then
 		self:CheckForVictory()
-
 		for k, ply in pairs(self:GetPlayingPlayers()) do
 			if ply:IsProp() then
 				ply.PropMovement = (ply.PropMovement || 0) + ply:GetVelocity():Length()
@@ -312,6 +308,7 @@ function GM:RoundsThink()
 				if self.LastRoundResult != WIN_PROP || !self.PropsWinStayProps:GetBool() then
 					self:SwapTeams()
 				end
+
 				self:SetupRound()
 			end
 		end

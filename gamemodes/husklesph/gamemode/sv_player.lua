@@ -2,7 +2,6 @@ local PlayerMeta = FindMetaTable("Player")
 
 function GM:PlayerInitialSpawn(ply)
 	self:RoundsSetupPlayer(ply)
-
 	self:TeamsSetupPlayer(ply)
 
 	if self:GetGameState() != ROUND_WAIT then
@@ -36,15 +35,15 @@ function GM:PlayerDisconnected(ply)
 end
 
 util.AddNetworkString("hull_set")
-function GM:PlayerSpawn( ply )
 
+function GM:PlayerSpawn(ply)
 	ply:UnCSpectate()
 
-	player_manager.OnPlayerSpawn( ply )
-	player_manager.RunClass( ply, "Spawn" )
+	player_manager.OnPlayerSpawn(ply)
+	player_manager.RunClass(ply, "Spawn")
 
-	hook.Call( "PlayerLoadout", GAMEMODE, ply )
-	hook.Call( "PlayerSetModel", GAMEMODE, ply )
+	hook.Call("PlayerLoadout", GAMEMODE, ply)
+	hook.Call("PlayerSetModel", GAMEMODE, ply)
 
 	ply:UnDisguise()
 	ply:CalculateSpeed()
@@ -53,7 +52,6 @@ function GM:PlayerSpawn( ply )
 	ply:SetHealth(ply:GetHMaxHealth())
 
 	GAMEMODE:PlayerSetNewHull(ply)
-
 	self:PlayerSetupHands(ply)
 
 	local col = team.GetColor(ply:Team())
@@ -65,28 +63,28 @@ end
 
 function GM:PlayerSetupHands(ply)
 	local oldhands = ply:GetHands()
-	if ( IsValid( oldhands ) ) then oldhands:Remove() end
+	if (IsValid(oldhands)) then oldhands:Remove() end
 
-	local hands = ents.Create( "gmod_hands" )
-	if ( IsValid( hands ) ) then
-		ply:SetHands( hands )
-		hands:SetOwner( ply )
+	local hands = ents.Create("gmod_hands")
+	if (IsValid(hands)) then
+		ply:SetHands(hands)
+		hands:SetOwner(ply)
 
 		-- Which hands should we use?
-		local cl_playermodel = ply:GetInfo( "cl_playermodel" )
-		local info = player_manager.TranslatePlayerHands( cl_playermodel )
-		if ( info ) then
-			hands:SetModel( info.model )
-			hands:SetSkin( info.skin )
-			hands:SetBodyGroups( info.body )
+		local cl_playermodel = ply:GetInfo("cl_playermodel")
+		local info = player_manager.TranslatePlayerHands(cl_playermodel)
+		if (info) then
+			hands:SetModel(info.model)
+			hands:SetSkin(info.skin)
+			hands:SetBodyGroups(info.body)
 		end
 
 		-- Attach them to the viewmodel
-		local vm = ply:GetViewModel( 0 )
-		hands:AttachToViewmodel( vm )
+		local vm = ply:GetViewModel(0)
+		hands:AttachToViewmodel(vm)
 
-		vm:DeleteOnRemove( hands )
-		ply:DeleteOnRemove( hands )
+		vm:DeleteOnRemove(hands)
+		ply:DeleteOnRemove(hands)
 
 		hands:Spawn()
 	end
@@ -109,14 +107,15 @@ function PlayerMeta:CalculateSpeed()
 			local mul = math.Clamp(self:GetNWFloat("disguiseVolume", 1) / GAMEMODE.PropsSmallSize:GetFloat(), 0.5, 1)
 			settings.walkSpeed = settings.walkSpeed * mul
 		end
+
 		if settings.runSpeed > settings.walkSpeed then
 			settings.runSpeed = settings.walkSpeed
 		end
+
 		settings.jumpPower = settings.jumpPower * GAMEMODE.PropsJumpPower:GetFloat()
 	end
 
 	hook.Call("PlayerCalculateSpeed", ply, settings)
-
 
 	-- set out new speeds
 	if settings.canRun then
@@ -124,6 +123,7 @@ function PlayerMeta:CalculateSpeed()
 	else
 		self:SetRunSpeed(settings.walkSpeed || 1)
 	end
+
 	if self:GetMoveType() != MOVETYPE_NOCLIP then
 		if settings.canMove then
 			self:SetMoveType(MOVETYPE_WALK)
@@ -131,6 +131,7 @@ function PlayerMeta:CalculateSpeed()
 			self:SetMoveType(MOVETYPE_NONE)
 		end
 	end
+
 	self.CanRun = settings.canRun
 	self:SetWalkSpeed(settings.walkSpeed || 1)
 	self:SetJumpPower(settings.jumpPower || 1)
@@ -150,7 +151,6 @@ function GM:PlayerLoadout(ply)
 		end
 	end
 end
-
 
 local playerModels = {}
 local function addModel(model, sex)
@@ -180,17 +180,14 @@ addModel("refugee02", "male")
 addModel("refugee03", "male")
 addModel("refugee04", "male")
 
-
-function GM:PlayerSetModel( ply )
-
-	local cl_playermodel = ply:GetInfo( "cl_playermodel" )
-
+function GM:PlayerSetModel(ply)
+	local cl_playermodel = ply:GetInfo("cl_playermodel")
 	local playerModel = table.Random(playerModels)
 	cl_playermodel = playerModel.model
 
-	local modelname = player_manager.TranslatePlayerModel( cl_playermodel )
-	util.PrecacheModel( modelname )
-	ply:SetModel( modelname )
+	local modelname = player_manager.TranslatePlayerModel(cl_playermodel)
+	util.PrecacheModel(modelname)
+	ply:SetModel(modelname)
 	ply.ModelSex = playerModel.sex
 
 	net.Start("player_model_sex")
@@ -201,7 +198,6 @@ end
 function GM:PlayerDeathSound()
 	return true
 end
-
 
 -- This is only a shallow copy.
 local function mergeTables(...)
@@ -216,7 +212,6 @@ local function mergeTables(...)
 	return newTable
 end
 
-
 -------------------------------
 -------------------------------
 -------------------------------
@@ -227,12 +222,10 @@ end
 -- basically just killed players every time or got them stuck in each other so it
 -- was not very useful. The TTT code has been tweaked to work better with Prophunters.
 
-
 -- Nice Fisher-Yates implementation, from Wikipedia
 local rand = math.random
 local function shuffleTable(t)
 	local n = #t
-
 	while n > 2 do
 		-- n is now the last pertinent index
 		local k = rand(n) -- 1 <= k <= n
@@ -244,7 +237,6 @@ local function shuffleTable(t)
 	return t
 end
 
-
 function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
 	if !IsValid(ply) || ply:IsSpectator() then return true end
 	if !rigged && (!IsValid(spwn) || !spwn:IsInWorld()) then return false end
@@ -252,16 +244,13 @@ function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
 	-- spwn is normally an ent, but we sometimes use a vector for jury rigged
 	-- positions
 	local pos = rigged && spwn || spwn:GetPos()
-
 	if !util.IsInWorld(pos) then return false end
 
-	local blocking = ents.FindInBox(pos + Vector( -32, -32, 0 ), pos + Vector( 32, 32, 64 )) -- Changed from (-16, -16, 0) (16, 16, 64)
-
+	local blocking = ents.FindInBox(pos + Vector(-32, -32, 0), pos + Vector(32, 32, 64)) -- Changed from (-16, -16, 0) (16, 16, 64)
 	for _, blockingEnt in ipairs(blocking) do
 		if IsValid(blockingEnt) && blockingEnt:IsPlayer() && !blockingEnt:IsSpectator() && blockingEnt:Alive() then
 			if force then
 				blockingEnt:Kill()
-
 				blockingEnt:PlayerChatMsg(Color(200, 20, 20), "You were killed because there are not enough spawnpoints.")
 				for _, value in ipairs(player.GetAll()) do
 					if value:IsAdmin() || value:IsSuperAdmin() then
@@ -276,7 +265,6 @@ function GM:IsSpawnpointSuitable(ply, spwn, force, rigged)
 
 	return true
 end
-
 
 -- TTT only had a single table for spawnpoints but we're going to use three different ones
 -- so that we can try to group teams together.
@@ -293,7 +281,6 @@ local hunterSpawnTypes = {"info_player_counterterrorist",
 local spectatorSpawnTypes = {"info_player_start", "gmod_player_start",
 "info_player_teamspawn", "ins_spawnpoint", "aoc_spawnpoint",
 "dys_spawn_point", "info_player_coop", "info_player_deathmatch"}
-
 
 local function getSpawnEnts(plyTeam, force_all)
 	local tblToUse
@@ -327,32 +314,29 @@ local function getSpawnEnts(plyTeam, force_all)
 	end
 
 	shuffleTable(tbl)
-
 	return tbl
 end
-
 
 -- Generate points next to and above the spawn that we can test for suitability (a "3x3 grid")
 local function pointsAroundSpawn(spwn)
 	if !IsValid(spwn) then return {} end
-	local pos = spwn:GetPos()
 
+	local pos = spwn:GetPos()
 	local w, _ = 50, 72 -- Increased from the default 36, 72 as it seems to work better with Prophunters.
 
 	-- all rigged positions
 	-- could be done without typing them out, but would take about as much time
 	return {
-		pos + Vector( w,  0,  0),
-		pos + Vector( 0,  w,  0),
-		pos + Vector( w,  w,  0),
+		pos + Vector(w,  0,  0),
+		pos + Vector(0,  w,  0),
+		pos + Vector(w,  w,  0),
 		pos + Vector(-w,  0,  0),
-		pos + Vector( 0, -w,  0),
+		pos + Vector(0, -w,  0),
 		pos + Vector(-w, -w,  0),
 		pos + Vector(-w,  w,  0),
-		pos + Vector( w, -w,  0)
+		pos + Vector(w, -w,  0)
 	};
 end
-
 
 function GM:PlayerSelectSpawn(ply)
 	local plyTeam = ply:Team()
@@ -364,9 +348,7 @@ function GM:PlayerSelectSpawn(ply)
 
 	-- Should be true for each first player on a team
 	if !self.SpawnPoints[plyTeam] || (table.IsEmpty(self.SpawnPoints[plyTeam])) || (!IsTableOfEntitiesValid(self.SpawnPoints[plyTeam])) then
-
 		self.SpawnPoints[plyTeam] = getSpawnEnts(plyTeam, false)
-
 		-- One might think that we have to regenerate our spawnpoint
 		-- cache. Otherwise, any rigged spawn entities would not get reused, and
 		-- MORE new entities would be made instead. In reality, the map cleanup at
@@ -393,7 +375,6 @@ function GM:PlayerSelectSpawn(ply)
 
 	-- That did not work, so now look around spawns
 	local picked = nil
-
 	for _, spwn in pairs(self.SpawnPoints[plyTeam]) do
 		picked = spwn -- just to have something if all else fails
 
@@ -409,6 +390,7 @@ function GM:PlayerSelectSpawn(ply)
 				else
 					spawnType = "info_player_start"
 				end
+
 				local rigSpwn = ents.Create(spawnType)
 				if IsValid(rigSpwn) then
 					rigSpwn:SetPos(rig)
@@ -433,13 +415,11 @@ function GM:PlayerSelectSpawn(ply)
 	return picked
 end
 
-
 -- TTT code ends here.
 
 -----------------------------------
 -----------------------------------
 -----------------------------------
-
 
 function GM:PlayerDeathThink(ply)
 	if self:CanRespawn(ply) then
@@ -496,10 +476,9 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 		-- set the last death award
 		self.LastPropDeath = ply
 	end
+
 	ply:UnDisguise()
-
 	ply:Freeze(false) -- why?, *sigh*
-
 	ply:CreateRagdoll()
 
 	local ent = ply:GetNWEntity("DeathRagdoll")
@@ -517,7 +496,6 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 
 			-- did a hunter kill a prop
 			if attacker:IsHunter() && ply:IsProp() then
-
 				-- increase their round kills
 				attacker.HunterKills = (attacker.HunterKills || 0) + 1
 
@@ -532,14 +510,12 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo)
 	self:AddKillFeed(ply, attacker, dmginfo)
 end
 
-function GM:PlayerDeath(ply, inflictor, attacker )
-
+function GM:PlayerDeath(ply, inflictor, attacker)
 	ply.NextSpawnTime = CurTime() + 1
 	ply.DeathTime = CurTime()
 
 	-- time until player can spectate another player
 	ply.SpectateTime = CurTime() + 2
-
 end
 
 function GM:KeyPress(ply, key)
@@ -554,14 +530,15 @@ function GM:PlayerSwitchFlashlight(ply)
 	if ply:IsDisguised() then
 		return false
 	end
+
 	return true
 end
 
-function GM:PlayerShouldTaunt( ply, actid )
+function GM:PlayerShouldTaunt(ply, actid)
 	return false
 end
 
-function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, speaker )
+function GM:PlayerCanSeePlayersChat(text, teamOnly, listener, speaker)
 	if !IsValid(speaker) then return false end
 	local canhear = self:PlayerCanHearChatVoice(listener, speaker, "chat", teamOnly)
 	return canhear
@@ -576,15 +553,13 @@ function GM:StartCommand(ply, cmd)
 	end
 end
 
-
-local sv_alltalk = GetConVar( "sv_alltalk" )
-function GM:PlayerCanHearPlayersVoice( listener, talker )
+local sv_alltalk = GetConVar("sv_alltalk")
+function GM:PlayerCanHearPlayersVoice(listener, talker)
 	if !IsValid(talker) then return false end
 	return self:PlayerCanHearChatVoice(listener, talker, "voice")
 end
 
-
-function GM:PlayerCanHearChatVoice( listener, talker, typ, teamOnly )
+function GM:PlayerCanHearChatVoice(listener, talker, typ, teamOnly)
 	if typ == "chat" && teamOnly then
 		if listener:Team() != talker:Team() then
 			return false
@@ -610,7 +585,6 @@ function GM:PlayerCanHearChatVoice( listener, talker, typ, teamOnly )
 	end
 
 	return true
-
 end
 
 function GM:PlayerCanPickupWeapon(ply, wep)
@@ -619,5 +593,6 @@ function GM:PlayerCanPickupWeapon(ply, wep)
 			return false
 		end
 	end
+
 	return true
 end

@@ -34,6 +34,7 @@ function PlayerMeta:CanFitHull(hullx, hully, hullz)
 	if tr.Hit then
 		return false
 	end
+
 	return true
 end
 
@@ -47,9 +48,9 @@ function PlayerMeta:GetPropEyePos()
 	if !self:IsDisguised() then
 		return self:GetShootPos()
 	end
+
 	local maxs = self:GetNWVector("disguiseMaxs")
 	local mins = self:GetNWVector("disguiseMins")
-
 	local reach = (maxs.z - mins.z) + 10
 	local trace = {}
 	trace.start = self:GetPos() + Vector(0, 0, 1.5)
@@ -72,6 +73,7 @@ function PlayerMeta:GetPropEyeTrace()
 		trace.mask = MASK_SHOT
 		return util.TraceLine(trace)
 	end
+
 	local trace = {}
 	trace.start = self:GetPropEyePos()
 	trace.endpos = trace.start + self:GetAimVector() * 100000
@@ -136,5 +138,6 @@ function GM:PlayerCanDisguiseCurrentTarget(ply)
 			end
 		end
 	end
+
 	return false, nil
 end

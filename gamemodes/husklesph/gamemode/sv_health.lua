@@ -1,4 +1,3 @@
-
 local PlayerMeta = FindMetaTable("Player")
 
 function PlayerMeta:SetHMaxHealth(amo)

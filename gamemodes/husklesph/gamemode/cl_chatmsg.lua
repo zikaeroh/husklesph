@@ -4,7 +4,6 @@
 -- can't do) and we want to be able to send messages from the server (MsgC can't do
 -- this).
 
-
 net.Receive("ph_chatmsg", function(len)
 	local tbl = net.ReadTable()
 	chat.AddText(unpack(tbl))

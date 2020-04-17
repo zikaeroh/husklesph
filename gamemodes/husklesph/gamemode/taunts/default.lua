@@ -36,7 +36,6 @@ addTaunt("Over there", {
 	"vo/npc/male01/overthere02.wav"
 }, "props", "male", {"talk"})
 
-
 addTaunt("Ready when you are", {
 	"vo/npc/female01/readywhenyouare01.wav",
 	"vo/npc/female01/readywhenyouare02.wav"
@@ -54,7 +53,6 @@ addTaunt("Watch out", {
 addTaunt("Watch out", {
 	"vo/npc/female01/watchout.wav"
 }, "props", "female", {"talk"})
-
 
 addTaunt("Zombie Speak", {
 	"npc/zombie/zombie_voice_idle1.wav",

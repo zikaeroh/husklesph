@@ -1,4 +1,3 @@
-
 util.AddNetworkString("kill_feed_add")
 
 function GM:AddKillFeed(ply, attacker, dmginfo)

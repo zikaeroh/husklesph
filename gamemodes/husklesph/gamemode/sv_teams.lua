@@ -1,5 +1,3 @@
-
-
 function GM:TeamsSetupPlayer(ply)
 	local cops = team.NumPlayers(TEAM_HUNTER)
 	local robbers = team.NumPlayers(TEAM_PROP)
@@ -14,15 +12,13 @@ concommand.Add("car_jointeam", function(ply, com, args)
 	local curteam = ply:Team()
 	local newteam = tonumber(args[1] || "") || 0
 	if newteam == TEAM_SPEC && curteam != TEAM_SPEC then
-
 		ply:SetTeam(newteam)
 		if ply:Alive() then
 			ply:Kill()
 		end
+
 		GlobalChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
-
 	elseif newteam >= TEAM_HUNTER && newteam <= TEAM_PROP && newteam != curteam then
-
 		-- make sure we can't join the bigger team
 		local otherteam = newteam == TEAM_HUNTER && TEAM_PROP || TEAM_HUNTER
 		if team.NumPlayers(newteam) <= team.NumPlayers(otherteam) then
@@ -30,19 +26,17 @@ concommand.Add("car_jointeam", function(ply, com, args)
 			if ply:Alive() then
 				ply:Kill()
 			end
+
 			GlobalChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
 		else
 			ply:PlayerChatMsg("Team full, you cannot join")
 		end
-
 	end
-
 end)
 
 function GM:CheckTeamBalance()
 	if !self.TeamBalanceCheck || self.TeamBalanceCheck < CurTime() then
 		self.TeamBalanceCheck = CurTime() + 3 * 60 -- check every 3 minutes
-
 		local diff = team.NumPlayers(TEAM_HUNTER) - team.NumPlayers(TEAM_PROP)
 		if diff < -1 || diff > 1 then -- teams must be off by more than 2 for team balance
 			self.TeamBalanceTimer = CurTime() + 30 -- balance in 30 seconds
@@ -51,6 +45,7 @@ function GM:CheckTeamBalance()
 			end
 		end
 	end
+
 	if self.TeamBalanceTimer && self.TeamBalanceTimer < CurTime() then
 		self.TeamBalanceTimer = nil
 		self:BalanceTeams()
@@ -65,6 +60,7 @@ function GM:BalanceTeams(nokill)
 			biggerTeam = TEAM_HUNTER
 			smallerTeam = TEAM_PROP
 		end
+
 		diff = team.NumPlayers(biggerTeam) - team.NumPlayers(smallerTeam)
 		while diff > 1 do
 			local players = team.GetPlayers(biggerTeam)
@@ -73,6 +69,7 @@ function GM:BalanceTeams(nokill)
 			if !nokill && ply:Alive() then
 				ply:Kill()
 			end
+
 			GlobalChatMsg(ply:Nick(), " team balanced to ", team.GetColor(smallerTeam), team.GetName(smallerTeam))
 			diff = diff - 2
 		end
@@ -87,5 +84,6 @@ function GM:SwapTeams()
 			ply:SetTeam(TEAM_HUNTER)
 		end
 	end
+
 	GlobalChatMsg(Color(50, 220, 150), "Teams have been swapped")
 end

@@ -1,6 +1,5 @@
 PlayerAwards = {}
 
-
 PlayerAwards.LastPropStanding = {
 	name = "Longest Survivor",
 	desc = "Prop who survived longest",
@@ -12,7 +11,6 @@ PlayerAwards.LastPropStanding = {
 		return nil
 	end
 }
-
 
 PlayerAwards.LeastMovement = {
 	name = "Least Movement",
@@ -31,7 +29,6 @@ PlayerAwards.LeastMovement = {
 		return minPly
 	end
 }
-
 
 PlayerAwards.MostTaunts = {
 	name = "Most Taunts",
@@ -52,7 +49,6 @@ PlayerAwards.MostTaunts = {
 	end
 }
 
-
 PlayerAwards.FirstHunterKill = {
 	name = "First Blood",
 	desc = "Hunter who had the first kill",
@@ -60,7 +56,6 @@ PlayerAwards.FirstHunterKill = {
 		return GAMEMODE.FirstHunterKill
 	end
 }
-
 
 PlayerAwards.MostKills = {
 	name = "Most Kills",
@@ -81,7 +76,6 @@ PlayerAwards.MostKills = {
 	end
 }
 
-
 PlayerAwards.PropDamage = {
 	name = "Angriest Player",
 	desc = "Hunter who shot at props the most",
@@ -100,7 +94,6 @@ PlayerAwards.PropDamage = {
 		return nil
 	end
 }
-
 
 PlayerAwards.MostMovement = {
 	name = "Most Movement",

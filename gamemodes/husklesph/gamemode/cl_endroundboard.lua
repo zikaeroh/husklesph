@@ -3,12 +3,10 @@ if GAMEMODE && IsValid(GAMEMODE.EndRoundPanel) then
 end
 
 local menu
-
 local muted = Material("icon32/muted.png")
 local unmuted = Material("icon32/unmuted.png")
 
 local function addPlayerItem(self, mlist, ply)
-
 	local but = vgui.Create("DButton")
 	but.player = ply
 	but.ctime = CurTime()
@@ -16,7 +14,6 @@ local function addPlayerItem(self, mlist, ply)
 	but:SetText("")
 
 	function but:Paint(w, h)
-
 		surface.SetDrawColor(color_black)
 
 		if IsValid(ply) && ply:IsPlayer() then
@@ -25,13 +22,12 @@ local function addPlayerItem(self, mlist, ply)
 				surface.SetDrawColor(col.r, col.g, col.b, 20)
 				surface.DrawRect(0, 0, w, h)
 			end
-			local s = 4
 
+			local s = 4
 			if ply:IsSpeaking() then
 				surface.SetMaterial(unmuted)
 
 				local v = ply:VoiceVolume()
-
 				local x, y = self:LocalToScreen(0, 0)
 				render.SetScissorRect(x, y, x + s + 32 * (0.5 + v / 2), y + h, true)
 
@@ -53,7 +49,6 @@ local function addPlayerItem(self, mlist, ply)
 			end
 
 			draw.SimpleText(ply:Ping(), "RobotoHUD-20", w - 4, 0, col, 2)
-
 			draw.SimpleText(ply:Nick(), "RobotoHUD-20", s, 0, col, 0)
 		end
 	end
@@ -68,11 +63,9 @@ local function addPlayerItem(self, mlist, ply)
 end
 
 local function doPlayerItems(self, mlist)
-
 	local add = false
 	for k, ply in pairs(player.GetAll()) do
 		local found = false
-
 		for t,v in pairs(mlist:GetCanvas():GetChildren()) do
 			if v.player == ply then
 				found = true
@@ -85,14 +78,15 @@ local function doPlayerItems(self, mlist)
 			add = true
 		end
 	end
-	local del = false
 
+	local del = false
 	for t,v in pairs(mlist:GetCanvas():GetChildren()) do
 		if !v.perm && v.ctime != CurTime() then
 			v:Remove()
 			del = true
 		end
 	end
+
 	-- make sure the rest of the elements are sorted and moved up to fill gaps
 	if del || add then
 		timer.Simple(0, function()
@@ -108,6 +102,7 @@ local function doPlayerItems(self, mlist)
 			for k, v in pairs(childs) do
 				v:SetParent(mlist)
 			end
+
 			mlist:GetCanvas():InvalidateLayout()
 		end)
 	end
@@ -121,6 +116,7 @@ end)
 
 function GM:OpenEndRoundMenu()
 	chat.Close()
+
 	if IsValid(menu) then
 		menu.ChatTextEntry:SetText("")
 		menu:SetVisible(true)
@@ -140,22 +136,21 @@ function GM:OpenEndRoundMenu()
 	menu:ShowCloseButton(false)
 	menu:DockPadding(8, 8, 8, 8)
 
-	local matBlurScreen = Material( "pp/blurscreen" )
+	local matBlurScreen = Material("pp/blurscreen")
 	function menu:Paint(w, h)
 		DisableClipping(true)
 
-		local x, y = self:LocalToScreen( 0, 0 )
-
+		local x, y = self:LocalToScreen(0, 0)
 		local Fraction = 0.4
 
-		surface.SetMaterial( matBlurScreen )
-		surface.SetDrawColor( 255, 255, 255, 255 )
+		surface.SetMaterial(matBlurScreen)
+		surface.SetDrawColor(255, 255, 255, 255)
 
 		for i = 0.33, 1, 0.33 do
-			matBlurScreen:SetFloat( "$blur", Fraction * 5 * i )
+			matBlurScreen:SetFloat("$blur", Fraction * 5 * i)
 			matBlurScreen:Recompute()
-			if ( render ) then render.UpdateScreenEffectTexture() end
-			surface.DrawTexturedRect( x * -1, y * -1, ScrW(), ScrH() )
+			if (render) then render.UpdateScreenEffectTexture() end
+			surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
 		end
 
 		surface.SetDrawColor(40,40,40,230)
@@ -166,21 +161,23 @@ function GM:OpenEndRoundMenu()
 
 	local leftpnl = vgui.Create("DPanel", menu)
 	leftpnl:Dock(LEFT)
+
 	function leftpnl:PerformLayout()
 		self:SetWide(menu:GetWide() * 0.4)
 	end
+
 	function leftpnl:Paint(w, h)
 	end
 
 	-- player list section
 	local listpnl = vgui.Create("DPanel", leftpnl)
 	listpnl:Dock(FILL)
+
 	function listpnl:Paint(w, h)
 		surface.SetDrawColor(20, 20, 20, 150)
 		local t = draw.GetFontHeight("RobotoHUD-25") + 2
 		surface.DrawRect(0, t, w, h - t)
 	end
-
 
 	local header = vgui.Create("DLabel", listpnl)
 	header:Dock(TOP)
@@ -192,6 +189,7 @@ function GM:OpenEndRoundMenu()
 	local plist = vgui.Create("DScrollPanel", listpnl)
 	menu.PlayerList = plist
 	plist:Dock(FILL)
+
 	function plist:Paint(w, h)
 	end
 
@@ -199,14 +197,14 @@ function GM:OpenEndRoundMenu()
 		if !self.RefreshWait || self.RefreshWait < CurTime() then
 			self.RefreshWait = CurTime() + 0.1
 			doPlayerItems(self, plist)
-
 		end
 	end
 
 	-- child positioning
 	local canvas = plist:GetCanvas()
 	canvas:DockPadding(0, 0, 0, 0)
-	function canvas:OnChildAdded( child )
+
+	function canvas:OnChildAdded(child)
 		child:Dock(TOP)
 		child:DockMargin(0, 0, 0, 1)
 	end
@@ -215,6 +213,7 @@ function GM:OpenEndRoundMenu()
 	local pnl = vgui.Create("DPanel", leftpnl)
 	pnl:Dock(BOTTOM)
 	pnl:DockMargin(0, 20, 0, 0)
+
 	function pnl:PerformLayout()
 		self:SetTall(leftpnl:GetTall() * 0.5)
 	end
@@ -231,7 +230,6 @@ function GM:OpenEndRoundMenu()
 	header:SetTall(draw.GetFontHeight("RobotoHUD-25"))
 	header:SetText("Chat")
 	header:DockMargin(4, 2, 4, 2)
-
 
 	local sayPnl = vgui.Create("DPanel", pnl)
 	sayPnl:Dock(BOTTOM)
@@ -261,6 +259,7 @@ function GM:OpenEndRoundMenu()
 	menu.ChatTextEntry = entry
 	entry:SetFont("RobotoHUD-15")
 	entry:SetTextColor(color_white)
+
 	function entry:OnEnter(...)
 		RunConsoleCommand("say", self:GetValue())
 		self:SetText("")
@@ -269,44 +268,47 @@ function GM:OpenEndRoundMenu()
 			self:RequestFocus()
 		end)
 	end
+
 	local colCursor = Color(255, 0, 0)
 	local colText = Color(180, 180, 180)
+
 	function entry:Paint(w, h)
-		self:DrawTextEntryText( self.Focused && color_white || colText, self.m_colHighlight, colCursor )
+		self:DrawTextEntryText(self.Focused && color_white || colText, self.m_colHighlight, colCursor)
 	end
+
 	function entry:OnGetFocus()
 		self.Focused = true
 		menu:SetKeyboardInputEnabled(true)
 	end
+
 	function entry:OnLoseFocus()
 		self.Focused = false
 		menu:SetKeyboardInputEnabled(false)
 	end
 
-
 	local mlist = vgui.Create("DScrollPanel", pnl)
 	menu.ChatList = mlist
 	mlist:Dock(FILL)
+
 	function mlist:Paint(w, h)
 	end
 
 	-- child positioning
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(0, 0, 0, 0)
-	function canvas:OnChildAdded( child )
+
+	function canvas:OnChildAdded(child)
 		child:Dock(TOP)
 		child:DockMargin(0, 0, 0, 1)
 	end
 
-	function mlist.VBar:SetUp( _barsize_, _canvassize_ )
-
+	function mlist.VBar:SetUp(_barsize_, _canvassize_)
 		local oldSize = self.CanvasSize
 
-		self.BarSize 	= _barsize_
-		self.CanvasSize = math.max( _canvassize_ - _barsize_, 1 )
+		self.BarSize = _barsize_
+		self.CanvasSize = math.max(_canvassize_ - _barsize_, 1)
 
-		self:SetEnabled( _canvassize_ > _barsize_ )
-
+		self:SetEnabled(_canvassize_ > _barsize_)
 		self:InvalidateLayout()
 
 		if self:GetScroll() == oldSize || (oldSize == 1 && self:GetScroll() == 0) then
@@ -320,6 +322,7 @@ function GM:OpenEndRoundMenu()
 	respnl:Dock(FILL)
 	respnl:DockMargin(20, 0, 0, 0)
 	respnl:DockPadding(0, 0, 0, 0)
+
 	function respnl:Paint(w, h)
 		surface.SetDrawColor(20, 20, 20, 150)
 		local t = draw.GetFontHeight("RobotoHUD-25") + 2
@@ -346,6 +349,7 @@ function GM:OpenEndRoundMenu()
 	timeleft:Dock(BOTTOM)
 	timeleft:SetTall(draw.GetFontHeight("RobotoHUD-20"))
 	local col = Color(150, 150, 150)
+
 	function timeleft:Paint(w, h)
 		if GAMEMODE:GetGameState() == ROUND_POST then
 			local settings = GAMEMODE:GetRoundSettings()
@@ -359,12 +363,14 @@ function GM:OpenEndRoundMenu()
 	menu.ResultList = mlist
 	mlist:Dock(FILL)
 	mlist:DockMargin(20, 0, 20, 0)
+
 	function mlist:Paint(w, h)
 	end
 
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(0, 0, 0, 0)
-	function canvas:OnChildAdded( child )
+
+	function canvas:OnChildAdded(child)
 		child:Dock(TOP)
 		child:DockMargin(0, 0, 0, 16)
 	end
@@ -376,6 +382,7 @@ function GM:OpenEndRoundMenu()
 	votepnl:Dock(FILL)
 	votepnl:DockMargin(20, 0, 0, 0)
 	votepnl:DockPadding(0, 0, 0, 0)
+
 	function votepnl:Paint(w, h)
 		surface.SetDrawColor(20, 20, 20, 150)
 		local t = draw.GetFontHeight("RobotoHUD-25") + 2
@@ -393,6 +400,7 @@ function GM:OpenEndRoundMenu()
 	timeleft:Dock(BOTTOM)
 	timeleft:SetTall(draw.GetFontHeight("RobotoHUD-20"))
 	local col = Color(150, 150, 150)
+
 	function timeleft:Paint(w, h)
 		if GAMEMODE:GetGameState() == ROUND_MAPVOTE then
 			local voteTime = GAMEMODE.MapVoteTime || 30
@@ -405,12 +413,14 @@ function GM:OpenEndRoundMenu()
 	menu.MapVoteList = mlist
 	mlist:Dock(FILL)
 	mlist:DockMargin(0, 20, 0, 20)
+
 	function mlist:Paint(w, h)
 	end
 
 	local canvas = mlist:GetCanvas()
 	canvas:DockPadding(20, 0, 20, 0)
-	function canvas:OnChildAdded( child )
+
+	function canvas:OnChildAdded(child)
 		child:Dock(TOP)
 		child:DockMargin(0, 0, 0, 16)
 	end
@@ -422,12 +432,11 @@ function GM:CloseEndRoundMenu()
 	end
 end
 
-
 function GM:EndRoundMenuResults(res)
 	self:OpenEndRoundMenu()
+
 	menu.ResultsPanel:SetVisible(true)
 	menu.VotePanel:SetVisible(false)
-
 	menu.Results = res
 	menu.ChatList:Clear()
 	menu.ResultList:Clear()
@@ -442,6 +451,7 @@ function GM:EndRoundMenuResults(res)
 	for _, award in pairs(res.playerAwards) do
 		local pnl = vgui.Create("DPanel")
 		pnl:SetTall(math.max(draw.GetFontHeight("RobotoHUD-35"), draw.GetFontHeight("RobotoHUD-15") + draw.GetFontHeight("RobotoHUD-20") * 1.1))
+
 		function pnl:Paint(w, h)
 			surface.SetDrawColor(50, 50, 50)
 			draw.DrawText(award.name, "RobotoHUD-20", 0, 0, Color(220, 220, 220), 0)
@@ -458,13 +468,13 @@ function GM:EndRoundMapVote()
 
 	menu.ResultsPanel:SetVisible(false)
 	menu.VotePanel:SetVisible(true)
-
 	menu.MapVoteList:Clear()
 
 	for k, map in pairs(self.MapList) do
 		local but = vgui.Create("DButton")
 		but:SetText("")
 		but:SetTall(128)
+
 		local png
 		local path = "maps/" .. map .. ".png"
 		if file.Exists(path, "GAME") then
@@ -480,6 +490,7 @@ function GM:EndRoundMapVote()
 				end
 			end
 		end
+
 		local dname = map:gsub("^%a%a%a?_", ""):gsub("_?v[%d%.%-]+$", "")
 		dname = dname:gsub("[_]", " "):gsub("([%a])([%a]+)", function(a, b) return a:upper() .. b end)
 		local z = tonumber(util.CRC(dname):sub(1, 8))
@@ -488,6 +499,7 @@ function GM:EndRoundMapVote()
 
 		but.VotesScroll = 0
 		but.VotesScrollDir = 1
+
 		function but:Paint(w, h)
 			if self.Hovered then
 				surface.SetDrawColor(50, 50, 50, 50)
@@ -539,6 +551,7 @@ function GM:EndRoundMapVote()
 		function but:DoClick()
 			RunConsoleCommand("ph_votemap", map)
 		end
+
 		menu.MapVoteList:AddItem(but)
 	end
 end
@@ -550,6 +563,7 @@ function GM:EndRoundAddChatText(...)
 
 	local pnl = vgui.Create("DPanel")
 	pnl.Text = {...}
+
 	function pnl:PerformLayout()
 		if self.Text then
 			self.TextLines = WrapText("RobotoHUD-15", self:GetWide() - 16, self.Text)
@@ -564,6 +578,7 @@ function GM:EndRoundAddChatText(...)
 			self.TextLines:Paint(4, draw.GetFontHeight("RobotoHUD-15") * -0.2)
 		end
 	end
+
 	menu.ChatList:AddItem(pnl)
 end
 
