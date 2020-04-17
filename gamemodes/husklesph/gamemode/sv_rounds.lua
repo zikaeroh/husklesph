@@ -209,13 +209,17 @@ function GM:EndRound(reason)
 		local result = award.getWinner()
 
 		-- nil values cannot exist in awards otherwise the net.WriteTable below will break
-		if type(result) == "Player" then
+		if !result then
+			continue
+		elseif type(result) == "Player" then
 			awards[awardKey] = {
 				name = award.name,
 				desc = award.desc,
 				winnerName = result:Nick(),
 				winnerTeam = result:Team()
 			}
+		else
+			ErrorNoHalt("PROPHUNTERS WARNING: EndRound Player Award gave non Player object: " .. type(result))
 		end
 	end
 
