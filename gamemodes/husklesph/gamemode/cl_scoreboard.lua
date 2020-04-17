@@ -19,7 +19,7 @@ local function colMul(color, mul)
 end
 
 local muted = Material("icon32/muted.png", "noclamp")
-local skull = Material("melonbomber/skull.png", "noclamp")
+local skull = Material("prophunters/skull.png", "noclamp")
 
 local function addPlayerItem(self, mlist, ply, pteam)
 	local but = vgui.Create("DButton")
