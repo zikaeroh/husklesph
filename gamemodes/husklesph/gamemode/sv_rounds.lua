@@ -134,6 +134,10 @@ function GM:SetupRound()
 				ply:Freeze(true)
 			end
 
+			ply.PropDmgPenalty = 0
+			ply.PropMovement = 0
+			ply.HunterKills = 0
+			ply.TauntAmount = 0
 			ply.TauntsUsed = {}
 			ply.TauntEnd = nil
 			ply.AutoTauntDeadline = nil
