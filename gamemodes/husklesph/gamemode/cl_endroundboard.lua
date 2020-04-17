@@ -449,7 +449,7 @@ function GM:EndRoundMenuResults(res)
 			-- surface.DrawOutlinedRect(0, 0, w, h)
 			draw.DrawText(award.name, "RobotoHUD-20", 0, 0, Color(220, 220, 220), 0)
 			draw.DrawText(award.desc, "RobotoHUD-15", 0, draw.GetFontHeight("RobotoHUD-20"), Color(120, 120, 120), 0)
-			draw.DrawText(award.winner:Nick(), "RobotoHUD-25", w, h / 2 - draw.GetFontHeight("RobotoHUD-25") / 2, team.GetColor(award.winner:Team()), 2)
+			draw.DrawText(award.winnerName, "RobotoHUD-25", w, h / 2 - draw.GetFontHeight("RobotoHUD-25") / 2, team.GetColor(award.winnerTeam), 2)
 		end
 
 		menu.ResultList:AddItem(pnl)
