@@ -235,6 +235,7 @@ function GM:RoundsSetupPlayer(ply)
 end
 
 function GM:CheckForVictory()
+	-- Check if time limit expired
 	local settings = self:GetRoundSettings()
 	local roundTime = settings.RoundTime || 5 * 60
 	if self:GetStateRunningTime() > roundTime then
@@ -242,30 +243,21 @@ function GM:CheckForVictory()
 		return
 	end
 
-	local red, blue = 0, 0
-	for k, ply in pairs(self:GetPlayingPlayers()) do
-		if ply:Alive() then
-			if ply:IsHunter() then
-				red = red + 1
-			elseif ply:IsProp() then
-				blue = blue + 1
-			end
-		end
+	-- Check if there are still living players on either team
+	local huntersAlive, propsAlive = false, false
+	for _, ply in pairs(self:GetPlayingPlayers()) do
+		if !ply:Alive() then continue end
+
+		huntersAlive = huntersAlive || ply:IsHunter()
+		propsAlive = propsAlive || ply:IsProp()
 	end
 
-	if red == 0 && blue == 0 then
+	if !huntersAlive && !propsAlive then
 		self:EndRound(WIN_NONE)
-		return
-	end
-
-	if red == 0 then
+	elseif !huntersAlive then
 		self:EndRound(WIN_PROP)
-		return
-	end
-
-	if blue == 0 then
+	elseif !propsAlive then
 		self:EndRound(WIN_HUNTER)
-		return
 	end
 end
 
