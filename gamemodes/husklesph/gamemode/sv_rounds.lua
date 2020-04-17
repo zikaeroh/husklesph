@@ -204,13 +204,13 @@ function GM:EndRound(reason)
 	end
 	self.LastRoundResult = reason
 
-	local PlayerAwardsResults = {}
+	local awards = {}
 	for awardKey, award in pairs(PlayerAwards) do -- PlayerAwards comes from sv_awards.lua
 		local result = award.getWinner()
 
-		-- nil values cannot exist in PlayerAwardsResults otherwise the net.WriteTable below will break
+		-- nil values cannot exist in awards otherwise the net.WriteTable below will break
 		if type(result) == "Player" then
-			PlayerAwardsResults[awardKey] = {
+			awards[awardKey] = {
 				name = award.name,
 				desc = award.desc,
 				winnerName = result:Nick(),
@@ -224,7 +224,7 @@ function GM:EndRound(reason)
 	if winningTeam then
 		net.WriteUInt(winningTeam, 16)
 	end
-	net.WriteTable(PlayerAwardsResults)
+	net.WriteTable(awards)
 	net.Broadcast()
 
 	self.RoundSettings.NextRoundTime = 15
