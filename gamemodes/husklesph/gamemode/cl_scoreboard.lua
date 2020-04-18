@@ -67,7 +67,7 @@ end
 local function doPlayerItems(self, mlist, pteam)
 	for k, ply in pairs(team.GetPlayers(pteam)) do
 		local found = false
-		for t,v in pairs(mlist:GetCanvas():GetChildren()) do
+		for t, v in pairs(mlist:GetCanvas():GetChildren()) do
 			if v.player == ply then
 				found = true
 				v.ctime = CurTime()
@@ -80,7 +80,7 @@ local function doPlayerItems(self, mlist, pteam)
 	end
 
 	local del = false
-	for t,v in pairs(mlist:GetCanvas():GetChildren()) do
+	for t, v in pairs(mlist:GetCanvas():GetChildren()) do
 		if !v.perm && v.ctime != CurTime() then
 			v:Remove()
 			del = true
@@ -117,7 +117,7 @@ local function makeTeamList(parent, pteam)
 	end
 
 	local headp = vgui.Create("DPanel", pnl)
-	headp:DockMargin(0,0,0,4)
+	headp:DockMargin(0, 0, 0, 4)
 	headp:Dock(TOP)
 	headp:SetTall(hs)
 
@@ -144,12 +144,12 @@ local function makeTeamList(parent, pteam)
 
 		local col = table.Copy(team.GetColor(pteam))
 		if self:IsDown() then
-			surface.SetDrawColor(12,50,50,120)
+			surface.SetDrawColor(12, 50, 50, 120)
 			col.r = col.r * 0.8
 			col.g = col.g * 0.8
 			col.b = col.b * 0.8
 		elseif self:IsHovered() then
-			surface.SetDrawColor(255,255,255,30)
+			surface.SetDrawColor(255, 255, 255, 30)
 			col.r = col.r * 1.2
 			col.g = col.g * 1.2
 			col.b = col.b * 1.2
@@ -170,7 +170,7 @@ local function makeTeamList(parent, pteam)
 
 	function canvas:OnChildAdded(child)
 		child:Dock(TOP)
-		child:DockMargin(0,0,0,4)
+		child:DockMargin(0, 0, 0, 4)
 	end
 
 	local head = vgui.Create("DPanel")
@@ -220,7 +220,7 @@ function GM:ScoreboardShow()
 		end
 
 		function menu:Paint(w, h)
-			surface.SetDrawColor(40,40,40,230)
+			surface.SetDrawColor(40, 40, 40, 230)
 			surface.DrawRect(0, 0, w, h)
 		end
 
@@ -292,7 +292,7 @@ function GM:ScoreboardShow()
 		main:Dock(FILL)
 
 		function main:Paint(w, h)
-			surface.SetDrawColor(40,40,40,230)
+			surface.SetDrawColor(40, 40, 40, 230)
 		end
 
 		menu.CopsList = makeTeamList(main, TEAM_HUNTER)

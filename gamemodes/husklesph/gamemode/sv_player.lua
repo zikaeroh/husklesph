@@ -55,7 +55,7 @@ function GM:PlayerSpawn(ply)
 	self:PlayerSetupHands(ply)
 
 	local col = team.GetColor(ply:Team())
-	local vec = Vector(col.r / 255,col.g / 255,col.b / 255)
+	local vec = Vector(col.r / 255, col.g / 255, col.b / 255)
 	ply:SetPlayerColor(vec)
 
 	ply.LastSpawnTime = CurTime()

@@ -57,12 +57,12 @@ local function openHelpScreen()
 		end
 
 		function menu:Paint(w, h)
-			surface.SetDrawColor(40,40,40,230)
+			surface.SetDrawColor(40, 40, 40, 230)
 			surface.DrawRect(0, 0, w, h)
 			surface.SetFont("RobotoHUD-25")
 
 			local t = "Help"
-			local tw,th = surface.GetTextSize(t)
+			local tw, th = surface.GetTextSize(t)
 			draw.ShadowText(t, "RobotoHUD-25", 8, 2, Color(132, 199, 29), 0)
 			draw.ShadowText("learn about the gamemode", "RobotoHUD-L15", 8 + tw + 16, 2 + th * 0.90, Color(220, 220, 220), 0, 4)
 		end
@@ -80,7 +80,7 @@ local function openHelpScreen()
 
 		function canvas:OnChildAdded(child)
 			child:Dock(TOP)
-			child:DockMargin(0,0,0,4)
+			child:DockMargin(0, 0, 0, 4)
 		end
 
 		for k, t in pairs(categories) do
@@ -136,7 +136,7 @@ local function openHelpScreen()
 
 		function canvas:OnChildAdded(child)
 			child:Dock(TOP)
-			child:DockMargin(0,0,0,4)
+			child:DockMargin(0, 0, 0, 4)
 		end
 
 		local pnl = vgui.Create("DPanel")

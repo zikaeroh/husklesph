@@ -64,7 +64,7 @@ local defaultMapList = {
 
 function GM:SaveMapList()
 	-- ensure the folders are there
-	if !file.Exists("husklesph/","DATA") then
+	if !file.Exists("husklesph/", "DATA") then
 		file.CreateDir("husklesph")
 	end
 

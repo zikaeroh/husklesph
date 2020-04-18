@@ -27,7 +27,7 @@ end
 
 function GM:SaveBannedModels()
 	-- ensure the folders are there
-	if !file.Exists("husklesph/","DATA") then
+	if !file.Exists("husklesph/", "DATA") then
 		file.CreateDir("husklesph")
 	end
 

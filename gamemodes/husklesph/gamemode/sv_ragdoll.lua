@@ -42,7 +42,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 	if !self.DeathRagdolls then self.DeathRagdolls = {} end
 
 	local countPlayerRagdolls = 1
-	for k,rag in pairs(self.DeathRagdolls) do
+	for k, rag in pairs(self.DeathRagdolls) do
 		if IsValid(rag) then
 			countPlayerRagdolls = countPlayerRagdolls + 1
 		else
@@ -51,10 +51,10 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 	end
 
 	if DeathRagdollsPerPlayer >= 0 && countPlayerRagdolls > DeathRagdollsPerPlayer then
-		for i = 0,countPlayerRagdolls do
+		for i = 0, countPlayerRagdolls do
 			if countPlayerRagdolls > DeathRagdollsPerPlayer then
 				self.DeathRagdolls[1]:Remove()
-				table.remove(self.DeathRagdolls,1)
+				table.remove(self.DeathRagdolls, 1)
 				countPlayerRagdolls = countPlayerRagdolls - 1
 			else
 				break
@@ -64,7 +64,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 
 	-- remove old server ragdolls
 	local c2 = 1
-	for k,rag in pairs(GAMEMODE.DeathRagdolls) do
+	for k, rag in pairs(GAMEMODE.DeathRagdolls) do
 		if IsValid(rag) then
 			c2 = c2 + 1
 		else
@@ -73,10 +73,10 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 	end
 
 	if DeathRagdollsPerServer >= 0 && c2 > DeathRagdollsPerServer then
-		for i = 0,c2 do
+		for i = 0, c2 do
 			if c2 > DeathRagdollsPerServer then
 				GAMEMODE.DeathRagdolls[1]:Remove()
-				table.remove(GAMEMODE.DeathRagdolls,1)
+				table.remove(GAMEMODE.DeathRagdolls, 1)
 				c2 = c2 - 1
 			else
 				break
@@ -93,7 +93,7 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 	duplicator.DoGeneric(ent, Data)
 	ent:Spawn()
 	ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-	ent:Fire("kill","",60 * 8)
+	ent:Fire("kill", "", 60 * 8)
 	if ent.SetPlayerColor then
 		ent:SetPlayerColor(self:GetPlayerColor())
 	end
@@ -130,8 +130,8 @@ function PlayerMeta:CreateRagdoll(attacker, dmginfo)
 
 	-- finish up
 	self:SetNWEntity("DeathRagdoll", ent)
-	table.insert(self.DeathRagdolls,ent)
-	table.insert(GAMEMODE.DeathRagdolls,ent)
+	table.insert(self.DeathRagdolls, ent)
+	table.insert(GAMEMODE.DeathRagdolls, ent)
 end
 
 if !PlayerMeta.GetRagdollEntityOld then

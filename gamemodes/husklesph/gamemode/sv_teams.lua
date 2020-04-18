@@ -40,7 +40,7 @@ function GM:CheckTeamBalance()
 		local diff = team.NumPlayers(TEAM_HUNTER) - team.NumPlayers(TEAM_PROP)
 		if diff < -1 || diff > 1 then -- teams must be off by more than 2 for team balance
 			self.TeamBalanceTimer = CurTime() + 30 -- balance in 30 seconds
-			for k,ply in pairs(player.GetAll()) do
+			for k, ply in pairs(player.GetAll()) do
 				ply:ChatPrint("Auto team balance in 30 seconds")
 			end
 		end
@@ -55,7 +55,7 @@ end
 function GM:BalanceTeams(nokill)
 	local diff = team.NumPlayers(TEAM_HUNTER) - team.NumPlayers(TEAM_PROP)
 	if diff < -1 || diff > 1 then -- teams must be off by more than 2 for team balance
-		local biggerTeam, smallerTeam = TEAM_PROP,TEAM_HUNTER
+		local biggerTeam, smallerTeam = TEAM_PROP, TEAM_HUNTER
 		if diff > 0 then
 			biggerTeam = TEAM_HUNTER
 			smallerTeam = TEAM_PROP

@@ -151,7 +151,7 @@ end
 
 function GM:DrawHealth(ply)
 	local x = 20
-	local w,h = math.ceil(ScrW() * 0.09), 80
+	local w, h = math.ceil(ScrW() * 0.09), 80
 	h = w
 	local y = ScrH() - 20 - h
 	local ps = 0.05

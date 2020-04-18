@@ -59,7 +59,7 @@ local function lerp(from, to, step)
 	return math.max(from - step, to)
 end
 
-local camDis, camHeight = 0,0
+local camDis, camHeight = 0, 0
 function GM:CalcView(ply, pos, angles, fov)
 	if self:IsCSpectating() && IsValid(self:GetCSpectatee()) then
 		ply = self:GetCSpectatee()

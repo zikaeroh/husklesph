@@ -5,7 +5,7 @@ local rootFolder = (GM || GAMEMODE).Folder:sub(11) .. "/gamemode/"
 -- add cs lua all the cl_ and sh_ files
 local files = file.Find(rootFolder .. "*", "LUA")
 for k, v in pairs(files) do
-	if v:sub(1,3) == "cl_" || v:sub(1,3) == "sh_" then
+	if v:sub(1, 3) == "cl_" || v:sub(1, 3) == "sh_" then
 		AddCSLuaFile(rootFolder .. v)
 	end
 end
@@ -73,7 +73,7 @@ end
 function GM:InitPostEntityAndMapCleanup()
 	for k, ent in pairs(ents.GetAll()) do
 		if ent:GetClass():find("door") then
-			ent:Fire("unlock","",0)
+			ent:Fire("unlock", "", 0)
 		end
 	end
 end

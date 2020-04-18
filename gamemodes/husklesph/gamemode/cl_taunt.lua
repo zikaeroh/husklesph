@@ -142,11 +142,11 @@ local function openTauntMenu()
 	menu:DockPadding(8, 8 + draw.GetFontHeight("RobotoHUD-25"), 8, 8)
 
 	function menu:Paint(w, h)
-		surface.SetDrawColor(40,40,40,230)
+		surface.SetDrawColor(40, 40, 40, 230)
 		surface.DrawRect(0, 0, w, h)
 		surface.SetFont("RobotoHUD-25")
 		local t = "Taunts"
-		local tw,th = surface.GetTextSize(t)
+		local tw, th = surface.GetTextSize(t)
 		draw.ShadowText(t, "RobotoHUD-25", 8, 2, Color(49, 142, 219), 0)
 		draw.ShadowText(TauntMenuPhrase, "RobotoHUD-L15", 8 + tw + 16, 2 + th * 0.90, Color(220, 220, 220), 0, 4)
 	end

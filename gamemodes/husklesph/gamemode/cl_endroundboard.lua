@@ -66,7 +66,7 @@ local function doPlayerItems(self, mlist)
 	local add = false
 	for k, ply in pairs(player.GetAll()) do
 		local found = false
-		for t,v in pairs(mlist:GetCanvas():GetChildren()) do
+		for t, v in pairs(mlist:GetCanvas():GetChildren()) do
 			if v.player == ply then
 				found = true
 				v.ctime = CurTime()
@@ -80,7 +80,7 @@ local function doPlayerItems(self, mlist)
 	end
 
 	local del = false
-	for t,v in pairs(mlist:GetCanvas():GetChildren()) do
+	for t, v in pairs(mlist:GetCanvas():GetChildren()) do
 		if !v.perm && v.ctime != CurTime() then
 			v:Remove()
 			del = true
@@ -153,7 +153,7 @@ function GM:OpenEndRoundMenu()
 			surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
 		end
 
-		surface.SetDrawColor(40,40,40,230)
+		surface.SetDrawColor(40, 40, 40, 230)
 		surface.DrawRect(-x, -y, ScrW(), ScrH())
 
 		DisableClipping(false)
