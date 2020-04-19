@@ -549,7 +549,6 @@ function GM:StartCommand(ply, cmd)
 		cmd:SetForwardMove(0)
 		cmd:SetSideMove(0)
 		cmd:SetViewAngles(Angle(0, 0, 0))
-		self:BotMove(ply, cmd)
 	end
 end
 
