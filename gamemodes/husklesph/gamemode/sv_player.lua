@@ -63,17 +63,17 @@ end
 
 function GM:PlayerSetupHands(ply)
 	local oldhands = ply:GetHands()
-	if (IsValid(oldhands)) then oldhands:Remove() end
+	if IsValid(oldhands) then oldhands:Remove() end
 
 	local hands = ents.Create("gmod_hands")
-	if (IsValid(hands)) then
+	if IsValid(hands) then
 		ply:SetHands(hands)
 		hands:SetOwner(ply)
 
 		-- Which hands should we use?
 		local cl_playermodel = ply:GetInfo("cl_playermodel")
 		local info = player_manager.TranslatePlayerHands(cl_playermodel)
-		if (info) then
+		if info then
 			hands:SetModel(info.model)
 			hands:SetSkin(info.skin)
 			hands:SetBodyGroups(info.body)
@@ -295,7 +295,7 @@ local function getSpawnEnts(plyTeam, force_all)
 	local tbl = {}
 	for _, classname in ipairs(tblToUse) do
 		for _, e in ipairs(ents.FindByClass(classname)) do
-			if IsValid(e) && (!e.BeingRemoved) then
+			if IsValid(e) && !e.BeingRemoved then
 				table.insert(tbl, e)
 			end
 		end
@@ -306,7 +306,7 @@ local function getSpawnEnts(plyTeam, force_all)
 		local allSpawnTypes = mergeTables(propSpawnTypes, hunterSpawnTypes, spectatorSpawnTypes)
 		for _, classname in ipairs(allSpawnTypes) do
 			for _, e in ipairs(ents.FindByClass(classname)) do
-				if IsValid(e) && (!e.BeingRemoved) then
+				if IsValid(e) && !e.BeingRemoved then
 					table.insert(tbl, e)
 				end
 			end
@@ -347,7 +347,7 @@ function GM:PlayerSelectSpawn(ply)
 	end
 
 	-- Should be true for each first player on a team
-	if !self.SpawnPoints[plyTeam] || (table.IsEmpty(self.SpawnPoints[plyTeam])) || (!IsTableOfEntitiesValid(self.SpawnPoints[plyTeam])) then
+	if !self.SpawnPoints[plyTeam] || table.IsEmpty(self.SpawnPoints[plyTeam]) || !IsTableOfEntitiesValid(self.SpawnPoints[plyTeam]) then
 		self.SpawnPoints[plyTeam] = getSpawnEnts(plyTeam, false)
 		-- One might think that we have to regenerate our spawnpoint
 		-- cache. Otherwise, any rigged spawn entities would not get reused, and

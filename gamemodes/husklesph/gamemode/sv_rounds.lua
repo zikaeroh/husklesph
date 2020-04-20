@@ -319,7 +319,7 @@ end
 
 local function ForceEndRound(ply, command, args)
 	-- ply is nil on dedicated server console
-	if (!IsValid(ply)) || ply:IsAdmin() || ply:IsSuperAdmin() || cvars.Bool("sv_cheats", 0) then
+	if !IsValid(ply) || ply:IsAdmin() || ply:IsSuperAdmin() || cvars.Bool("sv_cheats", 0) then
 		GAMEMODE.RoundSettings = GAMEMODE.RoundSettings || {}
 		GAMEMODE:EndRound(WIN_NONE)
 	else

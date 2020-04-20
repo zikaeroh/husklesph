@@ -19,16 +19,16 @@ matproxy.Add({
 		self.ResultTo = values.resultvar
 	end,
 	bind = function(self, mat, ent)
-		if (!IsValid(ent)) then return end
+		if !IsValid(ent) then return end
 
-		if (ent.GetPlayerColorOverride) then -- clientside entities can't override functions, so we need an additional one for it
+		if ent.GetPlayerColorOverride then -- clientside entities can't override functions, so we need an additional one for it
 			local col = ent:GetPlayerColorOverride()
-			if (isvector(col)) then
+			if isvector(col) then
 				mat:SetVector(self.ResultTo, col)
 			end
-		elseif (ent.GetPlayerColor) then
+		elseif ent.GetPlayerColor then
 			local col = ent:GetPlayerColor()
-			if (isvector(col)) then
+			if isvector(col) then
 				mat:SetVector(self.ResultTo, col)
 			end
 		else

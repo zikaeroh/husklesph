@@ -28,9 +28,9 @@ function GM:InitPostEntity()
 end
 
 function GM:PostDrawViewModel(vm, ply, weapon)
-	if (weapon.UseHands || !weapon:IsScripted()) then
+	if weapon.UseHands || !weapon:IsScripted() then
 		local hands = LocalPlayer():GetHands()
-		if (IsValid(hands)) then hands:DrawModel() end
+		if IsValid(hands) then hands:DrawModel() end
 	end
 end
 

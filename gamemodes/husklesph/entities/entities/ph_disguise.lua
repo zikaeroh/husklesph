@@ -22,7 +22,7 @@ function ENT:Initialize()
 	end
 end
 
-if (CLIENT) then
+if CLIENT then
 	function ENT:Draw()
 		self:DrawModel()
 	end

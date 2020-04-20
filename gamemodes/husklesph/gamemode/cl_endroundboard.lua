@@ -149,7 +149,7 @@ function GM:OpenEndRoundMenu()
 		for i = 0.33, 1, 0.33 do
 			matBlurScreen:SetFloat("$blur", Fraction * 5 * i)
 			matBlurScreen:Recompute()
-			if (render) then render.UpdateScreenEffectTexture() end
+			if render then render.UpdateScreenEffectTexture() end
 			surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
 		end
 

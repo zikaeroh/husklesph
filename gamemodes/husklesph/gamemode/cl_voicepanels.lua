@@ -20,7 +20,7 @@ function PANEL:Setup(ply)
 end
 
 function PANEL:Paint(w, h)
-	if (!IsValid(self.ply)) then return end
+	if !IsValid(self.ply) then return end
 
 	local volume = self.ply:VoiceVolume()
 	col = team.GetColor(self.ply:Team())
@@ -40,14 +40,14 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:Think()
-	if (self.fadeAnim) then
+	if self.fadeAnim then
 		self.fadeAnim:Run()
 	end
 end
 
 function PANEL:FadeOut(anim, delta, data)
-	if (anim.Finished) then
-		if (IsValid(PlayerVoicePanels[self.ply])) then
+	if anim.Finished then
+		if IsValid(PlayerVoicePanels[self.ply]) then
 			PlayerVoicePanels[self.ply]:Remove()
 			PlayerVoicePanels[self.ply] = nil
 			return
@@ -62,13 +62,13 @@ end
 derma.DefineControl("VoiceNotify", "", PANEL, "DPanel")
 
 function GM:PlayerStartVoice(ply)
-	if (!IsValid(g_VoicePanelList)) then return end
+	if !IsValid(g_VoicePanelList) then return end
 
 	-- There'd be an exta one if voice_loopback is on, so remove it.
 	GAMEMODE:PlayerEndVoice(ply)
 
-	if (IsValid(PlayerVoicePanels[ply])) then
-		if (PlayerVoicePanels[ply].fadeAnim) then
+	if IsValid(PlayerVoicePanels[ply]) then
+		if PlayerVoicePanels[ply].fadeAnim then
 			PlayerVoicePanels[ply].fadeAnim:Stop()
 			PlayerVoicePanels[ply].fadeAnim = nil
 		end
@@ -77,7 +77,7 @@ function GM:PlayerStartVoice(ply)
 		return
 	end
 
-	if (!IsValid(ply)) then return end
+	if !IsValid(ply) then return end
 
 	local pnl = g_VoicePanelList:Add("VoiceNotify")
 	pnl:Setup(ply)
@@ -86,7 +86,7 @@ end
 
 local function VoiceClean()
 	for k, v in pairs(PlayerVoicePanels) do
-		if (!IsValid(k) || !k:IsPlayer()) then
+		if !IsValid(k) || !k:IsPlayer() then
 			GAMEMODE:PlayerEndVoice(k)
 		end
 	end
@@ -94,8 +94,8 @@ end
 timer.Create("VoiceClean", 10, 0, VoiceClean)
 
 function GM:PlayerEndVoice(ply)
-	if (IsValid(PlayerVoicePanels[ply])) then
-		if (PlayerVoicePanels[ply].fadeAnim) then return end
+	if IsValid(PlayerVoicePanels[ply]) then
+		if PlayerVoicePanels[ply].fadeAnim then return end
 
 		PlayerVoicePanels[ply].fadeAnim = Derma_Anim("FadeOut", PlayerVoicePanels[ply], PlayerVoicePanels[ply].FadeOut)
 		PlayerVoicePanels[ply].fadeAnim:Start(2)
