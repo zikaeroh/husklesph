@@ -1,7 +1,6 @@
-
-
 local Builder = {}
 Builder.__index = Builder
+
 function Builder:WriteBlock(newLine)
 	local block = {}
 	block.text = self.curText
@@ -37,26 +36,21 @@ function Builder:Run()
 				if !firstChunk then
 					self:WriteBlock(true)
 				end
+
 				firstChunk = false
 				local spaces, rest = chunk:match("^([%s]*)(.*)$")
-				-- print(#spaces, "<" .. rest)
-
 				local sw = surface.GetTextSize(spaces)
 				self.curText = self.curText .. spaces
 				self.curWidth = self.curWidth + sw
-
 				for word in rest:gmatch("([^%s]+[%s]*)") do
 					local w = surface.GetTextSize(word)
 
 					-- can't we fit the word on the same line
 					if w + self.curWidth > self.maxWidth then
-
 						-- is the word too long for a single line (then we need to split it)
 						if w > self.maxWidth then
-
 							-- while our current word cannot fit in the line
 							while self.curWidth + w > self.maxWidth do
-
 								-- find the number of chracters that can fit
 								local chars = 1
 								while true do
@@ -65,10 +59,12 @@ function Builder:Run()
 										print("error" .. chars)
 										break
 									end
+
 									if aw + self.curWidth > self.maxWidth then
 										chars = chars - 1
 										break
 									end
+
 									chars = chars + 1
 								end
 
@@ -102,6 +98,7 @@ function Builder:Run()
 			end -- end chunk loop
 		end
 	end
+
 	self:WriteBlock(true)
 	local h = 0
 	for k, line in pairs(self.blocks) do
@@ -109,6 +106,7 @@ function Builder:Run()
 			h = h + draw.GetFontHeight(self.font)
 		end
 	end
+
 	self.height = h
 end
 

@@ -11,10 +11,8 @@ local function renderDis(self)
 		if ply:Alive() && ply:IsDisguised() then
 			local model = ply:GetNWString("disguiseModel")
 			if model && model != "" then
-
 				local ent = ply:GetNWEntity("disguiseEntity")
 				if IsValid(ent) then
-					-- ent:SetNoDraw(false)
 					local mins = ply:GetNWVector("disguiseMins")
 					local maxs = ply:GetNWVector("disguiseMaxs")
 					local ang = ply:EyeAngles()
@@ -29,10 +27,7 @@ local function renderDis(self)
 					center:Rotate(ang)
 					ent:SetPos(pos - center)
 					ent:SetAngles(ang)
-					-- ent:SetupBones()
 					ent:SetSkin(ply:GetNWInt("disguiseSkin", 1))
-					-- ent:DrawShadow()
-					-- ent:DrawModel()
 				end
 			end
 		end
@@ -40,8 +35,7 @@ local function renderDis(self)
 end
 
 function GM:RenderDisguises()
-
-	cam.Start3D( EyePos(), EyeAngles() )
+	cam.Start3D(EyePos(), EyeAngles())
 	local b, err = pcall(renderDis, self)
 	cam.End3D()
 	if !b then

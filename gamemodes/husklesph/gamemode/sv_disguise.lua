@@ -8,12 +8,12 @@ function GM:PlayerDisguise(ply)
 		if ply.LastDisguise && ply.LastDisguise + 1 > CurTime() then
 			return
 		end
+
 		ply:DisguiseAsProp(target)
 	end
 end
 
 function PlayerMeta:DisguiseAsProp(ent)
-
 	local hullxy, hullz = ent:GetPropSize()
 	if !self:CanFitHull(hullxy, hullxy, hullz) then
 		self:PlayerChatMsg(Color(255, 50, 50), "Not enough room to change")
@@ -23,8 +23,8 @@ function PlayerMeta:DisguiseAsProp(ent)
 	if !self:IsDisguised() then
 		self.OldPlayerModel = self:GetModel()
 	end
-	self:Flashlight(false)
 
+	self:Flashlight(false)
 
 	-- create an entity for the disguise
 	-- we can't use a clientside entity as it needs a shadow
@@ -34,7 +34,6 @@ function PlayerMeta:DisguiseAsProp(ent)
 		self:SetNWEntity("disguiseEntity", dent)
 		dent.PropOwner = self
 		dent:SetPos(self:GetPos())
-		-- dent:SetParent(self)
 		dent:Spawn()
 	end
 	dent:SetModel(ent:GetModel())
@@ -52,7 +51,6 @@ function PlayerMeta:DisguiseAsProp(ent)
 	self:DrawShadow(false)
 	GAMEMODE:PlayerSetNewHull(self, hullxy, hullz, hullz)
 
-
 	local maxHealth = 1
 	local volume = 1
 	local phys = ent:GetPhysicsObject()
@@ -60,6 +58,7 @@ function PlayerMeta:DisguiseAsProp(ent)
 		maxHealth = math.Clamp(math.Round(phys:GetVolume() / 230), 1, 200)
 		volume = phys:GetVolume()
 	end
+
 	self.PercentageHealth = math.min(self:Health() / self:GetHMaxHealth(), self.PercentageHealth || 1)
 	local per = math.Clamp(self.PercentageHealth * maxHealth, 1, 200)
 	self:SetHealth(per)
@@ -67,7 +66,6 @@ function PlayerMeta:DisguiseAsProp(ent)
 	self:SetNWFloat("disguiseVolume", volume)
 
 	self:CalculateSpeed()
-
 
 	local offset = Vector(0, 0, ent:OBBMaxs().z - self:OBBMins().z + 10)
 	self:SetViewOffset(offset)
@@ -92,6 +90,7 @@ function PlayerMeta:UnDisguise()
 	if IsValid(dent) then
 		dent:Remove()
 	end
+
 	self.PercentageHealth = nil
 	self:SetNWBool("disguised", false)
 	self:SetColor(Color(255, 255, 255, 255))
@@ -103,6 +102,7 @@ function PlayerMeta:UnDisguise()
 		self:SetModel(self.OldPlayerModel)
 		self.OldPlayerModel = nil
 	end
+
 	self:SetViewOffset(Vector(0, 0, 64))
 	self:SetViewOffsetDucked(Vector(0, 0, 28))
 
@@ -144,6 +144,7 @@ end
 concommand.Add("ph_lockrotation", function(ply, com, args)
 	if !IsValid(ply) then return end
 	if !ply:IsDisguised() then return end
+
 	if ply:DisguiseRotationLocked() then
 		ply:DisguiseUnlockRotation()
 	else

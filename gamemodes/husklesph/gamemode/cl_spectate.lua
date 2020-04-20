@@ -1,4 +1,3 @@
-
 net.Receive("spectating_status", function(length)
 	GAMEMODE.SpectateMode = net.ReadInt(8)
 	GAMEMODE.Spectating = false

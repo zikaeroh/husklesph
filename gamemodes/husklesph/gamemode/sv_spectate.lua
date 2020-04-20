@@ -12,6 +12,7 @@ function PlayerMeta:CSpectate(mode, spectatee)
 		self:SpectateEntity(Entity(-1))
 		self.Spectatee = nil
 	end
+
 	self.SpectateMode = mode
 	self.Spectating = true
 	net.Start("spectating_status")
@@ -54,7 +55,6 @@ end
 
 function GM:SpectateNext(ply, direction)
 	direction = direction || 1
-
 	local players = {}
 	local index = 1
 	for k, v in pairs(player.GetAll()) do
@@ -68,11 +68,13 @@ function GM:SpectateNext(ply, direction)
 			end
 		end
 	end
+
 	if #players > 0 then
 		index = index + direction
 		if index > #players then
 			index = 1
 		end
+
 		if index < 1 then
 			index = #players
 		end
@@ -105,15 +107,12 @@ function GM:SpectateNext(ply, direction)
 end
 
 function GM:ChooseSpectatee(ply)
-
 	if !ply.SpectateTime || ply.SpectateTime < CurTime() then
-
 		if ply:KeyPressed(IN_JUMP) then
 			if ply:GetCSpectateMode() != OBS_MODE_ROAMING && (ply:IsSpectator() || self.DeadSpectateRoam:GetBool()) then
 				ply:CSpectate(OBS_MODE_ROAMING)
 			end
 		else
-
 			local direction
 			if ply:KeyPressed(IN_ATTACK) then
 				direction = 1

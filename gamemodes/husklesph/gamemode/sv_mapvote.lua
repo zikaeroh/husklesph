@@ -26,11 +26,14 @@ function GM:RotateMap()
 			index = k
 		end
 	end
+
 	if !index then index = 1 end
 	index = index + 1
+
 	if index > #self.MapList then
 		index = 1
 	end
+
 	local nextMap = self.MapList[index]
 	self:ChangeMapTo(nextMap)
 end
@@ -41,6 +44,7 @@ function GM:ChangeMapTo(map)
 		self:SetGameState(ROUND_WAIT)
 		return
 	end
+
 	print("[husklesph] Rotate changing map to " .. map)
 	GlobalChatMsg("Changing map to ", map)
 	hook.Call("OnChangeMap", GAMEMODE)
@@ -59,9 +63,8 @@ local defaultMapList = {
 }
 
 function GM:SaveMapList()
-
 	-- ensure the folders are there
-	if !file.Exists("husklesph/","DATA") then
+	if !file.Exists("husklesph/", "DATA") then
 		file.CreateDir("husklesph")
 	end
 
@@ -69,6 +72,7 @@ function GM:SaveMapList()
 	for k, map in pairs(self.MapList) do
 		txt = txt .. map .. "\r\n"
 	end
+
 	file.Write("husklesph/maplist.txt", txt)
 end
 
@@ -79,6 +83,7 @@ function GM:LoadMapList()
 		for map in jason:gmatch("[^\r\n]+") do
 			table.insert(tbl, map)
 		end
+
 		self.MapList = tbl
 	else
 		local tbl = {}
@@ -98,6 +103,7 @@ function GM:LoadMapList()
 				end
 			end
 		end
+
 		self.MapList = tbl
 		self:SaveMapList()
 	end
@@ -135,15 +141,8 @@ function GM:StartMapVote()
 	for k, v in pairs(self.MapList) do
 		table.insert(maps, math.random(#maps) + 1, v)
 	end
+
 	self.MapList = maps
-
-	-- make bots vote for a map
-	-- for k, ply in pairs(player.GetAll()) do
-	-- 	if ply:IsBot() then
-	-- 		self.MapVotes[ply] = maps[math.random(#maps)]
-	-- 	end
-	-- end
-
 	self:SetGameState(ROUND_MAPVOTE)
 	self:NetworkMapVoteStart()
 end
@@ -195,7 +194,6 @@ function GM:NetworkMapVoteStart(ply)
 	end
 	net.WriteUInt(0, 16)
 
-
 	if ply then
 		net.Send(ply)
 	else
@@ -214,7 +212,6 @@ function GM:NetworkMapVotes(ply)
 		net.WriteString(map)
 	end
 	net.WriteUInt(0, 8)
-
 
 	if ply then
 		net.Send(ply)
@@ -236,6 +233,7 @@ concommand.Add("ph_votemap", function(ply, com, args)
 				break
 			end
 		end
+
 		if !found then
 			ply:ChatPrint("Invalid map " .. args[1])
 			return

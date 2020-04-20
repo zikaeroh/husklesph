@@ -27,25 +27,21 @@ function GM:InitPostEntity()
 	net.SendToServer()
 end
 
-function GM:PostDrawViewModel( vm, ply, weapon )
-
-	if ( weapon.UseHands || !weapon:IsScripted() ) then
-
+function GM:PostDrawViewModel(vm, ply, weapon)
+	if weapon.UseHands || !weapon:IsScripted() then
 		local hands = LocalPlayer():GetHands()
-		if ( IsValid( hands ) ) then hands:DrawModel() end
-
+		if IsValid(hands) then hands:DrawModel() end
 	end
-
 end
 
-function GM:RenderScene( origin, angles, fov )
+function GM:RenderScene(origin, angles, fov)
 	local client = LocalPlayer()
 	if IsValid(client) then
 		local wep = client:GetActiveWeapon()
 		if IsValid(wep) && wep.PostDrawTranslucentRenderables then
 			local errored, retval = pcall(wep.PostDrawTranslucentRenderables, wep)
 			if !errored then
-				print( retval )
+				print(retval)
 			end
 		end
 	end
@@ -59,27 +55,30 @@ local function lerp(from, to, step)
 	if from < to then
 		return math.min(from + step, to)
 	end
+
 	return math.max(from - step, to)
 end
 
-local camDis, camHeight = 0,0
+local camDis, camHeight = 0, 0
 function GM:CalcView(ply, pos, angles, fov)
 	if self:IsCSpectating() && IsValid(self:GetCSpectatee()) then
 		ply = self:GetCSpectatee()
 	end
+
 	if ply:IsPlayer() && !ply:Alive() then
 		ply = ply:GetRagdollEntity()
 	end
+
 	if IsValid(ply) then
 		if ply:IsPlayer() && ply:IsDisguised() then
 			local maxs = ply:GetNWVector("disguiseMaxs")
 			local mins = ply:GetNWVector("disguiseMins")
 			local view = {}
-
 			local reach = (maxs.z - mins.z)
 			if self:GetRoundSettings() && self:GetRoundSettings().PropsCamDistance then
 				reach = reach * self:GetRoundSettings().PropsCamDistance
 			end
+
 			local trace = {}
 			trace.start = ply:GetPropEyePos()
 			trace.endpos = trace.start + angles:Forward() * -reach
@@ -96,8 +95,6 @@ function GM:CalcView(ply, pos, angles, fov)
 			local camPos = trace.start * 1
 			camPos.z = ply:GetPos().z + camHeight
 			view.origin = camPos + (trace.endpos - trace.start):GetNormal() * camDis
-			-- view.origin = tr.HitPos
-
 			view.angles = angles
 			view.fov = fov
 			return view
@@ -118,7 +115,6 @@ net.Receive("hull_set", function(len)
 	local duckz = net.ReadFloat()
 	GAMEMODE:PlayerSetHull(ply, hullx, hully, hullz, duckz)
 end)
-
 
 function GM:RenderScene()
 	self:RenderDisguises()
@@ -145,7 +141,6 @@ end)
 function GM:StartChat()
 	if IsValid(self.EndRoundPanel) && self.EndRoundPanel:IsVisible() then
 		timer.Simple(0, function() chat.Close() end)
-
 		self.EndRoundPanel:SetKeyboardInputEnabled(true)
 		self.EndRoundPanel.ChatTextEntry:RequestFocus()
 		return true

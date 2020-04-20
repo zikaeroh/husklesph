@@ -1,5 +1,3 @@
-
-
 Taunts = {}
 TauntCategories = {}
 AllowedTauntSounds = {}
@@ -16,9 +14,7 @@ function PlayerModelTauntAllowed(ply, whitelist)
 
 	local mod = ply:GetModel()
 	mod = player_manager.TranslateToPlayerModelName(mod)
-
 	local models = player_manager.AllValidModels()
-
 	for _, v in pairs(whitelist) do
 		if !models[v] then
 			-- v was not a name, so check it as a path
@@ -53,10 +49,10 @@ end
 function TauntAllowedForPlayer(ply, tauntTable)
 	if tauntTable.sex then
 		if GAMEMODE && GAMEMODE.PlayerModelSex then
-			if tauntTable.sex ~= GAMEMODE.PlayerModelSex then
+			if tauntTable.sex != GAMEMODE.PlayerModelSex then
 				return false
 			end
-		elseif tauntTable.sex ~= ply.ModelSex then
+		elseif tauntTable.sex != ply.ModelSex then
 			return false
 		end
 	end
@@ -65,7 +61,7 @@ function TauntAllowedForPlayer(ply, tauntTable)
 		if !table.HasValue(tauntTable.team, ply:Team()) then
 			return false
 		end
-	elseif tauntTable.team ~= ply:Team() then
+	elseif tauntTable.team != ply:Team() then
 		return false
 	end
 
@@ -74,8 +70,8 @@ end
 
 -- display name, table of sound files, team (name or id), sex (nil for both), table of category ids, [duration in seconds]
 local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
-	if !name || type(name) ~= "string" then return end
-	if type(snd) ~= "table" then snd = {tostring(snd)} end
+	if !name || type(name) != "string" then return end
+	if type(snd) != "table" then snd = {tostring(snd)} end
 	if #snd == 0 then error("No sounds for " .. name) return end
 
 	local t = {}
@@ -88,12 +84,14 @@ local function addTaunt(name, snd, pteam, sex, cats, duration, allowedModels)
 	else
 		t.team = tonumber(pteam)
 	end
+
 	if sex && #sex > 0 then
 		t.sex = sex
 		if sex == "both" || sex == "nil" then
 			t.sex = nil
 		end
 	end
+
 	t.name = name
 	t.allowedModels = allowedModels
 
@@ -151,6 +149,7 @@ local function loadTaunts(rootFolder)
 		if !f then
 			return
 		end
+
 		setfenv(f, tempG)
 		local b, err = pcall(f)
 

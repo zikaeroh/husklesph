@@ -1,13 +1,13 @@
 local url = "https://raw.githubusercontent.com/zikaeroh/husklesph/master/gamemodes/husklesph/husklesph.txt"
 local downloadlinks = "https://steamcommunity.com/sharedfiles/filedetails/?id=1585255351"
 
-
 function GM:CheckForNewVersion(ply)
 	local req = {}
 	req.url = url
 	req.failed = function(reason)
 		print("Couldn't get version file.", reason)
 	end
+
 	req.success = function(code, body, headers)
 		local tab = util.KeyValuesToTable(body)
 		if !tab || !tab.version then
@@ -35,6 +35,7 @@ function GM:CheckForNewVersion(ply)
 			MsgC("\n")
 		end
 	end
+
 	HTTP(req)
 end
 
@@ -47,5 +48,6 @@ concommand.Add("ph_version", function(ply)
 	else
 		MsgC(color, msg, "\n") -- Print to the server console
 	end
+
 	GAMEMODE:CheckForNewVersion(ply)
 end)
