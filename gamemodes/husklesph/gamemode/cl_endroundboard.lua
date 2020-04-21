@@ -115,10 +115,7 @@ concommand.Add("ph_endroundmenu_close", function()
 end)
 
 function GM:OpenEndRoundMenu()
-	chat.Close()
-
 	if IsValid(menu) then
-		menu.ChatTextEntry:SetText("")
 		menu:SetVisible(true)
 		return
 	end
@@ -207,113 +204,6 @@ function GM:OpenEndRoundMenu()
 	function canvas:OnChildAdded(child)
 		child:Dock(TOP)
 		child:DockMargin(0, 0, 0, 1)
-	end
-
-	-- chat section
-	local pnl = vgui.Create("DPanel", leftpnl)
-	pnl:Dock(BOTTOM)
-	pnl:DockMargin(0, 20, 0, 0)
-
-	function pnl:PerformLayout()
-		self:SetTall(leftpnl:GetTall() * 0.5)
-	end
-
-	function pnl:Paint(w, h)
-		surface.SetDrawColor(20, 20, 20, 150)
-		local t = draw.GetFontHeight("RobotoHUD-25") + 2
-		surface.DrawRect(0, t, w, h - t)
-	end
-
-	local header = vgui.Create("DLabel", pnl)
-	header:Dock(TOP)
-	header:SetFont("RobotoHUD-25")
-	header:SetTall(draw.GetFontHeight("RobotoHUD-25"))
-	header:SetText("Chat")
-	header:DockMargin(4, 2, 4, 2)
-
-	local sayPnl = vgui.Create("DPanel", pnl)
-	sayPnl:Dock(BOTTOM)
-	sayPnl:DockPadding(4, 4, 4, 4)
-	sayPnl:SetTall(draw.GetFontHeight("RobotoHUD-15") + 8)
-
-	local entry = vgui.Create("DTextEntry", sayPnl)
-
-	function sayPnl:Paint(w, h)
-		if entry.Focused then
-			surface.SetDrawColor(30, 20, 20, 150)
-		else
-			surface.SetDrawColor(20, 20, 20, 150)
-		end
-		surface.DrawRect(0, 0, w, h)
-	end
-
-	local say = vgui.Create("DLabel", sayPnl)
-	say:Dock(LEFT)
-	say:SetFont("RobotoHUD-15")
-	say:SetTextColor(Color(150, 150, 150))
-	say:SetText("Say:")
-	say:DockMargin(4, 0, 0, 0)
-	say:SizeToContentsX()
-
-	entry:Dock(FILL)
-	menu.ChatTextEntry = entry
-	entry:SetFont("RobotoHUD-15")
-	entry:SetTextColor(color_white)
-
-	function entry:OnEnter(...)
-		RunConsoleCommand("say", self:GetValue())
-		self:SetText("")
-		timer.Simple(0, function()
-			menu:SetKeyboardInputEnabled(true)
-			self:RequestFocus()
-		end)
-	end
-
-	local colCursor = Color(255, 0, 0)
-	local colText = Color(180, 180, 180)
-
-	function entry:Paint(w, h)
-		self:DrawTextEntryText(self.Focused && color_white || colText, self.m_colHighlight, colCursor)
-	end
-
-	function entry:OnGetFocus()
-		self.Focused = true
-		menu:SetKeyboardInputEnabled(true)
-	end
-
-	function entry:OnLoseFocus()
-		self.Focused = false
-		menu:SetKeyboardInputEnabled(false)
-	end
-
-	local mlist = vgui.Create("DScrollPanel", pnl)
-	menu.ChatList = mlist
-	mlist:Dock(FILL)
-
-	function mlist:Paint(w, h)
-	end
-
-	-- child positioning
-	local canvas = mlist:GetCanvas()
-	canvas:DockPadding(0, 0, 0, 0)
-
-	function canvas:OnChildAdded(child)
-		child:Dock(TOP)
-		child:DockMargin(0, 0, 0, 1)
-	end
-
-	function mlist.VBar:SetUp(_barsize_, _canvassize_)
-		local oldSize = self.CanvasSize
-
-		self.BarSize = _barsize_
-		self.CanvasSize = math.max(_canvassize_ - _barsize_, 1)
-
-		self:SetEnabled(_canvassize_ > _barsize_)
-		self:InvalidateLayout()
-
-		if self:GetScroll() == oldSize || (oldSize == 1 && self:GetScroll() == 0) then
-			self:SetScroll(self.CanvasSize)
-		end
 	end
 
 	-- results section
@@ -438,7 +328,6 @@ function GM:EndRoundMenuResults(res)
 	menu.ResultsPanel:SetVisible(true)
 	menu.VotePanel:SetVisible(false)
 	menu.Results = res
-	menu.ChatList:Clear()
 	menu.ResultList:Clear()
 	if res.winningTeam == WIN_HUNTER || res.winningTeam == WIN_PROP then
 		menu.WinningTeam:SetText(team.GetName(res.winningTeam) .. " win!")
@@ -554,32 +443,6 @@ function GM:EndRoundMapVote()
 
 		menu.MapVoteList:AddItem(but)
 	end
-end
-
-function GM:EndRoundAddChatText(...)
-	if !IsValid(menu) then
-		return
-	end
-
-	local pnl = vgui.Create("DPanel")
-	pnl.Text = {...}
-
-	function pnl:PerformLayout()
-		if self.Text then
-			self.TextLines = WrapText("RobotoHUD-15", self:GetWide() - 16, self.Text)
-		end
-		if self.TextLines then
-			self:SetTall(self.TextLines.height)
-		end
-	end
-
-	function pnl:Paint(w, h)
-		if self.TextLines then
-			self.TextLines:Paint(4, draw.GetFontHeight("RobotoHUD-15") * -0.2)
-		end
-	end
-
-	menu.ChatList:AddItem(pnl)
 end
 
 function GM:CloseRoundMenu()
