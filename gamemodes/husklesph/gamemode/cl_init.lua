@@ -127,7 +127,13 @@ function GM:EntityRemoved(ent)
 end
 
 concommand.Add("+menu_context", function()
-	RunConsoleCommand("ph_lockrotation")
+	if GAMEMODE:GetGameState() == ROUND_POST then
+		-- TODO: Opening the menu like this before EndRoundMenuResults has called from the
+		-- timer in cl_rounds will show the previous rounds results (until the timer fires).
+		GAMEMODE:ToggleEndRoundMenuVisibility()
+	else
+		RunConsoleCommand("ph_lockrotation")
+	end
 end)
 
 net.Receive("player_model_sex", function()

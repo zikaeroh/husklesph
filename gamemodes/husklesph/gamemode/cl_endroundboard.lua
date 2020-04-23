@@ -44,28 +44,39 @@ local function createEndRoundMenu()
 		surface.DrawRect(0, 22, w, h)
 	end
 
-	-- results section (purely a container)
+	-- Results section (this is just a container for winner, awards, and timeLeft)
 	local resultsPanel = vgui.Create("DPanel", menu)
-	menu.ResultsPanel = resultsPanel
 	resultsPanel:Dock(FILL)
 
 	function resultsPanel:Paint(w, h) end
 
+	menu.setResultsPanelVisibility = function(isVisible)
+		resultsPanel:SetVisible(isVisible)
+	end
+
 	-- Text label at the top specifying who won
 	local winner = vgui.Create("DLabel", resultsPanel)
-	menu.WinningTeam = winner
 	winner:Dock(TOP)
 	winner:SetTall(draw.GetFontHeight("RobotoHUD-30"))
 	winner:SetFont("RobotoHUD-30")
 	winner:SetContentAlignment(5) -- Center
 
+	menu.setWinningTeamText = function(winState)
+		if winState == WIN_NONE then
+			winner:SetText("Round tied")
+			winner:SetColor(Color(150, 150, 150))
+		else
+			winner:SetText(team.GetName(winState) .. " win!")
+			winner:SetColor(team.GetColor(winState))
+		end
+	end
+
 	-- Middle area where the player awards are listed
 	local awards = vgui.Create("DScrollPanel", resultsPanel)
 	awards:Dock(FILL)
-	menu.AwardsList = awards
-	-- awards:DockMargin(20, 20, 20, 0)
 
 	function awards:Paint(w, h)
+		-- Add a dark rectangle over the area for the awards to visually separate it from rest of the menu
 		surface.SetDrawColor(20, 20, 20, 150)
 		surface.DrawRect(0, 0, w, h)
 	end
@@ -74,17 +85,37 @@ local function createEndRoundMenu()
 	canvas:DockPadding(0, 0, 0, 0)
 
 	function canvas:OnChildAdded(child)
+		-- Awards fill from top to bottom
 		child:Dock(TOP)
 		child:DockMargin(10, 10, 10, 0)
 	end
 
-	-- Timer at bottom right showing how long until next round/mapvote
-	local timeleft = vgui.Create("DPanel", resultsPanel)
-	timeleft:Dock(BOTTOM)
-	timeleft:SetTall(draw.GetFontHeight("RobotoHUD-15"))
+	menu.setPlayerAwards = function(allAwards)
+		awards:Clear()
+		print(allAwards)
 
-	function timeleft:Paint(w, h)
-		-- Extend the darker rectangle in awards:Paint to make it looks like one large seamless rectangle
+		for _, award in pairs(allAwards) do
+			local containerPanel = vgui.Create("DPanel")
+			containerPanel:SetTall(draw.GetFontHeight("RobotoHUD-20"))
+
+			function containerPanel:Paint(w, h)
+				surface.SetDrawColor(50, 50, 50)
+				draw.DrawText(award.name, "RobotoHUD-10", 0, 0, Color(220, 220, 220), 0)
+				draw.DrawText(award.desc, "RobotoHUD-10", 0, draw.GetFontHeight("RobotoHUD-10"), Color(120, 120, 120), 0)
+				draw.DrawText(award.winnerName, "RobotoHUD-15", w, (h / 2) - (draw.GetFontHeight("RobotoHUD-20") / 2), team.GetColor(award.winnerTeam), 2)
+			end
+
+			awards:AddItem(containerPanel)
+		end
+	end
+
+	-- Timer at bottom right showing how long until next round/mapvote
+	local timeLeft = vgui.Create("DPanel", resultsPanel)
+	timeLeft:Dock(BOTTOM)
+	timeLeft:SetTall(draw.GetFontHeight("RobotoHUD-15"))
+
+	function timeLeft:Paint(w, h)
+		-- "Extend" the dark rectangle from awards:Paint to make a larger seamless rectangle
 		surface.SetDrawColor(20, 20, 20, 150)
 		surface.DrawRect(0, 0, w, h)
 
@@ -92,116 +123,79 @@ local function createEndRoundMenu()
 			local settings = GAMEMODE:GetRoundSettings()
 			local roundTime = settings.NextRoundTime || 30
 			local time = math.max(0, roundTime - GAMEMODE:GetStateRunningTime())
+			-- TODO: Say "Mapvote in..." if last round
 			draw.DrawText("Next round in " .. math.ceil(time), "RobotoHUD-15", w - 4, 0, Color(150, 150, 150), 2)
 		end
 	end
 
+	-- map vote
+	local votePanel = vgui.Create("DPanel", menu)
+	votePanel:SetVisible(false)
+	votePanel:Dock(FILL)
+	votePanel:DockMargin(20, 0, 0, 0)
+	votePanel:DockPadding(0, 0, 0, 0)
 
-
-
-
-
-	if false then
-		-- map vote
-		local votepnl = vgui.Create("DPanel", menu)
-		votepnl:SetVisible(false)
-		menu.VotePanel = votepnl
-		votepnl:Dock(FILL)
-		votepnl:DockMargin(20, 0, 0, 0)
-		votepnl:DockPadding(0, 0, 0, 0)
-
-		function votepnl:Paint(w, h)
-			surface.SetDrawColor(20, 20, 20, 150)
-			local t = draw.GetFontHeight("RobotoHUD-25") + 2
-			surface.DrawRect(0, t, w, h - t)
-		end
-
-		local header = vgui.Create("DLabel", votepnl)
-		header:Dock(TOP)
-		header:SetFont("RobotoHUD-25")
-		header:SetTall(draw.GetFontHeight("RobotoHUD-25"))
-		header:SetText("Map voting")
-		header:DockMargin(4, 2, 4, 2)
-
-		local timeleft = vgui.Create("DPanel", votepnl)
-		timeleft:Dock(BOTTOM)
-		timeleft:SetTall(draw.GetFontHeight("RobotoHUD-20"))
-		local col = Color(150, 150, 150)
-
-		function timeleft:Paint(w, h)
-			if GAMEMODE:GetGameState() == ROUND_MAPVOTE then
-				local voteTime = GAMEMODE.MapVoteTime || 30
-				local time = math.max(0, voteTime - GAMEMODE:GetMapVoteRunningTime())
-				draw.SimpleText("Voting ends in " .. math.ceil(time), "RobotoHUD-20", w - 4, 0, col, 2)
-			end
-		end
-
-		local mlist = vgui.Create("DScrollPanel", votepnl)
-		menu.MapVoteList = mlist
-		mlist:Dock(FILL)
-		mlist:DockMargin(0, 20, 0, 20)
-
-		function mlist:Paint(w, h) end
-
-		local canvas = mlist:GetCanvas()
-		canvas:DockPadding(20, 0, 20, 0)
-
-		function canvas:OnChildAdded(child)
-			child:Dock(TOP)
-			child:DockMargin(0, 0, 0, 16)
-		end
-	end
-end
-
-function GM:OpenEndRoundMenu()
-	if !IsValid(menu) then
-		createEndRoundMenu()
+	function votePanel:Paint(w, h)
+		surface.SetDrawColor(20, 20, 20, 150)
+		local t = draw.GetFontHeight("RobotoHUD-25") + 2
+		surface.DrawRect(0, t, w, h - t)
 	end
 
-	menu:SetVisible(true)
-end
+	menu.setVotePanelVisibility = function(isVisible)
+		votePanel:SetVisible(isVisible)
+	end
 
-function GM:CloseEndRoundMenu()
-	if IsValid(menu) then
-		menu:Close()
+	local header = vgui.Create("DLabel", votePanel)
+	header:Dock(TOP)
+	header:SetFont("RobotoHUD-25")
+	header:SetTall(draw.GetFontHeight("RobotoHUD-25"))
+	header:SetText("Map voting")
+	header:DockMargin(4, 2, 4, 2)
+
+	local timeLeft = vgui.Create("DPanel", votePanel)
+	timeLeft:Dock(BOTTOM)
+	timeLeft:SetTall(draw.GetFontHeight("RobotoHUD-20"))
+	local col = Color(150, 150, 150)
+
+	function timeLeft:Paint(w, h)
+		if GAMEMODE:GetGameState() == ROUND_MAPVOTE then
+			local voteTime = GAMEMODE.MapVoteTime || 30
+			local time = math.max(0, voteTime - GAMEMODE:GetMapVoteRunningTime())
+			draw.SimpleText("Voting ends in " .. math.ceil(time), "RobotoHUD-20", w - 4, 0, col, 2)
+		end
+	end
+
+	local mapList = vgui.Create("DScrollPanel", votePanel)
+	menu.MapVoteList = mapList
+	mapList:Dock(FILL)
+	mapList:DockMargin(0, 20, 0, 20)
+
+	function mapList:Paint(w, h) end
+
+	local canvas = mapList:GetCanvas()
+	canvas:DockPadding(20, 0, 20, 0)
+
+	function canvas:OnChildAdded(child)
+		child:Dock(TOP)
+		child:DockMargin(0, 0, 0, 16)
 	end
 end
 
 function GM:EndRoundMenuResults(res)
 	self:OpenEndRoundMenu()
 
-	menu.ResultsPanel:SetVisible(true)
-	-- menu.VotePanel:SetVisible(false)
+	menu.setResultsPanelVisibility(true)
+	menu.setVotePanelVisibility(false)
 	menu.Results = res
-	menu.AwardsList:Clear()
-	if res.winningTeam == WIN_HUNTER || res.winningTeam == WIN_PROP then
-		menu.WinningTeam:SetText(team.GetName(res.winningTeam) .. " win!")
-		menu.WinningTeam:SetColor(team.GetColor(res.winningTeam))
-	else
-		menu.WinningTeam:SetText("Round tied")
-		menu.WinningTeam:SetColor(Color(150, 150, 150))
-	end
-
-	for _, award in pairs(res.playerAwards) do
-		local containerPanel = vgui.Create("DPanel")
-		containerPanel:SetTall(draw.GetFontHeight("RobotoHUD-20"))
-
-		function containerPanel:Paint(w, h)
-			surface.SetDrawColor(50, 50, 50)
-			draw.DrawText(award.name, "RobotoHUD-10", 0, 0, Color(220, 220, 220), 0)
-			draw.DrawText(award.desc, "RobotoHUD-10", 0, draw.GetFontHeight("RobotoHUD-10"), Color(120, 120, 120), 0)
-			draw.DrawText(award.winnerName, "RobotoHUD-15", w, (h / 2) - (draw.GetFontHeight("RobotoHUD-20") / 2), team.GetColor(award.winnerTeam), 2)
-		end
-
-		menu.AwardsList:AddItem(containerPanel)
-	end
+	menu.setPlayerAwards(res.playerAwards)
+	menu.setWinningTeamText(res.winningTeam)
 end
 
 function GM:EndRoundMapVote()
 	self:OpenEndRoundMenu()
 
-	menu.ResultsPanel:SetVisible(false)
-	menu.VotePanel:SetVisible(true)
+	menu.setResultsPanelVisibility(false)
+	menu.setVotePanelVisibility(true)
 	menu.MapVoteList:Clear()
 
 	for k, map in pairs(self.MapList) do
@@ -290,8 +284,24 @@ function GM:EndRoundMapVote()
 	end
 end
 
-function GM:CloseRoundMenu()
+function GM:OpenEndRoundMenu()
+	if !IsValid(menu) then
+		createEndRoundMenu()
+	end
+
+	menu:SetVisible(true)
+end
+
+function GM:CloseEndRoundMenu()
 	if IsValid(menu) then
-		menu:SetVisible(false)
+		menu:Close()
+	end
+end
+
+function GM:ToggleEndRoundMenuVisibility()
+	if IsValid(menu) && menu:IsVisible() then
+		GAMEMODE:CloseEndRoundMenu()
+	else
+		GAMEMODE:OpenEndRoundMenu()
 	end
 end
