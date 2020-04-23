@@ -33,7 +33,7 @@ net.Receive("round_victor", function(len)
 	tab.playerAwards = net.ReadTable()
 
 	-- open the results panel
-	timer.Simple(2, function()
+	timer.Create("ph_timer_show_results_delay", 2, 1, function()
 		GAMEMODE:EndRoundMenuResults(tab)
 	end)
 end)

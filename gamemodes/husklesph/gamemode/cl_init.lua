@@ -127,9 +127,7 @@ function GM:EntityRemoved(ent)
 end
 
 concommand.Add("+menu_context", function()
-	if GAMEMODE:GetGameState() == ROUND_POST then
-		-- TODO: Opening the menu like this before EndRoundMenuResults has called from the
-		-- timer in cl_rounds will show the previous rounds results (until the timer fires).
+	if (GAMEMODE:GetGameState() == ROUND_POST && !timer.Exists("ph_timer_show_results_delay")) || GAMEMODE:GetGameState() == ROUND_MAPVOTE then
 		GAMEMODE:ToggleEndRoundMenuVisibility()
 	else
 		RunConsoleCommand("ph_lockrotation")
