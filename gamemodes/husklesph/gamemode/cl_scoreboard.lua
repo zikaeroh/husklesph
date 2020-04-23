@@ -193,7 +193,7 @@ function GM:ScoreboardRoundResults(results)
 	menu.ResultsPanel:InvalidateLayout()
 end
 
-function GM:ScoreboardShow()
+local function createScoreboardPanel()
 	menu = vgui.Create("DFrame")
 	GAMEMODE.ScoreboardPanel = menu
 	menu:SetSize(ScrW() * 0.8, ScrH() * 0.8)
@@ -295,12 +295,15 @@ function GM:ScoreboardShow()
 	menu.PropsList:Dock(FILL)
 end
 
-function GM:ScoreboardHide()
-	if GAMEMODE.GameState == ROUND_POST then
-		menu:Close()
-		return
+function GM:ScoreboardShow()
+	if !IsValid(menu) then
+		createScoreboardPanel()
 	end
 
+	menu:SetVisible(true)
+end
+
+function GM:ScoreboardHide()
 	if IsValid(menu) then
 		menu:Close()
 	end
