@@ -212,7 +212,7 @@ function GM:EndRound(winningTeam)
 				winnerTeam = result:Team()
 			}
 		else
-			ErrorNoHalt("PROPHUNTERS WARNING: EndRound Player Award gave non Player object: " .. type(result))
+			ErrorNoHalt("HUSKLESPH WARNING: EndRound Player Award gave non Player object: " .. type(result))
 		end
 	end
 
