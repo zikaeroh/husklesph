@@ -42,7 +42,7 @@ local function openHelpScreen()
 		menu:SetVisible(!menu:IsVisible())
 	else
 		menu = vgui.Create("DFrame")
-		GAMEMODE.ScoreboardPanel = menu
+		GAMEMODE.HelpMenu = menu
 		menu:SetSize(ScrW() * 0.8, ScrH() * 0.8)
 		menu:Center()
 		menu:MakePopup()

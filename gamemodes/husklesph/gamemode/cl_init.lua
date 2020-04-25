@@ -127,7 +127,11 @@ function GM:EntityRemoved(ent)
 end
 
 concommand.Add("+menu_context", function()
-	RunConsoleCommand("ph_lockrotation")
+	if (GAMEMODE:GetGameState() == ROUND_POST && !timer.Exists("ph_timer_show_results_delay")) || GAMEMODE:GetGameState() == ROUND_MAPVOTE then
+		GAMEMODE:ToggleEndRoundMenuVisibility()
+	else
+		RunConsoleCommand("ph_lockrotation")
+	end
 end)
 
 net.Receive("player_model_sex", function()
@@ -137,12 +141,3 @@ net.Receive("player_model_sex", function()
 	end
 	GAMEMODE.PlayerModelSex = sex
 end)
-
-function GM:StartChat()
-	if IsValid(self.EndRoundPanel) && self.EndRoundPanel:IsVisible() then
-		timer.Simple(0, function() chat.Close() end)
-		self.EndRoundPanel:SetKeyboardInputEnabled(true)
-		self.EndRoundPanel.ChatTextEntry:RequestFocus()
-		return true
-	end
-end
