@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v1.11.0
+
+-   The end-game menu has been overhauled. (Thanks, Yolo!)
+    -   End screen is now a regular window, which can be closed and reopened (with the C key).
+    -   Since the menu can be closed, players are no longer stuck looking in the direction they faced when the round ends.
+    -   End-screen chat has been removed, and the regular in-game chat is no longer disabled.
+-   Fixed pre-round message to not disappear when there weren't enough players.
+-   Many, many code cleanups, reformatting, restructuring, and CI checks.
+
 ## v1.10.1
 
 -   Add `ph_map_time_limit`, which sets a number of minutes before the "last round".
