@@ -11,7 +11,7 @@ for k, v in pairs(files) do
 end
 
 util.AddNetworkString("clientIPE")
-util.AddNetworkString("mb_openhelpmenu")
+util.AddNetworkString("ph_openhelpmenu")
 util.AddNetworkString("player_model_sex")
 
 include("sv_chatmsg.lua")
@@ -25,7 +25,6 @@ include("sv_spectate.lua")
 include("sv_respawn.lua")
 include("sv_health.lua")
 include("sv_killfeed.lua")
-include("sv_bot.lua")
 include("sv_disguise.lua")
 include("sv_teams.lua")
 include("sv_taunt.lua")
@@ -52,8 +51,8 @@ GM.AutoTauntMin = CreateConVar("ph_auto_taunt_delay_min", 60, bit.bor(FCVAR_NOTI
 GM.AutoTauntMax = CreateConVar("ph_auto_taunt_delay_max", 120, bit.bor(FCVAR_NOTIFY), "Maximum time to go without taunting")
 GM.AutoTauntPropsOnly = CreateConVar("ph_auto_taunt_props_only", 1, bit.bor(FCVAR_NOTIFY), "Enable auto taunt for props only")
 
-resource.AddFile("materials/melonbomber/skull.png")
-resource.AddFile("materials/melonbomber/skull_license.txt")
+resource.AddSingleFile("materials/husklesph/skull.png")
+resource.AddSingleFile("materials/husklesph/skull_license.txt")
 
 function GM:Initialize()
 	self.RoundWaitForPlayers = CurTime()
@@ -133,7 +132,7 @@ function GM:CleanupMap()
 end
 
 function GM:ShowHelp(ply)
-	net.Start("mb_openhelpmenu")
+	net.Start("ph_openhelpmenu")
 	net.Send(ply)
 end
 

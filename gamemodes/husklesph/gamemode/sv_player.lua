@@ -396,7 +396,7 @@ function GM:PlayerSelectSpawn(ply)
 					rigSpwn:SetPos(rig)
 					rigSpwn:Spawn()
 
-					ErrorNoHalt("PROPHUNTERS WARNING: Map has too few spawn points, using a rigged spawn for " .. tostring(ply:Nick()) .. "\n")
+					ErrorNoHalt("HUSKLESPH WARNING: Map has too few spawn points, using a rigged spawn for " .. tostring(ply:Nick()) .. "\n")
 
 					self.HaveRiggedSpawn = true
 					return rigSpwn
@@ -549,7 +549,6 @@ function GM:StartCommand(ply, cmd)
 		cmd:SetForwardMove(0)
 		cmd:SetSideMove(0)
 		cmd:SetViewAngles(Angle(0, 0, 0))
-		self:BotMove(ply, cmd)
 	end
 end
 

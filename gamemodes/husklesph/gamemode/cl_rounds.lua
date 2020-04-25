@@ -29,11 +29,7 @@ end)
 
 net.Receive("round_victor", function(len)
 	local tab = {}
-	tab.reason = net.ReadUInt(8)
-	if tab.reason == WIN_HUNTER || tab.reason == WIN_PROP then
-		tab.winningTeam = net.ReadUInt(16)
-	end
-
+	tab.winningTeam = net.ReadUInt(8)
 	tab.playerAwards = net.ReadTable()
 
 	-- open the results panel

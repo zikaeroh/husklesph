@@ -1,24 +1,26 @@
 function GM:TeamsSetupPlayer(ply)
-	local cops = team.NumPlayers(TEAM_HUNTER)
-	local robbers = team.NumPlayers(TEAM_PROP)
-	if robbers <= cops then
+	local hunters = team.NumPlayers(TEAM_HUNTER)
+	local props = team.NumPlayers(TEAM_PROP)
+	if props <= hunters then
 		ply:SetTeam(TEAM_PROP)
 	else
 		ply:SetTeam(TEAM_HUNTER)
 	end
 end
 
-concommand.Add("car_jointeam", function(ply, com, args)
+concommand.Add("ph_jointeam", function(ply, com, args)
 	local curteam = ply:Team()
-	local newteam = tonumber(args[1] || "") || 0
-	if newteam == TEAM_SPEC && curteam != TEAM_SPEC then
+	local newteam = tonumber(args[1]) || TEAM_SPEC -- Default to spectators if there's a problem
+	if curteam == newteam then return end
+
+	if newteam == TEAM_SPEC then
 		ply:SetTeam(newteam)
 		if ply:Alive() then
 			ply:Kill()
 		end
 
 		GlobalChatMsg(ply:Nick(), " changed team to ", team.GetColor(newteam), team.GetName(newteam))
-	elseif newteam >= TEAM_HUNTER && newteam <= TEAM_PROP && newteam != curteam then
+	elseif newteam == TEAM_HUNTER || newteam == TEAM_PROP then
 		-- make sure we can't join the bigger team
 		local otherteam = newteam == TEAM_HUNTER && TEAM_PROP || TEAM_HUNTER
 		if team.NumPlayers(newteam) <= team.NumPlayers(otherteam) then

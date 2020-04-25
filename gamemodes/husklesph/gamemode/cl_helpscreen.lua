@@ -164,5 +164,5 @@ local function openHelpScreen()
 		end
 	end
 end
-concommand.Add("mb_helpscreen", openHelpScreen)
-net.Receive("mb_openhelpmenu", openHelpScreen)
+concommand.Add("ph_helpscreen", openHelpScreen)
+net.Receive("ph_openhelpmenu", openHelpScreen)

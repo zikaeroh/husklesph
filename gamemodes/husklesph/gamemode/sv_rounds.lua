@@ -188,19 +188,14 @@ function GM:StartRound()
 	GlobalChatMsg("Round has started")
 end
 
-function GM:EndRound(reason)
-	local winningTeam
-	if reason == WIN_NONE then
+function GM:EndRound(winningTeam)
+	if winningTeam == WIN_NONE then
 		GlobalChatMsg("Tie everybody loses")
-	elseif reason == WIN_HUNTER then
-		GlobalChatMsg(team.GetColor(TEAM_HUNTER), team.GetName(TEAM_HUNTER), " win")
-		winningTeam = TEAM_HUNTER
-	elseif reason == WIN_PROP then
-		GlobalChatMsg(team.GetColor(TEAM_PROP), team.GetName(TEAM_PROP), " win")
-		winningTeam = TEAM_PROP
+	else
+		GlobalChatMsg(team.GetColor(winningTeam), team.GetName(winningTeam), " win")
 	end
 
-	self.LastRoundResult = reason
+	self.LastRoundResult = winningTeam
 
 	local awards = {}
 	for awardKey, award in pairs(PlayerAwards) do -- PlayerAwards comes from sv_awards.lua
@@ -217,15 +212,12 @@ function GM:EndRound(reason)
 				winnerTeam = result:Team()
 			}
 		else
-			ErrorNoHalt("PROPHUNTERS WARNING: EndRound Player Award gave non Player object: " .. type(result))
+			ErrorNoHalt("HUSKLESPH WARNING: EndRound Player Award gave non Player object: " .. type(result))
 		end
 	end
 
 	net.Start("round_victor")
-	net.WriteUInt(reason, 8)
-	if winningTeam then
-		net.WriteUInt(winningTeam, 16)
-	end
+	net.WriteUInt(winningTeam, 8)
 	net.WriteTable(awards)
 	net.Broadcast()
 
@@ -243,6 +235,7 @@ function GM:RoundsSetupPlayer(ply)
 end
 
 function GM:CheckForVictory()
+	-- Check if time limit expired
 	local settings = self:GetRoundSettings()
 	local roundTime = settings.RoundTime || 5 * 60
 	if self:GetStateRunningTime() > roundTime then
@@ -250,30 +243,21 @@ function GM:CheckForVictory()
 		return
 	end
 
-	local red, blue = 0, 0
-	for k, ply in pairs(self:GetPlayingPlayers()) do
-		if ply:Alive() then
-			if ply:IsHunter() then
-				red = red + 1
-			elseif ply:IsProp() then
-				blue = blue + 1
-			end
-		end
+	-- Check if there are still living players on either team
+	local huntersAlive, propsAlive = false, false
+	for _, ply in pairs(self:GetPlayingPlayers()) do
+		if !ply:Alive() then continue end
+
+		huntersAlive = huntersAlive || ply:IsHunter()
+		propsAlive = propsAlive || ply:IsProp()
 	end
 
-	if red == 0 && blue == 0 then
+	if !huntersAlive && !propsAlive then
 		self:EndRound(WIN_NONE)
-		return
-	end
-
-	if red == 0 then
+	elseif !huntersAlive then
 		self:EndRound(WIN_PROP)
-		return
-	end
-
-	if blue == 0 then
+	elseif !propsAlive then
 		self:EndRound(WIN_HUNTER)
-		return
 	end
 end
 
@@ -296,7 +280,7 @@ function GM:RoundsThink()
 	elseif self:GetGameState() == ROUND_SEEK then
 		self:CheckForVictory()
 		for k, ply in pairs(self:GetPlayingPlayers()) do
-			if ply:IsProp() then
+			if ply:IsProp() && ply:Alive() then
 				ply.PropMovement = (ply.PropMovement || 0) + ply:GetVelocity():Length()
 			end
 		end

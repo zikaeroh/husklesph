@@ -440,9 +440,9 @@ function GM:EndRoundMenuResults(res)
 	menu.Results = res
 	menu.ChatList:Clear()
 	menu.ResultList:Clear()
-	if res.reason == WIN_HUNTER || res.reason == WIN_PROP then
-		menu.WinningTeam:SetText(team.GetName(res.reason) .. " win!")
-		menu.WinningTeam:SetColor(team.GetColor(res.reason))
+	if res.winningTeam == WIN_HUNTER || res.winningTeam == WIN_PROP then
+		menu.WinningTeam:SetText(team.GetName(res.winningTeam) .. " win!")
+		menu.WinningTeam:SetColor(team.GetColor(res.winningTeam))
 	else
 		menu.WinningTeam:SetText("Round tied")
 		menu.WinningTeam:SetColor(Color(150, 150, 150))
