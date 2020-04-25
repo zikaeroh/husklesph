@@ -13,7 +13,6 @@ include("cl_helpscreen.lua")
 include("cl_disguise.lua")
 include("cl_taunt.lua")
 include("cl_endroundboard.lua")
-include("cl_wraptext.lua")
 include("cl_mapvote.lua")
 include("cl_bannedmodels.lua")
 
