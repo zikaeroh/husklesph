@@ -194,113 +194,105 @@ function GM:ScoreboardRoundResults(results)
 end
 
 function GM:ScoreboardShow()
-	if IsValid(menu) then
-		if GAMEMODE.GameState == ROUND_POST then
-			menu:SetVisible(false)
-		else
-			menu:SetVisible(true)
+	menu = vgui.Create("DFrame")
+	GAMEMODE.ScoreboardPanel = menu
+	menu:SetSize(ScrW() * 0.8, ScrH() * 0.8)
+	menu:Center()
+	menu:MakePopup()
+	menu:SetKeyboardInputEnabled(false)
+	menu:SetDeleteOnClose(false)
+	menu:SetDraggable(false)
+	menu:ShowCloseButton(false)
+	menu:SetTitle("")
+	menu:DockPadding(8, 8, 8, 8)
+
+	function menu:PerformLayout()
+		if IsValid(menu.HuntersList) then
+			menu.HuntersList:SetWidth((self:GetWide() - 16) * 0.5)
 		end
-	else
-		menu = vgui.Create("DFrame")
-		GAMEMODE.ScoreboardPanel = menu
-		menu:SetSize(ScrW() * 0.8, ScrH() * 0.8)
-		menu:Center()
-		menu:MakePopup()
-		menu:SetKeyboardInputEnabled(false)
-		menu:SetDeleteOnClose(false)
-		menu:SetDraggable(false)
-		menu:ShowCloseButton(false)
-		menu:SetTitle("")
-		menu:DockPadding(8, 8, 8, 8)
-
-		function menu:PerformLayout()
-			if IsValid(menu.HuntersList) then
-				menu.HuntersList:SetWidth((self:GetWide() - 16) * 0.5)
-			end
-		end
-
-		function menu:Paint(w, h)
-			surface.SetDrawColor(40, 40, 40, 230)
-			surface.DrawRect(0, 0, w, h)
-		end
-
-		menu.Credits = vgui.Create("DPanel", menu)
-		menu.Credits:Dock(TOP)
-		menu.Credits:DockMargin(0, 0, 0, 4)
-
-		function menu.Credits:Paint(w, h)
-			surface.SetFont("RobotoHUD-25")
-			local t = GAMEMODE.Name || ""
-			local tw = surface.GetTextSize(t)
-			draw.ShadowText(t, "RobotoHUD-25", 4, 0, Color(199, 49, 29), 0)
-			draw.ShadowText(tostring(GAMEMODE.Version || "error") .. ", maintained by Zikaeroh, code by many cool people :)", "RobotoHUD-L12", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
-		end
-
-		function menu.Credits:PerformLayout()
-			surface.SetFont("RobotoHUD-25")
-			local _, h = surface.GetTextSize(GAMEMODE.Name || "")
-			self:SetTall(h)
-		end
-
-		local bottom = vgui.Create("DPanel", menu)
-		bottom:SetTall(draw.GetFontHeight("RobotoHUD-15") * 1.3)
-		bottom:Dock(BOTTOM)
-		bottom:DockMargin(0, 8, 0, 0)
-
-		surface.SetFont("RobotoHUD-15")
-		local tw = surface.GetTextSize("Spectate")
-
-		function bottom:Paint(w, h)
-			local c
-			for k, ply in pairs(team.GetPlayers(TEAM_SPEC)) do
-				if c then
-					c = c .. ", " .. ply:Nick()
-				else
-					c = ply:Nick()
-				end
-			end
-
-			if c then
-				draw.ShadowText(c, "RobotoHUD-10", tw + 8 + 4, h / 2, color_white, 0, 1)
-			end
-		end
-
-		local but = vgui.Create("DButton", bottom)
-		but:Dock(LEFT)
-		but:SetText("")
-		but:DockMargin(0, 0, 4, 0)
-		but:SetWide(tw + 8)
-
-		function but:Paint(w, h)
-			local col = Color(90, 90, 90, 160)
-			local colt = Color(190, 190, 190)
-			if self:IsDown() then
-				colMul(colt, 0.5)
-			elseif self:IsHovered() then
-				colMul(colt, 1.2)
-			end
-
-			draw.RoundedBox(4, 0, 0, w, h, col)
-			draw.ShadowText("Spectate", "RobotoHUD-15", w / 2, h / 2, colt, 1, 1)
-		end
-
-		function but:DoClick()
-			RunConsoleCommand("ph_jointeam", TEAM_SPEC)
-		end
-
-		local main = vgui.Create("DPanel", menu)
-		main:Dock(FILL)
-
-		function main:Paint(w, h)
-			surface.SetDrawColor(40, 40, 40, 230)
-		end
-
-		menu.HuntersList = makeTeamList(main, TEAM_HUNTER)
-		menu.HuntersList:Dock(LEFT)
-		menu.HuntersList:DockMargin(0, 0, 8, 0)
-		menu.PropsList = makeTeamList(main, TEAM_PROP)
-		menu.PropsList:Dock(FILL)
 	end
+
+	function menu:Paint(w, h)
+		surface.SetDrawColor(40, 40, 40, 230)
+		surface.DrawRect(0, 0, w, h)
+	end
+
+	menu.Credits = vgui.Create("DPanel", menu)
+	menu.Credits:Dock(TOP)
+	menu.Credits:DockMargin(0, 0, 0, 4)
+
+	function menu.Credits:Paint(w, h)
+		surface.SetFont("RobotoHUD-25")
+		local t = GAMEMODE.Name || ""
+		local tw = surface.GetTextSize(t)
+		draw.ShadowText(t, "RobotoHUD-25", 4, 0, Color(199, 49, 29), 0)
+		draw.ShadowText(tostring(GAMEMODE.Version || "error") .. ", maintained by Zikaeroh, code by many cool people :)", "RobotoHUD-L12", 4 + tw + 24, h  * 0.9, Color(220, 220, 220), 0, 4)
+	end
+
+	function menu.Credits:PerformLayout()
+		surface.SetFont("RobotoHUD-25")
+		local _, h = surface.GetTextSize(GAMEMODE.Name || "")
+		self:SetTall(h)
+	end
+
+	local bottom = vgui.Create("DPanel", menu)
+	bottom:SetTall(draw.GetFontHeight("RobotoHUD-15") * 1.3)
+	bottom:Dock(BOTTOM)
+	bottom:DockMargin(0, 8, 0, 0)
+
+	surface.SetFont("RobotoHUD-15")
+	local tw = surface.GetTextSize("Spectate")
+
+	function bottom:Paint(w, h)
+		local c
+		for k, ply in pairs(team.GetPlayers(TEAM_SPEC)) do
+			if c then
+				c = c .. ", " .. ply:Nick()
+			else
+				c = ply:Nick()
+			end
+		end
+
+		if c then
+			draw.ShadowText(c, "RobotoHUD-10", tw + 8 + 4, h / 2, color_white, 0, 1)
+		end
+	end
+
+	local but = vgui.Create("DButton", bottom)
+	but:Dock(LEFT)
+	but:SetText("")
+	but:DockMargin(0, 0, 4, 0)
+	but:SetWide(tw + 8)
+
+	function but:Paint(w, h)
+		local col = Color(90, 90, 90, 160)
+		local colt = Color(190, 190, 190)
+		if self:IsDown() then
+			colMul(colt, 0.5)
+		elseif self:IsHovered() then
+			colMul(colt, 1.2)
+		end
+
+		draw.RoundedBox(4, 0, 0, w, h, col)
+		draw.ShadowText("Spectate", "RobotoHUD-15", w / 2, h / 2, colt, 1, 1)
+	end
+
+	function but:DoClick()
+		RunConsoleCommand("ph_jointeam", TEAM_SPEC)
+	end
+
+	local main = vgui.Create("DPanel", menu)
+	main:Dock(FILL)
+
+	function main:Paint(w, h)
+		surface.SetDrawColor(40, 40, 40, 230)
+	end
+
+	menu.HuntersList = makeTeamList(main, TEAM_HUNTER)
+	menu.HuntersList:Dock(LEFT)
+	menu.HuntersList:DockMargin(0, 0, 8, 0)
+	menu.PropsList = makeTeamList(main, TEAM_PROP)
+	menu.PropsList:Dock(FILL)
 end
 
 function GM:ScoreboardHide()

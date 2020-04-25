@@ -137,12 +137,3 @@ net.Receive("player_model_sex", function()
 	end
 	GAMEMODE.PlayerModelSex = sex
 end)
-
-function GM:StartChat()
-	if IsValid(self.EndRoundPanel) && self.EndRoundPanel:IsVisible() then
-		timer.Simple(0, function() chat.Close() end)
-		self.EndRoundPanel:SetKeyboardInputEnabled(true)
-		self.EndRoundPanel.ChatTextEntry:RequestFocus()
-		return true
-	end
-end
