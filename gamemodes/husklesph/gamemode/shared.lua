@@ -29,7 +29,7 @@ function PlayerMeta:IsProp() return self:Team() == TEAM_PROP end
 
 GM.StartWaitTime = CreateConVar("ph_mapstartwait", 30, bit.bor(FCVAR_NOTIFY, FCVAR_REPLICATED), "Number of seconds to wait for players on map start before starting round")
 
-team.SetUp(TEAM_SPEC, "Spectators", Color(120, 120, 120))
+team.SetUp(TEAM_SPEC, "Spectators", Color(120, 120, 120), false) -- Setting Joinable to false allows us to use team.BestAutoJoinTeam and have it only include the Hunters/Props teams.
 team.SetUp(TEAM_HUNTER, "Hunters", Color(255, 150, 50))
 team.SetUp(TEAM_PROP, "Props", Color(50, 150, 255))
 

@@ -2,7 +2,7 @@ local PlayerMeta = FindMetaTable("Player")
 
 function GM:PlayerInitialSpawn(ply)
 	self:RoundsSetupPlayer(ply)
-	self:TeamsSetupPlayer(ply)
+	ply:SetTeam(team.BestAutoJoinTeam())
 
 	if self:GetGameState() != ROUND_WAIT then
 		timer.Simple(0, function()
