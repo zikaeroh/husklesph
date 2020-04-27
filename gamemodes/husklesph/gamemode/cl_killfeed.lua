@@ -1,104 +1,67 @@
-GM.KillFeed = {}
+local killFeedEvents = {}
+local FADE_AMOUNT = math.floor(255 * 0.1) -- How much to reduce alpha every 0.1 seconds
+local KILL_FEED_MESSAGE_TIMEOUT = 10 -- How long a message stays in the kill feed before fading out
 
-net.Receive("kill_feed_add", function(len)
-	local ply = net.ReadEntity()
-	local attacker = net.ReadEntity()
-	local damageType = net.ReadUInt(32)
-	if !IsValid(ply) then return end
+function GM:ClearKillFeed()
+	killFeedEvents = {}
+end
 
-	local t = {}
-	t.time = CurTime()
-	t.player = ply
-	t.playerName = ply:Nick()
-	t.playerColor = team.GetColor(ply:Team())
-	t.attacker = attacker
-	t.damageType = damageType
-	if bit.band(damageType, DMG_FALL) == DMG_FALL then
-		t.message = "pushed to their death"
-		t.messageSelf = "fell to their death"
+-- This timer modifies the alpha values of each part of a kill feed message to create a "fading out" effect
+timer.Create("ph_timer_kill_feed", 0.1, 0, function()
+	local event = killFeedEvents[1]
+	if event && event.entryTime + KILL_FEED_MESSAGE_TIMEOUT < CurTime() then -- Kill feed entries last 10 seconds
+		if event.attackerName then
+			event.attackerColor.a = event.attackerColor.a - FADE_AMOUNT
+		end
+		event.victimColor.a = event.victimColor.a - FADE_AMOUNT
+		event.messageColor.a = event.messageColor.a - FADE_AMOUNT
+		if event.messageColor.a < 0 then
+			table.remove(killFeedEvents, 1)
+		end
 	end
-
-	if bit.band(damageType, DMG_BULLET) == DMG_BULLET then
-		t.message = table.Random({
-			"shot",
-			"fed lead to",
-			"swiss cheesed"
-		})
-		t.messageSelf = "shot themself"
-	end
-
-	if bit.band(damageType, DMG_BURN) == DMG_BURN then
-		t.message = "burned to death"
-		t.messageSelf = "burned to death"
-	end
-
-	if bit.band(damageType, DMG_CRUSH) == DMG_CRUSH then
-		t.message = "threw a prop at"
-		t.messageSelf = "was crushed to death"
-	end
-
-	if bit.band(damageType, DMG_BUCKSHOT) == DMG_BUCKSHOT then
-		t.message = table.Random({
-			"peppered with buckshot",
-			"shotgunned",
-		})
-	end
-
-	if bit.band(damageType, DMG_AIRBOAT) == DMG_AIRBOAT then
-		t.messageSelf = "shot too many props"
-	end
-
-	if damageType == 0 then
-		t.messageSelf = table.Random({
-			"fell over",
-			"tripped",
-			"couldn't take it",
-			"killed themself"
-		})
-	end
-
-	if IsValid(attacker) && attacker:IsPlayer() && attacker != ply then
-		t.attackerName = attacker:Nick()
-		t.attackerColor = team.GetColor(attacker:Team())
-		Msg(attacker:Nick() .. " " .. (t.message || "killed") .. " " .. ply:Nick() .. "\n")
-	else
-		Msg(ply:Nick() .. " " .. (t.messageSelf || "killed themself") .. "\n")
-	end
-
-	table.insert(GAMEMODE.KillFeed, t)
 end)
 
-function GM:DrawKillFeed()
-	local gap = draw.GetFontHeight("RobotoHUD-15") + 4
-	local down = 0
-	local k = 1
-	while true do
-		if k > #GAMEMODE.KillFeed then
-			break
+net.Receive("ph_kill_feed_add", function(len)
+	local killData = net.ReadTable()
+	killData.entryTime = CurTime()
+
+	table.insert(killFeedEvents, killData)
+end)
+
+local function drawKillFeedHUD()
+	local oldValue = DisableClipping(true)
+	local font = "RobotoHUD-15"
+	for index, event in ipairs(killFeedEvents) do
+		surface.SetFont(font)
+		-- Oldest events should be on the bottom
+		local heightOffset = 10 + ((#killFeedEvents - index) * draw.GetFontHeight(font))
+		local widthOffset = ScrW() - 10 - surface.GetTextSize(event.victimName) - surface.GetTextSize(" ") - surface.GetTextSize(event.message)
+		if event.attackerName then
+			widthOffset = widthOffset - surface.GetTextSize(event.attackerName) - surface.GetTextSize(" ")
 		end
 
-		local t = GAMEMODE.KillFeed[k]
-		if t.time + 30 < CurTime() then
-			table.remove(self.KillFeed, k)
+		-- TODO: After reorganizing how draw.ShadowText is done, replace all of these double-draws with a single ShadowText
+		-- Attacker or victim name
+		if event.attackerName then
+			draw.SimpleText(event.attackerName .. " ", font, widthOffset + 1, heightOffset + 1, Color(0, 0, 0, event.attackerColor.a))
+			widthOffset = widthOffset + draw.SimpleText(event.attackerName .. " ", font, widthOffset, heightOffset, event.attackerColor)
 		else
-			surface.SetFont("RobotoHUD-15")
-			local twp = surface.GetTextSize(t.playerName)
-			if t.attackerName then
-				local killed = " " .. (t.message || "killed") .. " "
-				local twa = surface.GetTextSize(t.attackerName)
-				local twk = surface.GetTextSize(killed)
-				draw.ShadowText(t.attackerName, "RobotoHUD-15", ScrW() - 4 - twp - twk - twa, 4 + down * gap, t.attackerColor, 0)
-				draw.ShadowText(killed, "RobotoHUD-15", ScrW() - 4 - twp - twk, 4 + down * gap, color_white, 0)
-				draw.ShadowText(t.playerName, "RobotoHUD-15", ScrW() - 4 - twp, 4 + down * gap, t.playerColor, 0)
-			else
-				local killed = " " .. (t.messageSelf || "killed themself")
-				local twk = surface.GetTextSize(killed)
-				draw.ShadowText(killed, "RobotoHUD-15", ScrW() - 4 - twk, 4 + down * gap, color_white, 0)
-				draw.ShadowText(t.playerName, "RobotoHUD-15", ScrW() - 4 - twp - twk, 4 + down * gap, t.playerColor, 0)
-			end
+			draw.SimpleText(event.victimName .. " ", font, widthOffset + 1, heightOffset + 1, Color(0, 0, 0, event.victimColor.a))
+			widthOffset = widthOffset + draw.SimpleText(event.victimName .. " ", font, widthOffset, heightOffset, event.victimColor)
+		end
 
-			down = down + 1
-			k = k + 1
+		-- Message
+		draw.SimpleText(event.message .. (event.attackerName && " " || ""), font, widthOffset + 1, heightOffset + 1, Color(0, 0, 0, event.messageColor.a))
+		widthOffset = widthOffset + draw.SimpleText(event.message .. (event.attackerName && " " || ""), font, widthOffset, heightOffset, event.messageColor)
+
+		-- Attacker name (if present)
+		if event.attackerName then
+			draw.SimpleText(event.victimName, font, widthOffset + 1, heightOffset + 1, Color(0, 0, 0, event.victimColor.a))
+			draw.SimpleText(event.victimName, font, widthOffset, heightOffset, event.victimColor)
 		end
 	end
+
+	DisableClipping(oldValue)
 end
+
+hook.Add("HUDPaint", "ph_kill_feed_hud_paint", drawKillFeedHUD)
