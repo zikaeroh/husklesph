@@ -95,7 +95,6 @@ local function createEndRoundMenu()
 
 	menu.setPlayerAwards = function(allAwards)
 		awards:Clear()
-		print(allAwards)
 
 		for _, award in pairs(allAwards) do
 			local containerPanel = vgui.Create("DPanel")
