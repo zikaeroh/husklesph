@@ -57,7 +57,7 @@ local function getKillMessage(dmgInfo, tblToUse)
 	return message
 end
 
-function GM:AddKillFeed(ply, attacker, dmginfo)
+function GM:AddKillFeed(ply, attacker, dmgInfo)
 	local killData = {
 		victimName = ply:Nick(),
 		victimColor = team.GetColor(ply:Team()),
@@ -67,9 +67,9 @@ function GM:AddKillFeed(ply, attacker, dmginfo)
 	if IsValid(attacker) && attacker:IsPlayer() && ply != attacker then
 		killData.attackerName = attacker:Nick()
 		killData.attackerColor = team.GetColor(attacker:Team())
-		killData.message = getKillMessage(dmginfo, attackedMessages) || "killed"
+		killData.message = getKillMessage(dmgInfo, attackedMessages) || "killed"
 	else
-		killData.message = getKillMessage(dmginfo, suicideMessages) || "died"
+		killData.message = getKillMessage(dmgInfo, suicideMessages) || "died"
 	end
 
 	net.Start("ph_kill_feed_add")
