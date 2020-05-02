@@ -1,15 +1,20 @@
 local killFeedEvents = {}
-local FADE_AMOUNT = math.floor(255 * 0.1) -- How much to reduce alpha every 0.1 seconds
-local KILL_FEED_MESSAGE_TIMEOUT = 10 -- How long a message stays in the kill feed before fading out
+
+local KILL_FEED_MESSAGE_TIMEOUT = 10 -- How long a message stays in the kill feed before starting to fade away
+local FADE_UPDATE_INTERVAL = 0.1 -- How long to wait before increasing the fade-ness of an expiring kill feed entry
+local FADE_TIME = 1.5 -- How long it takes for a kill feed entry to fade away
+
+local NUM_FADE_TICKS = math.floor(FADE_TIME / FADE_UPDATE_INTERVAL)
+local FADE_AMOUNT = math.floor(255 / NUM_FADE_TICKS)
 
 function GM:ClearKillFeed()
 	killFeedEvents = {}
 end
 
 -- This timer modifies the alpha values of each part of a kill feed message to create a "fading out" effect
-timer.Create("ph_timer_kill_feed", 0.1, 0, function()
+timer.Create("ph_timer_kill_feed", FADE_UPDATE_INTERVAL, 0, function()
 	local event = killFeedEvents[1]
-	if event && event.entryTime + KILL_FEED_MESSAGE_TIMEOUT < CurTime() then -- Kill feed entries last 10 seconds
+	if event && event.entryTime + KILL_FEED_MESSAGE_TIMEOUT < CurTime() then
 		if event.attackerName then
 			event.attackerColor.a = event.attackerColor.a - FADE_AMOUNT
 		end
@@ -29,7 +34,6 @@ net.Receive("ph_kill_feed_add", function(len)
 end)
 
 local function drawKillFeedHUD()
-	local oldValue = DisableClipping(true)
 	local font = "RobotoHUD-15"
 	for index, event in ipairs(killFeedEvents) do
 		surface.SetFont(font)
@@ -60,8 +64,6 @@ local function drawKillFeedHUD()
 			draw.SimpleText(event.victimName, font, widthOffset, heightOffset, event.victimColor)
 		end
 	end
-
-	DisableClipping(oldValue)
 end
 
 hook.Add("HUDPaint", "ph_kill_feed_hud_paint", drawKillFeedHUD)
