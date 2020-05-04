@@ -51,8 +51,7 @@ GM.AutoTauntMin = CreateConVar("ph_auto_taunt_delay_min", 60, bit.bor(FCVAR_NOTI
 GM.AutoTauntMax = CreateConVar("ph_auto_taunt_delay_max", 120, bit.bor(FCVAR_NOTIFY), "Maximum time to go without taunting")
 GM.AutoTauntPropsOnly = CreateConVar("ph_auto_taunt_props_only", 1, bit.bor(FCVAR_NOTIFY), "Enable auto taunt for props only")
 
-resource.AddSingleFile("materials/husklesph/skull.png")
-resource.AddSingleFile("materials/husklesph/skull_license.txt")
+resource.AddFile("materials/husklesph/skull.png")
 
 function GM:Initialize()
 	self.RoundWaitForPlayers = CurTime()
