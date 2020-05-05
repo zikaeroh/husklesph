@@ -2,5 +2,5 @@
     "title": "Prop Hunters - Huskles Edition",
     "type": "gamemode",
     "tags": ["fun"],
-    "ignore": [".*", ".vscode", "*.md", "*.gma", "*.ps1"]
+    "ignore": [".*", ".vscode", "*.md", "*.gma", "*.ps1", "materials/husklesph/skull_license.txt"]
 }
