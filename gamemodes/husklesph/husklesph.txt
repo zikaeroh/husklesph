@@ -5,5 +5,5 @@
 	"maps"		"^ph_"
 	"menusystem"	"1"
 	"workshopid"	"1585255351"
-	"version" 	"v1.11.0"
+	"version" 	"v1.11.1"
 }
