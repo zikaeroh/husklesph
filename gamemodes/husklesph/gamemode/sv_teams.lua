@@ -6,8 +6,8 @@ concommand.Add("ph_jointeam", function(ply, com, args)
 	-- Can join team hunter or team prop if team sizes are equal
 	-- Otherwise, can only join the smaller team
 	if newTeam == TEAM_SPEC || team.NumPlayers(TEAM_HUNTER) - team.NumPlayers(TEAM_PROP) == 0 || newTeam == team.BestAutoJoinTeam() then
-		ply:SetTeam(newTeam)
 		if ply:Alive() then ply:Kill() end
+		ply:SetTeam(newTeam)
 		GlobalChatMsg(ply:Nick(), " changed team to ", team.GetColor(newTeam), team.GetName(newTeam))
 	else
 		ply:PlayerChatMsg("Team full, you cannot join")

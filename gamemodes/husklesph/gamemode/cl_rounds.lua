@@ -19,7 +19,7 @@ net.Receive("gamestate", function(len)
 
 	if GAMEMODE.GameState == ROUND_HIDE then
 		GAMEMODE.UpgradesNotif = {}
-		GAMEMODE.KillFeed = {}
+		GAMEMODE.ClearKillFeed()
 	end
 
 	if GAMEMODE.GameState != ROUND_SEEK then

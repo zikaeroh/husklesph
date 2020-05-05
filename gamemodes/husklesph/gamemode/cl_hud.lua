@@ -30,7 +30,6 @@ end
 function GM:HUDPaint()
 	self:DrawGameHUD()
 	self:DrawRoundTimer()
-	self:DrawKillFeed()
 end
 
 local helpKeysProps = {
