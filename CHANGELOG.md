@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v1.11.2
+
+-   Further improve killfeed messages. (Thanks, Yolo!)
+
 ## v1.11.1
 
 -   Fix broken skull icon. (Thanks, Yolo!)
